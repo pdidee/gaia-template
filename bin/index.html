@@ -1,0 +1,122 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+   <!-- SEO -->
+   <meta name="keywords" content="Demo" />
+   <!-- SEO -->
+   <meta name="Creative Director" content="" />
+   <meta name="Art Director" content="" />
+   <meta name="Designer" content="" />
+   <meta name="Programmer" content="Boy, cjboy1984@gmail.com" />
+
+   <!-- Facebook sharing meta-data -->
+   <!-- Size of the thumbnail is 120x120 -->
+   <meta name="title" content="" />
+   <meta name="description" content="" />
+   <link rel="image_src" href="" />
+
+   <title>Demo</title>
+
+   <!-- disable padding -->
+   <style type="text/css">
+   body
+   {
+      margin-left: 0px;
+      margin-top: 0px;
+      margin-right: 0px;
+      margin-bottom: 0px;
+   }
+   #FlashContainer
+   {
+      margin: 0 auto;
+      background-color:#ffffff;
+   }
+   </style>
+   <link href="commons/styles/fblike.css" rel="stylesheet" type="text/css" />
+
+   <!-- Prgression Framework necessary libs -->
+   <script type="text/javascript" src="commons/scripts/swfobject/swfobject.js"></script>
+   <!-- swfaddress.js看似會看graph api衝到…不知為何？ -->
+   <script type="text/javascript" src="commons/scripts/swfaddress/swfaddress.js"></script>
+   <script type="text/javascript" src="commons/scripts/swffit/swffit.js"></script>
+   <!-- Facebook Graph API necessary libs -->
+   <script type="text/javascript" src="http://connect.facebook.net/zh_TW/all.js"></script>
+
+   <script type="text/javascript">
+   <!-- Social Network Sharing -->
+   function shareFacebook()
+   {
+      var d = document, f = 'http://www.facebook.com/sharer', p = '.php?src=bm&v=4&i=1259575049&u=' + encodeURIComponent(document.location.href) + '&t=' + encodeURIComponent(d.title);
+      function a()
+      {
+         if (!window.open(f + p, 'sharer', 'toolbar=0,status=0,resizable=1,width=626,height=436'))
+         {
+            document.location.href = f + p;
+         }
+      }
+      if (/Firefox/.test(navigator.userAgent))
+      {
+         setTimeout(a, 0);
+      }
+      else
+      {
+         a();
+      }
+   }
+
+   function sharePlurk()
+   {
+      window.open('http://www.plurk.com/?qualifier=shares&status='.concat(encodeURIComponent(location.href)).concat(' ').concat('&#40;').concat(encodeURIComponent(document.title)).concat('&#41;'));
+   }
+
+   function shareTwitter()
+   {
+      window.open('http://twitter.com/home/?status='.concat(encodeURIComponent(document.title)).concat(' ').concat(encodeURIComponent(location.href)));
+   }
+
+   <!-- In order to let js call flash function -->
+   function getSwfById(swfID)
+   {
+      if(navigator.appName.indexOf("Microsoft") != -1)
+      {
+         swf = window[swfID];
+      }
+      else
+      {
+         swf = document[swfID];
+      }
+   }
+
+   <!-- Facebook -->
+   var app_id = '152204381520601';
+   var canvas_id = 'null';
+   var permission = 'user_about_me,user_birthday,user_photos,email,read_friendlists,publish_stream';
+   var base_url = '';
+   <!-- Flash -->
+   var isIE = navigator.userAgent.search("MSIE") > -1; // 中文輸入solution，true => IE，false => Other
+   var flashvars = {app_id:app_id, permission:permission, canvas_id:canvas_id, base_url:base_url};
+   // use swfobject to get parameters, e.g: index.html?data=123
+   if (swfobject.getQueryParamValue("data"))
+   {
+      flashvars.data = swfobject.getQueryParamValue("data");
+   }
+   //var params = {wmode:(isIE ? 'opaque' : 'window'), allowscriptaccess:'always'};
+   var params = {wmode:'transparent', allowscriptaccess:'always'};
+   var attributes = {id:'MyFlash', name:'MyFlash'};
+   swfobject.embedSWF('main.swf', 'MyFlash', '100%', '520px', '10.0', null, flashvars, params, attributes);
+   //swffit.fit('MyFlash', 1000, 500); // 用swffit來定義swf的最小寬高
+   </script>
+</head>
+
+<body onload='getSwfById("mySwf");'>
+   <!-- Flash -->
+   <div id='FlashContainer'>
+      <!-- Facebook Graph API element div -->
+      <div id='fb-root'></div>
+      <!-- Flash element div -->
+      <div id='MyFlash'></div>
+   </div>
+</body>
+
+</html>
