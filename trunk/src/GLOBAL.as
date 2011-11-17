@@ -7,8 +7,8 @@ package
       // ________________________________________________
       //                                    document info
       
-      public static var DocWidth:Number = 960;
-      public static var DocHeight:Number = 520;
+      public static const DocWidth:Number = 960;
+      public static const DocHeight:Number = 520;
       
       public static var firstTimeVisit:Boolean = true;
       

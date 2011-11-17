@@ -27,11 +27,9 @@ package
    public class DefaultPreloader extends InOutBlockPreloader
    {
       // fla
-      public var mcExposure:MovieClip;
       public var mcThumb:MovieClip;
       public var mcTrack:MovieClip;
       public var mcBg:MovieClip;
-      public var mcBubbleView:BubbleStarView;
       
       // 100%
       private var width100:Number;
@@ -68,7 +66,6 @@ package
                onStart:function()
                {
                   visible = true;
-                  mcBubbleView.startEffx();
                },
                onComplete:function()
                {
@@ -82,7 +79,6 @@ package
          alpha = 0;
          mcThumb.width = 0;
          mcThumb.alpha = mcTrack.alpha = 1;
-         mcExposure.alpha = 0;
          
          // [actions]
          cmd.insert(TweenMax.to(this, 0.6, { alpha:1, ease:Quad.easeOut } ));
@@ -106,12 +102,9 @@ package
             {
                onStart:function()
                {
-                  mcBubbleView.stopCreateParticles();
                },
                onComplete:function()
                {
-                  mcBubbleView.stopEffx();
-                  
                   transitionOutComplete();
                }
             }
@@ -160,21 +153,14 @@ package
          
          // debug
          GaiaTest.init(this);
-         
-         // test
-//         mcLoading.transitionIn(function(){});
-//         setTimeout(mcLoading.transitionOut, 2 * 1000, function(){});
       }
       
       // ################### protected ##################
       
       override protected function onStageResize(e:Event = null):void
       {
-         x = (sw>>1) - 480;
-         y = (sh>>1) - 260;
-         
-         mcExposure.width = sw;
-         mcExposure.height = sh;
+         x = (sw>>1) - (GLOBAL.DocWidth>>1);
+         y = (sh>>1) - (GLOBAL.DocHeight>>1);
       }
       
       // #################### private ###################
