@@ -1,0 +1,437 @@
+<root>
+	<addr label="台北市">
+		<addr post="100">中正區</addr>
+		<addr post="103">大同區</addr>
+		<addr post="104">中山區</addr>
+		<addr post="105">松山區</addr>
+		<addr post="106">大安區</addr>
+		<addr post="108">萬華區</addr>
+		<addr post="110">信義區</addr>
+		<addr post="111">士林區</addr>
+		<addr post="112">北投區</addr>
+		<addr post="114">內湖區</addr>
+		<addr post="115">南港區</addr>
+		<addr post="116">文山區</addr>
+	</addr>
+
+	<addr label="新北市">
+		<addr post="207">萬里區</addr>
+		<addr post="208">金山區</addr>
+		<addr post="220">板橋區</addr>
+		<addr post="221">汐止區</addr>
+		<addr post="222">深坑區</addr>
+		<addr post="223">石碇區</addr>
+		<addr post="224">瑞芳區</addr>
+		<addr post="226">平溪區</addr>
+		<addr post="227">雙溪區</addr>
+		<addr post="228">貢寮區</addr>
+		<addr post="231">新店區</addr>
+		<addr post="232">坪林區</addr>
+		<addr post="233">烏來區</addr>
+		<addr post="234">永和區</addr>
+		<addr post="235">中和區</addr>
+		<addr post="236">土城區</addr>
+		<addr post="237">三峽區</addr>
+		<addr post="238">樹林區</addr>
+		<addr post="239">鶯歌區</addr>
+		<addr post="241">三重區</addr>
+		<addr post="242">新莊區</addr>
+		<addr post="243">泰山區</addr>
+		<addr post="244">林口區</addr>
+		<addr post="247">蘆洲區</addr>
+		<addr post="248">五股區</addr>
+		<addr post="249">八里區</addr>
+		<addr post="251">淡水區</addr>
+		<addr post="252">三芝區</addr>
+		<addr post="253">石門區</addr>
+	</addr>
+
+	<addr label="基隆市">
+		<addr post="200">仁愛區</addr>
+		<addr post="201">信義區</addr>
+		<addr post="202">中正區</addr>
+		<addr post="203">中山區</addr>
+		<addr post="204">安樂區</addr>
+		<addr post="205">暖暖區</addr>
+		<addr post="206">七堵區</addr>
+	</addr>
+
+	<addr label="宜蘭縣">
+		<addr post="260">宜蘭市</addr>
+		<addr post="261">頭城鎮</addr>
+		<addr post="262">礁溪鄉</addr>
+		<addr post="263">壯圍鄉</addr>
+		<addr post="264">員山鄉</addr>
+		<addr post="265">羅東鎮</addr>
+		<addr post="266">三星鄉</addr>
+		<addr post="267">大同鄉</addr>
+		<addr post="268">五結鄉</addr>
+		<addr post="269">冬山鄉</addr>
+		<addr post="270">蘇澳鎮</addr>
+		<addr post="272">南澳鄉</addr>
+	</addr>
+
+	<addr label="新竹市">
+		<addr post="300">東區</addr>
+		<addr post="300">北區</addr>
+		<addr post="300">香山區</addr>
+	</addr>
+
+	<addr label="新竹縣">
+		<addr post="302">竹北市</addr>
+		<addr post="303">湖口鄉</addr>
+		<addr post="304">新豐鄉</addr>
+		<addr post="305">新埔鄉</addr>
+		<addr post="306">關西鎮</addr>
+		<addr post="307">芎林鄉</addr>
+		<addr post="308">寶山鄉</addr>
+		<addr post="310">竹東鎮</addr>
+		<addr post="311">五峰鄉</addr>
+		<addr post="312">橫山鄉</addr>
+		<addr post="313">尖石鄉</addr>
+		<addr post="314">北埔鄉</addr>
+		<addr post="315">峨嵋鄉</addr>
+	</addr>
+
+	<addr label="桃園縣">
+		<addr post="320">中壢市</addr>
+		<addr post="324">平鎮市</addr>
+		<addr post="325">龍潭鄉</addr>
+		<addr post="326">楊梅鎮</addr>
+		<addr post="327">新屋鄉</addr>
+		<addr post="328">觀音鄉</addr>
+		<addr post="330">桃園市</addr>
+		<addr post="333">龜山鄉</addr>
+		<addr post="334">八德市</addr>
+		<addr post="335">大溪鎮</addr>
+		<addr post="336">復興鄉</addr>
+		<addr post="337">大園鄉</addr>
+		<addr post="338">蘆竹鄉</addr>
+	</addr>
+
+	<addr label="苗栗縣">
+		<addr post="350">竹南鎮</addr>
+		<addr post="351">頭份鎮</addr>
+		<addr post="352">三灣鄉</addr>
+		<addr post="353">南庄鄉</addr>
+		<addr post="354">獅潭鄉</addr>
+		<addr post="356">後龍鎮</addr>
+		<addr post="357">通霄鎮</addr>
+		<addr post="358">苑裡鎮</addr>
+		<addr post="360">苗栗市</addr>
+		<addr post="361">造橋鄉</addr>
+		<addr post="362">頭屋鄉</addr>
+		<addr post="363">公館鄉</addr>
+		<addr post="364">大湖鄉</addr>
+		<addr post="365">泰安鄉</addr>
+		<addr post="366">鉰鑼鄉</addr>
+		<addr post="367">三義鄉</addr>
+		<addr post="368">西湖鄉</addr>
+		<addr post="369">卓蘭鄉</addr>
+	</addr>
+
+	<addr label="台中市">
+		<addr post="400">中區</addr>
+		<addr post="401">東區</addr>
+		<addr post="402">南區</addr>
+		<addr post="403">西區</addr>
+		<addr post="404">北區</addr>
+		<addr post="406">北屯區</addr>
+		<addr post="407">西屯區</addr>
+		<addr post="408">南屯區</addr>
+		<addr post="411">太平區</addr>
+		<addr post="412">大里區</addr>
+		<addr post="413">霧峰區</addr>
+		<addr post="414">烏日區</addr>
+		<addr post="420">豐原區</addr>
+		<addr post="421">后里區</addr>
+		<addr post="422">石岡區</addr>
+		<addr post="423">東勢區</addr>
+		<addr post="424">和平區</addr>
+		<addr post="426">新社區</addr>
+		<addr post="427">潭子區</addr>
+		<addr post="428">大雅區</addr>
+		<addr post="429">神岡區</addr>
+		<addr post="432">大肚區</addr>
+		<addr post="433">沙鹿區</addr>
+		<addr post="434">龍井區</addr>
+		<addr post="435">梧棲區</addr>
+		<addr post="436">清水區</addr>
+		<addr post="437">大甲區</addr>
+		<addr post="438">外圃區</addr>
+		<addr post="439">大安區</addr>
+	</addr>
+
+	<addr label="彰化縣">
+		<addr post="500">彰化市</addr>
+		<addr post="502">芬園鄉</addr>
+		<addr post="503">花壇鄉</addr>
+		<addr post="504">秀水鄉</addr>
+		<addr post="505">鹿港鎮</addr>
+		<addr post="506">福興鄉</addr>
+		<addr post="507">線西鄉</addr>
+		<addr post="508">和美鎮</addr>
+		<addr post="509">伸港鄉</addr>
+		<addr post="510">員林鎮</addr>
+		<addr post="511">社頭鄉</addr>
+		<addr post="512">永靖鄉</addr>
+		<addr post="513">埔心鄉</addr>
+		<addr post="514">溪湖鎮</addr>
+		<addr post="515">大村鄉</addr>
+		<addr post="516">埔鹽鄉</addr>
+		<addr post="520">田中鎮</addr>
+		<addr post="521">北斗鎮</addr>
+		<addr post="522">田尾鄉</addr>
+		<addr post="523">埤頭鄉</addr>
+		<addr post="524">溪州鄉</addr>
+		<addr post="525">竹塘鄉</addr>
+		<addr post="526">二林鎮</addr>
+		<addr post="527">大城鄉</addr>
+		<addr post="528">芳苑鄉</addr>
+		<addr post="530">二水鄉</addr>
+	</addr>
+
+	<addr label="南投縣">
+		<addr post="540">南投市</addr>
+		<addr post="541">中寮鄉</addr>
+		<addr post="542">草屯鎮</addr>
+		<addr post="544">國姓鄉</addr>
+		<addr post="545">埔里鎮</addr>
+		<addr post="546">仁愛鄉</addr>
+		<addr post="551">名間鄉</addr>
+		<addr post="552">集集鄉</addr>
+		<addr post="553">水里鄉</addr>
+		<addr post="555">魚池鄉</addr>
+		<addr post="556">信義鄉</addr>
+		<addr post="557">竹山鎮</addr>
+		<addr post="558">鹿谷鄉</addr>
+	</addr>
+
+	<addr label="嘉義市">
+		<addr post="600">東區</addr>
+		<addr post="600">西區</addr>
+	</addr>
+
+	<addr label="嘉義縣">
+		<addr post="602">番路鄉</addr>
+		<addr post="603">梅山鄉</addr>
+		<addr post="604">竹崎鄉</addr>
+		<addr post="605">阿里山</addr>
+		<addr post="606">中埔鄉</addr>
+		<addr post="607">大埔鄉</addr>
+		<addr post="608">水上鄉</addr>
+		<addr post="611">鹿草鄉</addr>
+		<addr post="612">太保市</addr>
+		<addr post="613">朴子市</addr>
+		<addr post="614">東石鄉</addr>
+		<addr post="615">六腳鄉</addr>
+		<addr post="616">新港鄉</addr>
+		<addr post="621">民雄鄉</addr>
+		<addr post="622">大林鎮</addr>
+		<addr post="623">漢口鄉</addr>
+		<addr post="624">義竹鄉</addr>
+		<addr post="625">布袋鎮</addr>
+	</addr>
+
+	<addr label="雲林縣">
+		<addr post="630">斗南市</addr>
+		<addr post="631">大埤鄉</addr>
+		<addr post="632">虎尾鎮</addr>
+		<addr post="633">土庫鎮</addr>
+		<addr post="634">褒忠鄉</addr>
+		<addr post="635">東勢鄉</addr>
+		<addr post="636">台西鄉</addr>
+		<addr post="637">崙背鄉</addr>
+		<addr post="638">麥寮鄉</addr>
+		<addr post="640">斗六市</addr>
+		<addr post="643">林內鄉</addr>
+		<addr post="646">古坑鄉</addr>
+		<addr post="647">莿桐鄉</addr>
+		<addr post="648">西螺鎮</addr>
+		<addr post="649">二崙鄉</addr>
+		<addr post="651">北港鎮</addr>
+		<addr post="652">水林鄉</addr>
+		<addr post="653">口湖鄉</addr>
+		<addr post="654">四湖鄉</addr>
+		<addr post="655">元長鄉</addr>
+	</addr>
+
+	<addr label="台南市">
+		<addr post="700">中西區</addr>
+		<addr post="701">東區</addr>
+		<addr post="702">南區</addr>
+		<addr post="704">北區</addr>
+		<addr post="708">安平區</addr>
+		<addr post="709">安南區</addr>
+		<addr post="710">永康區</addr>
+		<addr post="711">歸仁區</addr>
+		<addr post="712">新化區</addr>
+		<addr post="713">左鎮區</addr>
+		<addr post="714">玉井區</addr>
+		<addr post="715">楠西區</addr>
+		<addr post="716">南化區</addr>
+		<addr post="717">仁德區</addr>
+		<addr post="718">關廟區</addr>
+		<addr post="719">龍崎區</addr>
+		<addr post="720">官田區</addr>
+		<addr post="721">麻豆區</addr>
+		<addr post="722">佳里區</addr>
+		<addr post="723">西港區</addr>
+		<addr post="724">七股區</addr>
+		<addr post="725">將軍區</addr>
+		<addr post="726">學甲區</addr>
+		<addr post="727">北門區</addr>
+		<addr post="730">新營區</addr>
+		<addr post="731">後壁區</addr>
+		<addr post="732">白河區</addr>
+		<addr post="733">東山區</addr>
+		<addr post="734">六甲區</addr>
+		<addr post="735">下營區</addr>
+		<addr post="736">柳營區</addr>
+		<addr post="737">鹽水區</addr>
+		<addr post="741">善化區</addr>
+		<addr post="742">大內區</addr>
+		<addr post="743">山上區</addr>
+		<addr post="744">新市區</addr>
+		<addr post="745">安定區</addr>
+	</addr>
+
+	<addr label="高雄市">
+		<addr post="800">新興區</addr>
+		<addr post="801">前金區</addr>
+		<addr post="802">苓雅區</addr>
+		<addr post="803">鹽埕區</addr>
+		<addr post="804">鼓山區</addr>
+		<addr post="805">旗津區</addr>
+		<addr post="806">前鎮區</addr>
+		<addr post="807">三民區</addr>
+		<addr post="811">楠梓區</addr>
+		<addr post="812">小港區</addr>
+		<addr post="813">左營區</addr>
+		<addr post="814">仁武區</addr>
+		<addr post="815">大社區</addr>
+		<addr post="817">東沙群島</addr>
+      <addr post="819">西沙群島</addr>
+		<addr post="820">岡山區</addr>
+		<addr post="821">路竹區</addr>
+		<addr post="822">阿蓮區</addr>
+		<addr post="823">田寮區</addr>
+		<addr post="824">燕巢區</addr>
+		<addr post="825">橋頭區</addr>
+		<addr post="826">梓官區</addr>
+		<addr post="827">彌陀區</addr>
+		<addr post="828">永安區</addr>
+		<addr post="829">湖內區</addr>
+		<addr post="830">鳳山區</addr>
+		<addr post="831">大寮區</addr>
+		<addr post="832">林園區</addr>
+		<addr post="833">鳥松區</addr>
+		<addr post="840">大樹區</addr>
+		<addr post="842">旗山區</addr>
+		<addr post="843">美濃區</addr>
+		<addr post="844">六龜區</addr>
+		<addr post="845">內門區</addr>
+		<addr post="846">杉林區</addr>
+		<addr post="847">甲仙區</addr>
+		<addr post="848">桃源區</addr>
+		<addr post="849">那瑪夏區</addr>
+		<addr post="851">茂林區</addr>
+		<addr post="852">茄萣區</addr>
+	</addr>
+
+	<addr label="澎湖縣">
+		<addr post="880">馬公市</addr>
+		<addr post="881">西嶼鄉</addr>
+		<addr post="882">望安鄉</addr>
+		<addr post="883">七美鄉</addr>
+		<addr post="884">白沙鄉</addr>
+		<addr post="885">湖西鄉</addr>
+	</addr>
+
+	<addr label="屏東縣">
+		<addr post="900">屏東市</addr>
+		<addr post="901">三地門鄉</addr>
+		<addr post="902">霧台鄉</addr>
+		<addr post="903">瑪家鄉</addr>
+		<addr post="904">九如鄉</addr>
+		<addr post="905">里港鄉</addr>
+		<addr post="906">高樹鄉</addr>
+		<addr post="907">鹽埔鄉</addr>
+		<addr post="908">長治鄉</addr>
+		<addr post="909">麟洛鄉</addr>
+		<addr post="911">竹田鄉</addr>
+		<addr post="912">內埔鄉</addr>
+		<addr post="913">萬丹鄉</addr>
+		<addr post="920">潮州鎮</addr>
+		<addr post="921">泰武鄉</addr>
+		<addr post="922">來義鄉</addr>
+		<addr post="923">萬巒鄉</addr>
+		<addr post="924">嵌頂鄉</addr>
+		<addr post="925">新埤鄉</addr>
+		<addr post="926">南州鄉</addr>
+		<addr post="927">林邊鄉</addr>
+		<addr post="928">東港鎮</addr>
+		<addr post="929">琉球鄉</addr>
+		<addr post="931">佳冬鄉</addr>
+		<addr post="932">新園鄉</addr>
+		<addr post="940">枋寮鄉</addr>
+		<addr post="941">枋山鄉</addr>
+		<addr post="942">春日鄉</addr>
+		<addr post="943">獅子鄉</addr>
+		<addr post="944">車城鄉</addr>
+		<addr post="945">牡丹鄉</addr>
+		<addr post="946">恆春鎮</addr>
+		<addr post="947">滿州鄉</addr>
+	</addr>
+
+	<addr label="台東縣">
+		<addr post="950">台東市</addr>
+		<addr post="951">綠島鄉</addr>
+		<addr post="952">蘭嶼鄉</addr>
+		<addr post="953">延平鄉</addr>
+		<addr post="954">卑南鄉</addr>
+		<addr post="955">鹿野鄉</addr>
+		<addr post="956">關山鎮</addr>
+		<addr post="957">海端鄉</addr>
+		<addr post="958">池上鄉</addr>
+		<addr post="959">東河鄉</addr>
+		<addr post="961">成氐燡</addr>
+		<addr post="962">長濱鄉</addr>
+		<addr post="963">太麻里</addr>
+		<addr post="964">金峰鄉</addr>
+		<addr post="965">大武鄉</addr>
+		<addr post="966">達仁鄉</addr>
+	</addr>
+
+	<addr label="花蓮縣">
+		<addr post="970">花蓮市</addr>
+		<addr post="971">新城鄉</addr>
+		<addr post="972">秀林鄉</addr>
+		<addr post="973">吉安鄉</addr>
+		<addr post="974">壽豐鄉</addr>
+		<addr post="975">鳳林鎮</addr>
+		<addr post="976">光復鄉</addr>
+		<addr post="977">豐濱鄉</addr>
+		<addr post="978">瑞穗鄉</addr>
+		<addr post="979">萬榮鄉</addr>
+		<addr post="981">玉里鎮</addr>
+		<addr post="982">卓溪鄉</addr>
+		<addr post="983">富里鄉</addr>
+	</addr>
+
+	<addr label="金門縣">
+		<addr post="890">金沙鎮</addr>
+		<addr post="891">金湖鎮</addr>
+		<addr post="892">金寧鄉</addr>
+		<addr post="893">金城鎮</addr>
+		<addr post="894">烈嶼鄉</addr>
+		<addr post="896">烏坵鄉</addr>
+	</addr>
+
+	<addr label="連江縣">
+		<addr post="209">南竿鄉</addr>
+		<addr post="210">北竿鄉</addr>
+		<addr post="211">莒光鄉</addr>
+		<addr post="212">東引</addr>
+	</addr>
+</root>
