@@ -34,19 +34,10 @@ package casts.root
          transitionInComplete();
       }
 
-      override public function transitionInComplete():void
-      {
-         super.transitionInComplete();
-      }
-
       override public function transitionOut():void
       {
          super.transitionOut();
-      }
-
-      override public function transitionOutComplete():void
-      {
-         super.transitionOutComplete();
+         transitionOutComplete();
       }
 
       // --------------------- LINE ---------------------
