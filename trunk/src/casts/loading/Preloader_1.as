@@ -1,6 +1,7 @@
 package casts.loading
 {
    import casts.loading.template.InOutBlockPreloader;
+   import casts.loading.template.InOutNonblockPreloader;
    
    import com.gaiaframework.events.AssetEvent;
    import com.greensock.TimelineMax;
@@ -13,7 +14,7 @@ package casts.loading
    import flash.display.MovieClip;
    import flash.events.Event;
    
-   public class Preloader_1 extends InOutBlockPreloader
+   public class Preloader_1 extends InOutNonblockPreloader
    {
       // fla
       public var mcThumb:MovieClip;
@@ -29,23 +30,24 @@ package casts.loading
       public function Preloader_1()
       {
          super();
+         isShow = false;
       }
       
       // --------------------- LINE ---------------------
       
       override public function transitionIn():void
       {
-         // necessary for block-mode
-         if (!callByTransitIn)
-         {
-            super.transitionIn();
-            super.transitionInComplete();
-            return;
-         }
-         else
-         {
-            callByTransitIn = false;
-         }
+         // necessary for block mode
+         //         if (!callByTransitIn)
+         //         {
+         //            super.transitionIn();
+         //            super.transitionInComplete();
+         //            return;
+         //         }
+         //         else
+         //         {
+         //            callByTransitIn = false;
+         //         }
          
          // stop cmd(TimelineMax)
          cmd.stop();
@@ -54,7 +56,10 @@ package casts.loading
             {
                onStart:function()
                {
-                  visible = true;
+                  // necessary for non-block mode
+                  isShow = true;
+                  
+                  transitionInComplete();
                },
                onComplete:function()
                {
@@ -65,12 +70,13 @@ package casts.loading
          );
          
          // [init]
-         alpha = 0;
-         mcThumb.width = 0;
-         mcThumb.alpha = mcTrack.alpha = 1;
+         visible = true;
+         TweenMax.to(this, 0, {alpha:1, scaleX:1, scaleY:1});
+         TweenMax.to(mcThumb, 0, {alpha:1, width:0});
+         TweenMax.to(mcTrack, 0, {alpha:1});
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.6, { alpha:1, ease:Quad.easeOut } ));
+         cmd.insert(TweenMax.to(this, 0.4, { alpha:1, ease:Quad.easeOut } ));
          
          cmd.play();
       }
@@ -91,6 +97,8 @@ package casts.loading
             {
                onStart:function()
                {
+                  // necessary for non-block mode
+                  isShow = false;
                },
                onComplete:function()
                {
@@ -103,17 +111,13 @@ package casts.loading
          {
             // [init]
             // [actions]
-            cmd.insert(TweenMax.to(mcThumb, 0.6, { width:width100 } ));
-            cmd.insert(TweenMax.to(mcThumb, 0.6, { alpha:0 } ), 0.6);
-            cmd.insert(TweenMax.to(mcTrack, 0.6, { alpha:0 } ), 0.6);
-            cmd.insert(TweenMax.to(this, 0.6, { alpha:0, ease:Quint.easeIn } ), 1.0);
-            
-            cmd.play();
+            cmd.insert(TweenMax.to(mcThumb, 0.4, { width:width100 } ));
+            cmd.insert(TweenMax.to(mcThumb, 0.4, { alpha:0 } ), 0.4);
+            cmd.insert(TweenMax.to(mcTrack, 0.4, { alpha:0 } ), 0.4);
+            cmd.insert(TweenMax.to(this, 0.4, { alpha:0, ease:Quint.easeIn } ), 0.8);
          }
-         else
-         {
-            transitionOutComplete();
-         }
+         
+         cmd.play();
       }
       
       override public function transitionOutComplete():void
@@ -140,10 +144,6 @@ package casts.loading
          
          // debug
          GaiaTest.init(this);
-         
-         // test
-//         mcLoading.transitionIn(function(){});
-//         setTimeout(mcLoading.transitionOut, 2 * 1000, function(){});
       }
       
       // ################### protected ##################

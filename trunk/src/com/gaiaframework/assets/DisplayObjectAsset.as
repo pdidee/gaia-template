@@ -21,7 +21,8 @@ package com.gaiaframework.assets
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.events.AssetEvent;
 	import com.gaiaframework.events.PageEvent;
-
+	import com.tyz.CacheLoader;
+	
 	import flash.accessibility.AccessibilityProperties;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -34,11 +35,11 @@ package com.gaiaframework.assets
 	import flash.geom.Transform;
 	import flash.system.ApplicationDomain;
 	import flash.system.LoaderContext;
-
+	
 	public class DisplayObjectAsset extends AbstractAsset implements IDisplayObject
 	{
 		protected var _depth:String;		
-		protected var _loader:Loader;
+		protected var _loader:CacheLoader;
 		protected var _domain:String;
 		protected var loaderContext:LoaderContext;
 		
@@ -53,10 +54,10 @@ package com.gaiaframework.assets
 		override public function init():void
 		{
 			if (_loader != null) destroy();
-			_loader = new Loader();
+			_loader = new CacheLoader(); // 2011.11.18 by BOY
 			_loader.visible = false;
 			_loader.mouseEnabled = false;
-			addListeners(_loader.contentLoaderInfo);
+			addListeners(_loader); // 2011.11.18 by BOY
 			super.init();
 		}
 		override public function preload():void
@@ -97,7 +98,7 @@ package com.gaiaframework.assets
 		{
 			if (_loader != null)
 			{
-				removeListeners(_loader.contentLoaderInfo);
+				removeListeners(_loader);
 				if (_loader.parent) _loader.parent.removeChild(_loader);
 				try
 				{
@@ -144,7 +145,7 @@ package com.gaiaframework.assets
 		}
 		override protected function onComplete(event:Event):void
 		{
-			removeListeners(_loader.contentLoaderInfo);
+			removeListeners(_loader); // 2011.11.18 by BOY
 			_loader.content.visible = false;
 			_loader.visible = true;
 			super.onComplete(event);

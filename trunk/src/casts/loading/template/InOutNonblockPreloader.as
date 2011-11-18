@@ -67,7 +67,10 @@ package casts.loading.template
 //         }
          
          // record history
-         oldBranch = Gaia.api.getCurrentBranch();
+         if (Gaia.api)
+         {
+            oldBranch = Gaia.api.getCurrentBranch();
+         }
       }
       
       override public function transitionInComplete():void
@@ -88,7 +91,10 @@ package casts.loading.template
 //         }
          
          // record history
-         oldBranch = Gaia.api.getCurrentBranch();
+         if (Gaia.api)
+         {
+            oldBranch = Gaia.api.getCurrentBranch();
+         }
       }
       
       override public function transitionOutComplete():void

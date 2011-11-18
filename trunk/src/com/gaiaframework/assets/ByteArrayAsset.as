@@ -15,15 +15,15 @@
 package com.gaiaframework.assets
 {
 	import com.gaiaframework.api.IByteArray;
-
+	import com.tyz.CacheURLLoader;
+	
 	import flash.events.Event;
-	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.utils.ByteArray;
 
 	public class ByteArrayAsset extends AbstractAsset implements IByteArray
 	{
-		protected var loader:URLLoader;
+		protected var loader:CacheURLLoader;
 		private var _data:ByteArray;
 		
 		function ByteArrayAsset()
@@ -37,7 +37,7 @@ package com.gaiaframework.assets
 		override public function init():void
 		{
 			isActive = true;
-			loader = new URLLoader();
+			loader = new CacheURLLoader();  // 2011.11.18  by BOY
 			loader.dataFormat = URLLoaderDataFormat.BINARY;
 			addListeners(loader);
 			super.init();
