@@ -64,7 +64,6 @@ package
          
          // I want to make preloader.swf complete it's transition-in and then do the loading job.
          GaiaPlus.api.setPreloader(Gaia.api.getPreloader());
-         Gaia.api.setPreloaderDelay(0);
          
          // layer
          var layer_1:Sprite = Gaia.api.getDepthContainer(Gaia.PRELOADER);
