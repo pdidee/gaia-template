@@ -1,13 +1,13 @@
-package casts.lightbox
+package casts._lightbox
 {
-   import casts.impls.IAddRemove;
+   import casts._impls.IAddRemove;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    
-   import debug.GaiaTest;
+   import extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;

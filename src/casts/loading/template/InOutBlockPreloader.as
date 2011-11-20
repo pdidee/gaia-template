@@ -1,7 +1,7 @@
 package casts.loading.template
 {
-   import casts.impls.IAddRemove;
-   import casts.impls.IMyPreloader;
+   import casts._impls.IAddRemove;
+   import casts._impls.IMyPreloader;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;

@@ -1,6 +1,6 @@
 package casts
 {
-   import casts.impls.ICastObject;
+   import casts._impls.ICastObject;
    
    import flash.utils.Dictionary;
 

@@ -1,6 +1,6 @@
 package extension
 {
-   import casts.impls.IMyPreloader;
+   import casts._impls.IMyPreloader;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.api.IBase;

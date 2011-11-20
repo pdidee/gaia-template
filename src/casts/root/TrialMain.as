@@ -1,8 +1,8 @@
 package casts.root
 {
-   import casts.impls.IAddRemove;
-   import casts.impls.IInitDestroy;
-   import casts.impls.ITransitInOut;
+   import casts._impls.IAddRemove;
+   import casts._impls.IInitDestroy;
+   import casts._impls.ITransitInOut;
    
    import com.greensock.TweenMax;
    import com.jumpeye.flashEff2.symbol.squareEffect.FESBlurSquare;

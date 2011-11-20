@@ -1,4 +1,4 @@
-package debug
+package extension
 {
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.api.IBase;
