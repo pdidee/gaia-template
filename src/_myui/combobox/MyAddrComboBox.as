@@ -1,4 +1,4 @@
-package ui2.combobox
+package _myui.combobox
 {
    import fl.controls.ComboBox;
    

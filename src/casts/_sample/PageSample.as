@@ -7,7 +7,7 @@ package casts._sample
    import com.greensock.TweenMax;
    import com.greensock.easing.Quint;
    
-   import extension.GaiaTest;
+   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;

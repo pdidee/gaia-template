@@ -1,4 +1,4 @@
-package extension
+package _extension
 {
    import casts._impls.IMyPreloader;
    

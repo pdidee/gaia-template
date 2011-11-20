@@ -1,4 +1,4 @@
-package myui.player
+package _myui.player
 {
    import flash.display.MovieClip;
    import flash.display.BlendMode;
@@ -8,7 +8,7 @@ package myui.player
    import flash.events.FullScreenEvent;
    // boy
    import ui2.MyPlayerMgr;
-   import myui.player.core.MyPlayerMgr;
+   import _myui.player.core.MyPlayerMgr;
 
    /**
     * @author  boy | cjboy1984@gmail.com

@@ -1,4 +1,4 @@
-package myui.scrollbar
+package _myui.scrollbar
 {
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
@@ -10,7 +10,7 @@ package myui.scrollbar
    import flash.geom.Point;
    import flash.geom.Rectangle;
    import flash.utils.Timer;
-   import myui.scrollbar.core.MyScrollBarMgr;
+   import _myui.scrollbar.core.MyScrollBarMgr;
 
    /**
     * @author	cjboy | cjboy1984@gmail.com

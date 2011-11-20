@@ -1,6 +1,6 @@
-package sample
+package _sample
 {
-   import effx.Rippler;
+   import _effx.Rippler;
 
    import flash.display.Bitmap;
    import flash.display.BitmapData;

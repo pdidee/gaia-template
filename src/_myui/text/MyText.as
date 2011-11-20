@@ -1,4 +1,4 @@
-package myui.text
+package _myui.text
 {
    import flash.display.Bitmap;
    import flash.display.BitmapData;

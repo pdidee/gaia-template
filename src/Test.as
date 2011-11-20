@@ -2,7 +2,7 @@ package
 {
    import com.gaiaframework.templates.AbstractPage;
    
-   import extension.GaiaPlus;
+   import _extension.GaiaPlus;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
