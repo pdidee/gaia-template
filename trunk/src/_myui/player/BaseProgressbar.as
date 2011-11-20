@@ -1,4 +1,4 @@
-package myui.player
+package _myui.player
 {
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
@@ -7,7 +7,7 @@ package myui.player
    import flash.events.Event;
    import flash.events.MouseEvent;
    
-   import myui.player.core.MyPlayerMgr;
+   import _myui.player.core.MyPlayerMgr;
 
    /**
     * @author     cjboy | cjboy1984@gmail.com

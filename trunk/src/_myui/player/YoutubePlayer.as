@@ -1,4 +1,4 @@
-﻿package myui.player
+﻿package _myui.player
 {
    import com.greensock.TweenLite;
    import com.greensock.easing.*;

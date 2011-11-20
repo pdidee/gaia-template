@@ -9,7 +9,7 @@ package casts.loading
    import com.greensock.easing.Quad;
    import com.greensock.easing.Quint;
    
-   import extension.GaiaTest;
+   import _extension.GaiaTest;
    
    import flash.display.MovieClip;
    import flash.events.Event;

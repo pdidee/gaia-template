@@ -21,9 +21,9 @@ package
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.events.GaiaEvent;
 	
-	import extension.GaiaTest;
+	import _extension.GaiaTest;
 	
-	import extension.GaiaPlus;
+	import _extension.GaiaPlus;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;

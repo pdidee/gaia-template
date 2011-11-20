@@ -1,4 +1,4 @@
-package myui.scrollbar.core
+package _myui.scrollbar.core
 {
    import flash.events.Event;
    import flash.events.EventDispatcher;

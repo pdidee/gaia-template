@@ -7,7 +7,7 @@ package casts._lightbox
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    
-   import extension.GaiaTest;
+   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;

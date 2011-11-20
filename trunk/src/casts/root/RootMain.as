@@ -5,7 +5,7 @@ package casts.root
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractPage;
    
-   import extension.GaiaTest;
+   import _extension.GaiaTest;
    
    import flash.display.Sprite;
    import flash.display.StageAlign;

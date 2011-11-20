@@ -1,4 +1,4 @@
-package myui.player.core
+package _myui.player.core
 {
    import flash.events.Event;
    import flash.events.EventDispatcher;

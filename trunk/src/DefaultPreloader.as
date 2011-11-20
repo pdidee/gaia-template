@@ -12,9 +12,9 @@ package
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
    
-   import extension.GaiaTest;
+   import _extension.GaiaTest;
    
-   import extension.GaiaPlus;
+   import _extension.GaiaPlus;
    
    import flash.display.MovieClip;
    import flash.display.Sprite;
