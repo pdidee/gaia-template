@@ -1,11 +1,11 @@
 package casts.root
 {
-   import casts.impls.IAddRemove;
+   import casts._impls.IAddRemove;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractPage;
    
-   import debug.GaiaTest;
+   import extension.GaiaTest;
    
    import flash.display.Sprite;
    import flash.display.StageAlign;

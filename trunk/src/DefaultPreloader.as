@@ -12,7 +12,7 @@ package
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
    
-   import debug.GaiaTest;
+   import extension.GaiaTest;
    
    import extension.GaiaPlus;
    

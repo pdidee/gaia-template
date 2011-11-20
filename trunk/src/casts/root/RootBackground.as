@@ -1,6 +1,6 @@
 package casts.root
 {
-   import casts.impls.IAddRemove;
+   import casts._impls.IAddRemove;
    
    import flash.display.MovieClip;
    import flash.events.Event;

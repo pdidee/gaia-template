@@ -1,6 +1,6 @@
-package casts.sample
+package casts._sample
 {
-   import casts.lightbox.BaseLightbox;
+   import casts._lightbox.BaseLightbox;
    
    public class LightboxSample extends BaseLightbox
    {

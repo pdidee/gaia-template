@@ -14,14 +14,14 @@
 
 package
 {
-	import casts.impls.IMyPreloader;
+	import casts._impls.IMyPreloader;
 	
 	import com.gaiaframework.api.Gaia;
 	import com.gaiaframework.core.GaiaMain;
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.events.GaiaEvent;
 	
-	import debug.GaiaTest;
+	import extension.GaiaTest;
 	
 	import extension.GaiaPlus;
 	

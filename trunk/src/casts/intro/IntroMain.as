@@ -4,7 +4,7 @@ package casts.intro
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    
-   import debug.GaiaTest;
+   import extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;

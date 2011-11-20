@@ -1,4 +1,4 @@
-package casts.sample
+package casts._sample
 {
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractBase;
@@ -7,7 +7,7 @@ package casts.sample
    import com.greensock.TweenMax;
    import com.greensock.easing.Quint;
    
-   import debug.GaiaTest;
+   import extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
