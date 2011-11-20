@@ -13,16 +13,16 @@ package casts._pattern
 
       public function getById(id:String):TimelineMax
       {
-         // stop cmd(TimelineMax)
          var cmd:TimelineMax = new TimelineMax();
 
-         switch(id)
-         {
-            case '1':
-               break;
-            case '2':
-               break;
-         }
+         // sample code
+//         switch(id)
+//         {
+//            case '1':
+//               break;
+//            case '2':
+//               break;
+//         }
 
          return cmd:
       }
