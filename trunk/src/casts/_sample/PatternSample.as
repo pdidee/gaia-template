@@ -1,5 +1,7 @@
 package casts.sample
 {
+   import com.gaiaframework.api.Gaia;
+   import com.gaiaframework.api.IPageAsset;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
@@ -9,7 +11,8 @@ package casts.sample
    public class PatternSample
    {
       // fla
-//      private function get rootPdt_1():Object { return objsPool['root pdt 1']; }
+//      private function get rootPage():IPageAsset { return Object(Gaia.api.getPage('root')); }
+//      private function get rootPdt_1():Object { return getObj('root pdt 1') || Object(rootPage.assets.XXX); }
       
       // singleton
       private static var _instance:PatternSample;
@@ -90,6 +93,18 @@ package casts.sample
       }
       
       // ################### protected ##################
+      
+      protected function getObj($id:String):Object
+      {
+         if (objsPool.hasOwnProperty($id))
+         {
+            return objsPool[$id];
+         }
+         else
+         {
+            return null;
+         }
+      }
       
       // #################### private ###################
       
