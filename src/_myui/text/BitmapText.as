@@ -14,13 +14,13 @@ package _myui.text
     * Cons: 1.裡面只能有一個TextField元件，不能有它。
     * @author   cjboy1984@gmail.com
     */
-   public class MyText extends MovieClip
+   public class BitmapText extends MovieClip
    {
       // for solving rotation issue of TextField using device font.
       private const CANVAS_NAME:String = '_canvas';
       private var canvas:Bitmap;
 
-      public function MyText()
+      public function BitmapText()
       {
          stop();
 
