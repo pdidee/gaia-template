@@ -74,24 +74,29 @@ package _myui.buttons
        * With fuzzy search:
        * branch = 'root/home*';
        */
-      public function isMatchBranch($branch:String):Boolean
+      public function isMatchBranch($branch:String, fuzzySearch:Boolean = false):Boolean
       {
-         var star:int = branch.indexOf('*');
-         if (star == -1) // no fuzzy
+         if (fuzzySearch)
+         {
+            var star:int = branch.indexOf('*');
+            if (star == -1) // no fuzzy
+            {
+               return ($branch == branch);
+            }
+            else if (star == 0) // '*' means match all
+            {
+               return true;
+            }
+            else // fuzzy
+            {
+               var b4star:String = branch.substr(0, star);
+               return ($branch.indexOf(b4star) != -1)
+            }
+         }
+         else
          {
             return ($branch == branch);
          }
-         else if (star == 0) // '*' means match all
-         {
-            return true;
-         }
-         else // fuzzy
-         {
-            var b4star:String = branch.substr(0, star);
-            return ($branch.indexOf(b4star) != -1)
-         }
-         
-         return false;
       }
       
       /**

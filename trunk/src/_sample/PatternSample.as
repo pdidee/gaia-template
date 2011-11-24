@@ -11,7 +11,7 @@ package _sample
    public class PatternSample
    {
       // fla
-//      private function get rootPage():IPageAsset { return Object(Gaia.api.getPage('root')); }
+//      private function get rootPage():IPageAsset { return IPageAsset(Gaia.api.getPage('root')); }
 //      private function get rootPdt_1():Object { return getObj('root pdt 1') || Object(rootPage.assets.XXX); }
       
       // singleton
