@@ -18,7 +18,11 @@ package _sample
       // fla
       
       // cmd
-      private var justatimer:Number;
+      private var t1:Number = 0;
+      private var t2:Number = 0;
+      private var t3:Number = 0;
+      private var t4:Number = 0;
+      private var t5:Number = 0;
       private var cmd:TimelineMax = new TimelineMax();
       
       public function PageSample()
