@@ -114,23 +114,16 @@ package casts.root
          // new selectedOne
          for (var i:int = 0; i < btnsPool.length; ++i) 
          {
-            if (btnsPool[i].isMatchBranch(branch))
+            if (btnsPool[i].isMatchBranch(branch, true))
             {
                selectedOne = btnsPool[i];
-               // special requirement
-               switch(selectedOne)
-               {
-                  case '1': // sample
-                     break;
-                  default:
-                     selectedOne.buttonMode = false;
-                     break;
-               }
+               // sometimes it need buttonMode=true to return.
+               selectedOne.buttonMode = !btnsPool[i].isMatchBranch(branch);
             }
          }
          
          // tween
-         if (selectedOne && oldSelectOne && selectedOne != oldSelectOne)
+         if (oldSelectOne && oldSelectOne != selectedOne)
          {
             TweenMax2.frameTo(oldSelectOne, 1);
          }
