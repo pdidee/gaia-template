@@ -101,6 +101,12 @@ package _myui.player.core
          playing = false;
          dispatchEvent(new Event(MyPlayerMgr.STOP));
       }
+      
+      public function reachEnd():void
+      {
+         playing = false;
+         dispatchEvent(new Event(MyPlayerMgr.VIDEO_END));
+      }
 
       public function seekPercentage(v:int):void
       {
@@ -128,11 +134,6 @@ package _myui.player.core
 
          _playheadPercentage = v;
          dispatchEvent(new Event(MyPlayerMgr.PLAYING));
-      }
-
-      public function sendVideoEndNote():void
-      {
-         dispatchEvent(new Event(MyPlayerMgr.VIDEO_END));
       }
 
       // --------------------- LINE ---------------------
