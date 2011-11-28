@@ -2,6 +2,8 @@ package _sample
 {
    import casts._lightbox.BaseLightbox;
    
+   import flash.events.Event;
+   
    public class LightboxSample extends BaseLightbox
    {
       
@@ -35,6 +37,22 @@ package _sample
       }
       
       // ################### protected ##################
+      
+      override protected function onAdd(e:Event):void
+      {
+      }
+      
+      override protected function onRemove(e:Event):void
+      {
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      override protected function onStageResize(e:Event = null):void
+      {
+//         x = sw;
+//         y = sh;
+      }
       
       // #################### private ###################
       

@@ -1,13 +1,13 @@
 package casts._lightbox
 {
+   import _extension.GaiaTest;
+   
    import casts._impls.IAddRemove;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
-   
-   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -22,7 +22,7 @@ package casts._lightbox
     * // hide
     * GaiaPlus.api.hideAssetById('lightbox_1', 'root');
     */   
-   public class BaseLightbox extends AbstractPage implements IAddRemove
+   public class BaseLightbox extends AbstractPage
    {
       // cmd
       protected var cmd:TimelineMax = new TimelineMax();
@@ -67,7 +67,9 @@ package casts._lightbox
       
       // --------------------- LINE ---------------------
       
-      public function onAdd(e:Event):void
+      // ################### protected ##################
+      
+      protected function onAdd(e:Event):void
       {
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -77,11 +79,18 @@ package casts._lightbox
          GaiaTest.init(this);
       }
       
-      public function onRemove(e:Event):void
+      protected function onRemove(e:Event):void
       {
       }
       
-      // ################### protected ##################
+      protected function onStageResize(e:Event = null):void
+      {
+      }
+      
+      protected function get sw():Number { return stage.stageWidth; }
+      protected function get sh():Number { return stage.stageHeight; }
+      
+      // --------------------- LINE ---------------------
       
       // 切換單元時，自動偵測退場
       protected function activateAutoTransitOut():void
