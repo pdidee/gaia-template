@@ -1,5 +1,7 @@
 package _myui.scrollbar
 {
+   import _myui.scrollbar.core.MyScrollBarMgr;
+   
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
    
@@ -10,8 +12,7 @@ package _myui.scrollbar
    import flash.geom.Point;
    import flash.geom.Rectangle;
    import flash.utils.Timer;
-   import _myui.scrollbar.core.MyScrollBarMgr;
-
+   
    /**
     * @author	cjboy | cjboy1984@gmail.com
     * @usage	Please make sure there are "btnThumb" MovieClip
@@ -24,81 +25,85 @@ package _myui.scrollbar
     * mcSbar.ta = mcTa;
     * mcSbar.taInitPos = new Point(0, 0);
     * mcSbar.mskRef = 200;
-    * // mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
+    * mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
     */
    public class VScrollBar extends MovieClip
    {
       // fla
       public var btnThumb:MovieClip;
-
-      private const SCROLL_SPEED:Number = 15;
-
-      private var _ta:MovieClip;          // target
-      private var _taInitPos:Point;       // target init-position
-      private var _barRef:Number;         // 捲bar的可移動距離
-      private var _mskRef:Number;         // 目標的遮罩高/寬
-      private var thumbNewY:int;          // thumb的y值，因為有滑鼠滾輪功能所以存在
-
+      
+      protected const SCROLL_SPEED:Number = 15;
+      
+      // manager
+      protected var managerNo:int = 0;
+      protected function get mgr():MyScrollBarMgr { return MyScrollBarMgr.getMgrAt(managerNo); }
+      
+      protected var _ta:MovieClip;          // target
+      protected var _taInitPos:Point;       // target init-position
+      protected var _barRef:Number;         // 捲bar的可移動距離
+      protected var _mskRef:Number;         // 目標的遮罩高/寬
+      protected var thumbNewY:int;          // thumb的y值，因為有滑鼠滾輪功能所以存在
+      
       // 是否在drag中
-      private var onDrag:Boolean;
-
+      protected var onDrag:Boolean;
+      
       // target boundary checker
-      private var taBoundaryChecker:Timer = new Timer(1000);
-      private var taBoundary:Rectangle;
-
+      protected var taBoundaryChecker:Timer = new Timer(1000);
+      protected var taBoundary:Rectangle;
+      
       public function VScrollBar()
       {
-         visible        = false;
-         mouseChildren  = true;
-
+         mouseChildren = false;
+         
          stop();
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
-
+      
       // ------------------------- LINE --------------------------
-
+      
       /**
        * 捲動目標
        */
       public function get ta():MovieClip { return _ta; }
       public function set ta(v:MovieClip):void
       {
+         mouseChildren = false;
+         
          if (v)
          {
             _ta = v;
             thumbNewY = 0;
-
+            
             addEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
             addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
             _ta.addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
-
+            
             // 檢查目標的寬/高是否改變過
             taBoundary = _ta.getBounds(this);
             taBoundaryChecker.addEventListener(TimerEvent.TIMER, taBoundaryChange);
             taBoundaryChecker.start();
-
-            checkVisibility();
+            
+            TweenMax.to(btnThumb, 0.4, {y:thumbNewY, onComplete:checkAvailable});
          }
          else
          {
             disableScrolling();
-
+            
             removeEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
             removeEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
             if (_ta) _ta.removeEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
-
+            
             taBoundaryChecker.removeEventListener(TimerEvent.TIMER, taBoundaryChange);
             taBoundaryChecker.stop();
             taBoundaryChecker.reset();
-
-            checkVisibility();
-
+            
             _ta = null;
             thumbNewY = 0;
+            checkAvailable();
          }
       }
-
+      
       /**
        * 目標的初始座標
        */
@@ -106,10 +111,10 @@ package _myui.scrollbar
       public function set taInitPos(v:Point):void
       {
          _taInitPos = v;
-
-         checkVisibility();
+         
+         checkAvailable();
       }
-
+      
       /**
        * 捲bar的btnThumb可移動的距離
        */
@@ -117,9 +122,9 @@ package _myui.scrollbar
       public function set barRef(v:Number):void
       {
          _barRef = v;
-         checkVisibility();
+         checkAvailable();
       }
-
+      
       /**
        * 目標的遮罩高/寬
        */
@@ -127,45 +132,44 @@ package _myui.scrollbar
       public function set mskRef(v:Number):void
       {
          _mskRef = v;
-         checkVisibility();
+         checkAvailable();
       }
-
+      
       // --------------------- LINE ---------------------
-
+      
       // ################### protected ##################
-
+      
       // #################### private ###################
-
-      private function onAdd(e:Event):void
+      
+      protected function onAdd(e:Event):void
       {
          // 這些數值都必需被設過才能work
          //_ta            = null;
          //_taInitPos     = null;
          //_mskRef        = NaN;
          //thumbNewY      = NaN;
-
+         
          onDrag         = false;
          _barRef        = height - btnThumb.height;
          thumbNewY      = 0;
-
-         mgr.percentage = 0;
-
+         btnThumb.y     = 0;
+         
          mgr.addEventListener(MyScrollBarMgr.SEEK_TO, seekTo);
       }
-
-      private function onRemove(e:Event):void
+      
+      protected function onRemove(e:Event):void
       {
          ta = null;
-
+         
          mgr.removeEventListener(MyScrollBarMgr.SEEK_TO, seekTo);
       }
-
+      
       // --------------------- LINE ---------------------
-
-      private function onSBarDown(e:MouseEvent):void
+      
+      protected function onSBarDown(e:MouseEvent):void
       {
          onDrag = true;
-
+         
          // if click on the track of scrollbar
          if (e.target != btnThumb)
          {
@@ -180,41 +184,41 @@ package _myui.scrollbar
             // target
             onScrolling();
          }
-
+         
          var rect:Rectangle = new Rectangle(0, 0, 0, _barRef);
          btnThumb.startDrag(false, rect);
          stage.addEventListener(MouseEvent.MOUSE_MOVE, onScrolling);
          stage.addEventListener(MouseEvent.MOUSE_UP, disableScrolling);
       }
-
-      private function onScrolling(e:MouseEvent = null):void
+      
+      protected function onScrolling(e:MouseEvent = null):void
       {
          if (stage.mouseX < 0 || stage.mouseX > stage.stageWidth ||
-             stage.mouseY < 0 || stage.mouseY > stage.stageHeight
-            )
+            stage.mouseY < 0 || stage.mouseY > stage.stageHeight
+         )
          {
             disableScrolling();
             return;
          }
-
+         
          thumbNewY = btnThumb.y;
          // see seekTo
          mgr.percentage = thumbNewY / _barRef;
       }
-
-      private function disableScrolling(e:MouseEvent = null):void
+      
+      protected function disableScrolling(e:MouseEvent = null):void
       {
          onDrag = false;
-
+         
          btnThumb.stopDrag();
          stage.removeEventListener(MouseEvent.MOUSE_MOVE, onScrolling);
          stage.removeEventListener(MouseEvent.MOUSE_UP, disableScrolling);
       }
-
-      private function onWheel(e:MouseEvent):void
+      
+      protected function onWheel(e:MouseEvent):void
       {
-         if (!visible) return;
-
+         if (!mouseChildren) return;
+         
          thumbNewY -=  e.delta / Math.abs(e.delta) * SCROLL_SPEED || 0; // edit scroll-speed here
          if (thumbNewY >= _barRef)
          {
@@ -224,33 +228,33 @@ package _myui.scrollbar
          {
             thumbNewY = 0;
          }
-
+         
          // see seekTo
          mgr.percentage = thumbNewY / _barRef;
       }
-
+      
       // --------------------- LINE ---------------------
-
-      private function seekTo(e:Event = null):void
+      
+      protected function seekTo(e:Event = null):void
       {
-         if (!visible) return;
-
+         if (!mouseChildren) return;
+         
          // bar
          if (!onDrag)
          {
             thumbNewY = _barRef * mgr.percentage;
             TweenMax.to(btnThumb, 0.2, { y:thumbNewY, ease:Linear.easeNone } );
          }
-
+         
          // target
          var taY:Number = _taInitPos.y - (_ta.height - _mskRef) * thumbNewY / _barRef;
          TweenMax.to(_ta, 0.4, { y:taY } );
       }
-
-      private function taBoundaryChange(e:TimerEvent):void
+      
+      protected function taBoundaryChange(e:TimerEvent):void
       {
-         if (onDrag || !visible) return;
-
+         if (onDrag || !mouseChildren) return;
+         
          var newBond:Rectangle = _ta.getBounds(this);
          if (Math.floor(taBoundary.height) != Math.floor(newBond.height))
          {
@@ -261,30 +265,28 @@ package _myui.scrollbar
             mgr.percentage = Math.abs(fixTaY - _taInitPos.y) / (_ta.height - mskRef);
          }
       }
-
+      
       // --------------------- LINE ---------------------
-
-      private function checkVisibility():void
+      
+      protected function checkAvailable():void
       {
          if (!_ta || !_taInitPos || !_mskRef || _ta.height <= _mskRef)
          {
-            visible = false;
+            mouseChildren = false;
          }
          else
          {
-            visible = true;
+            mouseChildren = true;
          }
       }
-
+      
       // --------------------- LINE ---------------------
-
-      private function get mgr():MyScrollBarMgr { return MyScrollBarMgr.getMgrAt(0); }
-
-      private function get sw():Number { return stage.stageWidth; }
-      private function get sh():Number { return stage.stageHeight; }
-
+      
+      protected function get sw():Number { return stage.stageWidth; }
+      protected function get sh():Number { return stage.stageHeight; }
+      
       // --------------------- LINE ---------------------
-
+      
    }
-
+   
 }

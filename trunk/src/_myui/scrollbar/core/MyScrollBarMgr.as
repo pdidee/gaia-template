@@ -4,28 +4,14 @@ package _myui.scrollbar.core
    import flash.events.EventDispatcher;
 
    /**
-    * It's just like a model for MyScrollBar basing on MVC-pattern.
+    * A scroll-bar basing on MVC-pattern.
     * @auther  cjboy1984@gmail.com
     * @date    May,13,2011
-    * @usage
-    * 1. 取得第n個 MyScrollBarMgr
-    * var mgr:MyScrollBarMgr = MyScrollBarMgr.getMgrAt(n);
-    *
-    * 2. 終結所有的 MyScrollBarMgr
-    * MyScrollBarMgr.dispose();
-    *
-    * 3. 利用取得的 MyScrollBarMgr 來做事
-    * mgr.ta = mcAAA;
-    * mgr.taInitPos = new Point(100, 200);
-    * mgr.direction = MyScrollBarMgr.DIRECTION_V; // MyScrollBarMgr.DIRECTION_H
-    * mgr.mskRef = 500;
-    * mgr.percentage = 0; // 0~100
-    * ...
     */
    public class MyScrollBarMgr extends EventDispatcher
    {
       // Event
-      public static const SEEK_TO:String = 'MyScrollBarMgr_seek_to';
+      public static const SEEK_TO:String = 'MyScrollBarMgr_SEEK_TO';
 
       // A static lists saving instance of MyScrollBarMgr class.
       private static var mgrs:Array;
@@ -33,8 +19,9 @@ package _myui.scrollbar.core
       // target, seek percentage, mask reference...
       private var _perc:Number; // 捲動的百分比，0~1
 
-      /* constructor */
-      public function MyScrollBarMgr();
+      public function MyScrollBarMgr(pvt:PrivateClass)
+      {
+      }
 
       // --------------------- LINE ---------------------
 
@@ -55,7 +42,7 @@ package _myui.scrollbar.core
          // Whether to create a new instance or NOT.
          while (i >= mgrs.length)
          {
-            var mgr:MyScrollBarMgr = new MyScrollBarMgr();
+            var mgr:MyScrollBarMgr = new MyScrollBarMgr(new PrivateClass());
             mgrs.push(mgr);
          }
          return mgrs[i] as MyScrollBarMgr;
@@ -106,4 +93,11 @@ package _myui.scrollbar.core
 
    }
 
+}
+
+class PrivateClass
+{
+   public function PrivateClass()
+   {
+   }
 }
