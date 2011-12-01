@@ -12,6 +12,9 @@ package
       
       public static var firstTimeVisit:Boolean = true;
       
+      // gaia history
+      public static var lastBranch:String = '';
+      
       // ________________________________________________
       //                                      facebook 區
       
