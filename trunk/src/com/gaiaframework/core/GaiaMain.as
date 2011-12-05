@@ -22,7 +22,7 @@ package com.gaiaframework.core
 	import com.gaiaframework.events.GaiaEvent;
 	import com.gaiaframework.events.GaiaSWFAddressEvent;
 	import com.gaiaframework.utils.CacheBuster;
-
+	
 	import flash.display.Sprite;
 	import flash.events.Event;
 
