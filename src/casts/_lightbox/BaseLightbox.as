@@ -24,6 +24,9 @@ package casts._lightbox
     */   
    public class BaseLightbox extends AbstractPage
    {
+      // return callback function
+      public var returnCallback:Function;
+      
       // cmd
       protected var cmd:TimelineMax = new TimelineMax();
       
@@ -74,6 +77,9 @@ package casts._lightbox
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
          stage.align = StageAlign.TOP_LEFT;
+         // stage resize handler
+         onStageResize();
+         stage.addEventListener(Event.RESIZE, onStageResize);
          
          // debug
          GaiaTest.init(this);
@@ -81,6 +87,8 @@ package casts._lightbox
       
       protected function onRemove(e:Event):void
       {
+         // stage resize handler
+         stage.removeEventListener(Event.RESIZE, onStageResize);
       }
       
       protected function onStageResize(e:Event = null):void
@@ -118,11 +126,19 @@ package casts._lightbox
          }
       }
       
-      // --------------------- LINE ---------------------
-      
       protected function onBeforeGoto(e:GaiaEvent):void
       {
          transitionOut();
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      protected function returnToParent():void
+      {
+         if (returnCallback as Function)
+         {
+            returnCallback();
+         }
       }
       
       // #################### private ###################

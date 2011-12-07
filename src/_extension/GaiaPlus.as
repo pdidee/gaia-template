@@ -16,16 +16,13 @@ package _extension
       // singleton
       private static var instance:GaiaPlus;
       
-      // callback
-      protected var callback:Function;
-      
       public function GaiaPlus(pvt:PrivateClass)
       {
       }
       
       // --------------------- LINE ---------------------
       
-      // Just like Gaia.api (smile :)
+      // Just like Gaia.api (smile :D)
       public static function get api():GaiaPlus
       {
          if (!instance)
@@ -56,58 +53,81 @@ package _extension
       // ________________________________________________
       //                                   Lightbox Asset
       
-      public function showAssetById($assetId:String, $pageId:String = defaultPageId, $callback:Function = null):void
+      /**
+       * Show asset by given asset-id and page-id. It helps you to control asset's content directly.
+       * @param $assetId         : String. Check part of site.xml of GAIA Framework for detail.
+       * @param $pageId          : String. Check part of site.xml of GAIA Framework for detail.
+       * @param $returnCallback  : A callback function notify the asset is removed or closed.
+       * e.g.
+       * GaiaPlus.api.showAsset('tvc', 'root', callback);
+       * 
+       * function callback()
+       * {
+       *    trace('!!!back!!!');
+       * };
+       */ 
+      public function showAsset($assetId:String, $pageId:String = defaultPageId, $returnCallback:Function = null):void
       {
-         if (!Gaia.api) return;
-         
-         var page:IPageAsset = Gaia.api.getPage($pageId);
-         if (!page) return; // page doesn't exist
-         if (!page.assets.hasOwnProperty($assetId)) return; // not an asset
-         
-         // callback
-         callback = $callback;
-         
-         var asset:Object = page.assets[$assetId];
-         var cast:IBase;
-         if (asset.content)
+         var asset:Object = getAsset($assetId, $pageId);
+         var assetContent:Object = getAssetContent($assetId, $pageId);
+         if (assetContent)
          {
-            cast = IBase(asset.content);
-            // remove old handler and add a new one
-            cast.removeEventListener('AFTER_TRANSITION_OUT', returnHandler);
-            cast.addEventListener('AFTER_TRANSITION_OUT', returnHandler);
-            cast.transitionIn();
+            assetContent.transitionIn();
+            
+            // return call back (for BaseLightbox)
+            if (assetContent.hasOwnProperty('returnCallback'))
+            {
+               assetContent.returnCallback = $returnCallback;
+            }
          }
-         else // need to load
+         else
          {
-            //            IAsset(asset).load();
+//            IAsset(asset).load();
          }
       }
       
-      public function hideAssetById($assetId:String, $pageId:String = defaultPageId):void
+      /**
+       * Hide asset by given asset-id and page-id. It helps you to control asset's content directly.
+       * @param $assetId         : String. Check part of site.xml of GAIA Framework for detail.
+       * @param $pageId          : String. Check part of site.xml of GAIA Framework for detail.
+       * e.g.
+       * GaiaPlus.api.hideAsset('tvc', 'root');
+       */      
+      public function hideAsset($assetId:String, $pageId:String = defaultPageId):void
       {
-         if (!Gaia.api) return;
+         var assetContent:Object = getAssetContent($assetId, $pageId);
+         if (assetContent)
+         {
+            assetContent.transitionOut();
+         }
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      public function getAsset($assetId:String, $pageId:String = defaultPageId):Object
+      {
+         if (!Gaia.api) return null;
          
          var page:IPageAsset = Gaia.api.getPage($pageId);
-         if (!page) return; // page doesn't exist
-         if (!page.assets.hasOwnProperty($assetId)) return; // not an asset
+         if (!page) return null; // page doesn't exist
+         if (!page.assets.hasOwnProperty($assetId)) return null; // not an asset
+         
+         return page.assets[$assetId];
+      }
+      
+      public function getAssetContent($assetId:String, $pageId:String = defaultPageId):Object
+      {
+         if (!Gaia.api) return null;
+         
+         var page:IPageAsset = Gaia.api.getPage($pageId);
+         if (!page) return null; // page doesn't exist
+         if (!page.assets.hasOwnProperty($assetId)) return null; // not an asset
          
          var asset:Object = page.assets[$assetId];
-         var cast:IBase;
-         if (asset.content)
-         {
-            cast = IBase(asset.content);
-            cast.transitionOut();
-         }
+         return asset.content;
       }
       
       // ################### protected ##################
-      
-      protected function returnHandler(e:Event):void
-      {
-         var page:IBase = IBase(e.target);
-         page.removeEventListener('AFTER_TRANSITION_OUT', returnHandler);
-         if (callback as Function) callback();
-      }
       
       // #################### private ###################
       

@@ -48,7 +48,7 @@ package casts.root
             
             if (Gaia.api)
             {
-               GaiaPlus.api.hideAssetById('trial', 'root');
+               GaiaPlus.api.hideAsset('trial', 'root');
             }
          };
       }
