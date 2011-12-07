@@ -1,29 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<site title="SKII MEN" menu="true" preloader="def_preloader.swf" flow="preload" routing="true">
+<site title="SKII MEN" menu="true" preloader="def_preloader.swf" flow="cross" routing="true">
    <page id="root" src="root.swf" depth="middle">
       <asset id="preloader_1" src="preloader_1.swf"/>
+      <asset id="tvc" src="video_lightbox.swf"/>
       
-      <!-- 五大美肌度的No.1提升 -->
-      <page id="no1_promotion" title="no1_promotion" src="no1_promotion/main.swf">
-         <page id="1" title="no1_promotion/1" src="no1_promotion/1.swf" landing="true"/>
-         <page id="2" title="no1_promotion/2" src="no1_promotion/2.swf"/>
-         <page id="3" title="no1_promotion/3" src="no1_promotion/3.swf"/>
-      </page>
-
-      <!-- home -->      
+      <!-- home -->
       <page id="home" title="home" src="home.swf">
          <asset id="intro" src="intro.swf"/>
       </page>
-      
-      <!-- 湯唯、李心潔的No.1選擇 -->
-      <page id="no1_option" title="no1_option" src="no1_option/main.swf">
-         <asset id="sub_1" src="no1_option/sub_1.swf" depth="nested"/>
-         <asset id="sub_2" src="no1_option/sub_2.swf" depth="nested"/>
-         <asset id="sub_tvc" src="no1_option/sub_tvc.swf"/>
-      </page>
-      
-      <page id="no1_example" title="no1_example" src="no1_option.swf"/>
-      <page id="no1_sales" title="no1_sales" src="no1_option.swf"/>
-      <page id="no1_me" title="no1_me" src="no1_option.swf"/>
    </page>
 </site>

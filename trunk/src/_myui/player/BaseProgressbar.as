@@ -109,7 +109,7 @@ package _myui.player
       protected function onUpdatePlayhead(e:Event):void
       {
          var w:Number = barWidth * mgr.playheadPercentage / 100;
-         TweenMax.to(mcPlayhead, 0.2, { x:w, ease:Linear.easeNone } );
+         TweenMax.to(mcPlayhead, 2, { x:w, ease:Linear.easeNone } );
       }
 
       // video ends note
