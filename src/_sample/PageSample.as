@@ -1,13 +1,12 @@
 package _sample
 {
+   import _extension.GaiaTest;
+   
    import com.gaiaframework.api.Gaia;
-   import com.gaiaframework.templates.AbstractBase;
+   import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
-   import com.greensock.easing.Quint;
-   
-   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -17,6 +16,9 @@ package _sample
    {
       // fla
       
+      // framework history
+      private var previousBranch:String;
+      
       // cmd
       public var t1:Number = 0;
       public var t2:Number = 0;
@@ -24,6 +26,9 @@ package _sample
       public var t4:Number = 0;
       public var t5:Number = 0;
       private var cmd:TimelineMax = new TimelineMax();
+      
+      protected function get sw():Number { return stage.stageWidth; }
+      protected function get sh():Number { return stage.stageHeight; }
       
       public function PageSample()
       {
@@ -105,9 +110,7 @@ package _sample
       
       // ################### protected ##################
       
-      // #################### private ###################
-      
-      private function onAdd(e:Event):void
+      protected function onAdd(e:Event):void
       {
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -119,24 +122,59 @@ package _sample
          visible = false;
          gotoAndStop(1);
          
+         // framework
+         initFrameworkRelationship();
+         
          // debug
          GaiaTest.init(this);
       }
       
-      private function onRemove(e:Event):void
+      protected function onRemove(e:Event):void
       {
          // basic
          stage.removeEventListener(Event.RESIZE, onStageResize);
+         
+         // framework
+         destroyFrameworkRelationship();
       }
       
-      private function onStageResize(e:Event = null):void
+      protected function onStageResize(e:Event = null):void
       {
          x = (sw>>1) - (GLOBAL.DocWidth>>1);
          y = (sh>>1) - (GLOBAL.DocHeight>>1);
       }
       
-      private function get sw():Number { return stage.stageWidth; }
-      private function get sh():Number { return stage.stageHeight; }
+      // ________________________________________________
+      //                                        framework
+      
+      protected function initFrameworkRelationship():void
+      {
+         if (!Gaia.api) return;
+         
+         Gaia.api.beforeGoto(onBeforeGoto)
+         Gaia.api.afterGoto(onAfterGoto);
+      }
+      
+      protected function destroyFrameworkRelationship():void
+      {
+         if (!Gaia.api) return;
+         Gaia.api.removeAfterGoto(onAfterGoto);
+         Gaia.api.removeAfterGoto(onAfterGoto);
+      }
+      
+      protected function onBeforeGoto(e:GaiaEvent):void
+      {
+      }
+      
+      protected function onAfterGoto(e:GaiaEvent):void
+      {
+         if (e.validBranch != 'root/product') return;
+         
+         // save branchs
+         previousBranch = Gaia.api.getCurrentBranch();
+      }
+      
+      // #################### private ###################
       
       // --------------------- LINE ---------------------
       

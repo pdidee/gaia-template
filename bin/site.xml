@@ -4,9 +4,12 @@
       <asset id="preloader_1" src="preloader_1.swf"/>
       <asset id="tvc" src="video_lightbox.swf"/>
       
+      <!-- intro -->
+      <page id="intro" title="intro" src="home/intro.swf">
+      </page>
+      
       <!-- home -->
-      <page id="home" title="home" src="home.swf">
-         <asset id="intro" src="intro.swf"/>
+      <page id="home" title="home" src="home/main.swf">
       </page>
    </page>
 </site>
