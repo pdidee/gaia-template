@@ -25,6 +25,8 @@ package com.gaiaframework.core
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
+	
+	import org.libspark.ui.SWFWheel;
 
 	public class GaiaMain extends Sprite
 	{
@@ -52,7 +54,9 @@ package com.gaiaframework.core
 		}
 		protected function onAddedToStage(event:Event):void
 		{
-			//SWFWheel.initialize(stage);
+         SWFWheel.initialize(stage);
+         SWFWheel.browserScroll = true;
+         
 			removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 			if (stage.stageWidth == 0 || stage.stageHeight == 0) addEventListener(Event.ENTER_FRAME, onWaitForWidthAndHeight);
 			else startGaia();

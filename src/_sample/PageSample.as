@@ -18,11 +18,11 @@ package _sample
       // fla
       
       // cmd
-      private var t1:Number = 0;
-      private var t2:Number = 0;
-      private var t3:Number = 0;
-      private var t4:Number = 0;
-      private var t5:Number = 0;
+      public var t1:Number = 0;
+      public var t2:Number = 0;
+      public var t3:Number = 0;
+      public var t4:Number = 0;
+      public var t5:Number = 0;
       private var cmd:TimelineMax = new TimelineMax();
       
       public function PageSample()
