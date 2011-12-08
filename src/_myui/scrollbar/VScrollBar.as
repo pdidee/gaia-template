@@ -1,4 +1,4 @@
-package _myui.scrollbar
+package myui.scrollbar
 {
    import _myui.scrollbar.core.MyScrollBarMgr;
    
@@ -25,7 +25,7 @@ package _myui.scrollbar
     * mcSbar.ta = mcTa;
     * mcSbar.taInitPos = new Point(0, 0);
     * mcSbar.mskRef = 200;
-    * mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
+    * // mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
     */
    public class VScrollBar extends MovieClip
    {
@@ -33,6 +33,9 @@ package _myui.scrollbar
       public var btnThumb:MovieClip;
       
       protected const SCROLL_SPEED:Number = 15;
+      
+      // fla
+      protected var canScroll:Boolean = false;
       
       // manager
       protected var managerNo:int = 0;
@@ -69,6 +72,7 @@ package _myui.scrollbar
       public function set ta(v:MovieClip):void
       {
          mouseChildren = false;
+         canScroll = false;
          
          if (v)
          {
@@ -76,8 +80,11 @@ package _myui.scrollbar
             thumbNewY = 0;
             
             addEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
-            addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
-            _ta.addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
+            addEventListener(MouseEvent.ROLL_OVER, onOver);
+            addEventListener(MouseEvent.ROLL_OUT, onOut);
+            _ta.addEventListener(MouseEvent.ROLL_OVER, onOver);
+            _ta.addEventListener(MouseEvent.ROLL_OUT, onOut);
+            stage.addEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
             
             // 檢查目標的寬/高是否改變過
             taBoundary = _ta.getBounds(this);
@@ -91,8 +98,14 @@ package _myui.scrollbar
             disableScrolling();
             
             removeEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
-            removeEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
-            if (_ta) _ta.removeEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
+            removeEventListener(MouseEvent.ROLL_OVER, onOver);
+            removeEventListener(MouseEvent.ROLL_OUT, onOut);
+            if (_ta)
+            {
+               _ta.removeEventListener(MouseEvent.ROLL_OVER, onOver);
+               _ta.removeEventListener(MouseEvent.ROLL_OUT, onOut);
+            }
+            if (stage) stage.removeEventListener(MouseEvent.MOUSE_WHEEL, onWheel);
             
             taBoundaryChecker.removeEventListener(TimerEvent.TIMER, taBoundaryChange);
             taBoundaryChecker.stop();
@@ -139,8 +152,6 @@ package _myui.scrollbar
       
       // ################### protected ##################
       
-      // #################### private ###################
-      
       protected function onAdd(e:Event):void
       {
          // 這些數值都必需被設過才能work
@@ -162,6 +173,18 @@ package _myui.scrollbar
          ta = null;
          
          mgr.removeEventListener(MyScrollBarMgr.SEEK_TO, seekTo);
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      protected function onOver(e:MouseEvent):void
+      {
+         canScroll = true;
+      }
+      
+      protected function onOut(e:MouseEvent):void
+      {
+         canScroll = false;
       }
       
       // --------------------- LINE ---------------------
@@ -218,6 +241,7 @@ package _myui.scrollbar
       protected function onWheel(e:MouseEvent):void
       {
          if (!mouseChildren) return;
+         if (!canScroll) return;
          
          thumbNewY -=  e.delta / Math.abs(e.delta) * SCROLL_SPEED || 0; // edit scroll-speed here
          if (thumbNewY >= _barRef)
@@ -284,6 +308,8 @@ package _myui.scrollbar
       
       protected function get sw():Number { return stage.stageWidth; }
       protected function get sh():Number { return stage.stageHeight; }
+      
+      // #################### private ###################
       
       // --------------------- LINE ---------------------
       
