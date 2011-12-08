@@ -13,6 +13,9 @@ package _sample
    /**
     * Facebook Graph API sample
     * @author cjboy1984@gmail.com
+    * @note
+    * 1. 如何在post貼上朋友名字，而且是可以點連過去該朋友呢？
+    * @[uid:0] // 這樣就行了！
     */
    public class FacebookDemo
    {
