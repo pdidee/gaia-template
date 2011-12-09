@@ -7,6 +7,8 @@ package _sample
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -33,6 +35,8 @@ package _sample
       public function PageSample()
       {
          super();
+         
+         TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -62,9 +66,17 @@ package _sample
          );
          
          // [init]
-         visible = true;
-         TweenMax.to(this, 0, {alpha:1, scaleX:1, scaleY:1});
+         TweenMax.to(this, 0, {autoAlpha:1, scaleX:1, scaleY:1, t1:0, t2:0, t3:0, t4:0, t5:0});
          // [actions]
+         // This if-else statement is for sub-pages.
+         // Condition 1 is for going to this page directly.
+         // Condition 2 is for going to its sub-pages.
+         if (!Gaia.api || Gaia.api.getCurrentBranch() == 'path')
+         {
+         }
+         else
+         {
+         }
          
          cmd.play();
       }
@@ -98,6 +110,7 @@ package _sample
          
          // [init]
          // [actions]
+         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}));
          
          cmd.play();
       }
