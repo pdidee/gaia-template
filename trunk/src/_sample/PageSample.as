@@ -10,6 +10,7 @@ package _sample
    import com.greensock.plugins.AutoAlphaPlugin;
    import com.greensock.plugins.TweenPlugin;
    
+   import flash.display.BlendMode;
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
@@ -19,6 +20,7 @@ package _sample
       // fla
       
       // framework history
+      private const BRANCH:String = 'path';
       private var previousBranch:String;
       
       // cmd
@@ -36,6 +38,8 @@ package _sample
       {
          super();
          
+         blendMode = BlendMode.LAYER;
+         
          TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
@@ -48,6 +52,9 @@ package _sample
       {
          super.transitionIn();
          transitionInComplete();
+         
+         // framework
+         initFrameworkRelationship();
          
          cmd.stop();
          cmd.kill();
@@ -71,13 +78,14 @@ package _sample
          // This if-else statement is for sub-pages.
          // Condition 1 is for going to this page directly.
          // Condition 2 is for going to its sub-pages.
-         if (!Gaia.api || Gaia.api.getCurrentBranch() == 'path')
+         if (!Gaia.api || Gaia.api.getCurrentBranch() == BRANCH)
          {
          }
          else
          {
          }
          
+         cmd.delay = 0.4;
          cmd.play();
       }
       
@@ -89,6 +97,9 @@ package _sample
       override public function transitionOut():void
       {
          super.transitionOut();
+         
+         // framework
+         destroyFrameworkRelationship();
          
          // stop cmd(TimelineMax)
          cmd.stop();
@@ -118,7 +129,6 @@ package _sample
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         visible = false;
       }
       
       // ################### protected ##################
@@ -135,9 +145,6 @@ package _sample
          visible = false;
          gotoAndStop(1);
          
-         // framework
-         initFrameworkRelationship();
-         
          // debug
          GaiaTest.init(this);
       }
@@ -146,9 +153,6 @@ package _sample
       {
          // basic
          stage.removeEventListener(Event.RESIZE, onStageResize);
-         
-         // framework
-         destroyFrameworkRelationship();
       }
       
       protected function onStageResize(e:Event = null):void
@@ -171,17 +175,21 @@ package _sample
       protected function destroyFrameworkRelationship():void
       {
          if (!Gaia.api) return;
+         
          Gaia.api.removeAfterGoto(onAfterGoto);
          Gaia.api.removeAfterGoto(onAfterGoto);
       }
       
       protected function onBeforeGoto(e:GaiaEvent):void
       {
+         // Because it is triggered before transitionOut()
+         if (e.validBranch != BRANCH) return;
       }
       
       protected function onAfterGoto(e:GaiaEvent):void
       {
-         if (e.validBranch != 'root/product') return;
+         // Because it is triggered before transitionOut()
+         if (e.validBranch != BRANCH) return;
          
          // save branchs
          previousBranch = Gaia.api.getCurrentBranch();
