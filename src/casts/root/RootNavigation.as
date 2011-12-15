@@ -1,5 +1,7 @@
 package casts.root
 {
+   import _myui.buttons.BranchButton;
+   
    import casts._impls.IAddRemove;
    
    import com.gaiaframework.api.Gaia;
@@ -9,8 +11,6 @@ package casts.root
    import flash.events.Event;
    import flash.events.MouseEvent;
    import flash.geom.Point;
-   
-   import _myui.buttons.BranchButton;
    
    public class RootNavigation extends MovieClip implements IAddRemove
    {
@@ -23,8 +23,8 @@ package casts.root
       public var btnCh5:BranchButton;
       
       // branch
-      private var btnsPool:Vector.<BranchButton>;
-      private var selectedOne:BranchButton;
+      private var btnPool:Vector.<BranchButton>;
+      private var selectOne:BranchButton;
       
       public function RootNavigation()
       {
@@ -104,32 +104,32 @@ package casts.root
       private function updateButtonStates(branch:String):void
       {
          // reset selectedOne
-         var oldSelectOne:BranchButton = selectedOne;
-         if (selectedOne)
+         var oldSelectOne:BranchButton = selectOne;
+         if (selectOne)
          {
-            selectedOne.buttonMode = true;
-            selectedOne = null;
+            selectOne.buttonMode = true;
+            selectOne = null;
          }
          
          // new selectedOne
-         for (var i:int = 0; i < btnsPool.length; ++i) 
+         for each (var i:BranchButton in btnPool) 
          {
-            if (btnsPool[i].isMatchBranch(branch, true))
+            if (i.isMatchBranch(branch, true))
             {
-               selectedOne = btnsPool[i];
+               selectOne = i;
                // sometimes it need buttonMode=true to return.
-               selectedOne.buttonMode = !btnsPool[i].isMatchBranch(branch);
+               selectOne.buttonMode = !i.isMatchBranch(branch);
             }
          }
          
          // tween
-         if (oldSelectOne && oldSelectOne != selectedOne)
+         if (oldSelectOne && oldSelectOne != selectOne)
          {
             TweenMax2.frameTo(oldSelectOne, 1);
          }
-         if (selectedOne)
+         if (selectOne)
          {
-            TweenMax2.frameTo(selectedOne, selectedOne.totalFrames);
+            TweenMax2.frameTo(selectOne, selectOne.totalFrames);
          }
       }
       
@@ -144,7 +144,7 @@ package casts.root
          btnCh4.branch = 'root/no1_sales';
          btnCh5.branch = 'root/no1_me';
          
-         btnsPool = Vector.<BranchButton>([
+         btnPool = Vector.<BranchButton>([
             btnHome,
             btnCh1,
             btnCh2,
@@ -152,11 +152,11 @@ package casts.root
             btnCh4,
             btnCh5
          ]);
-         for (var i:int = 0; i < btnsPool.length; ++i) 
+         for each (var i:MyButton in btnPool) 
          {
-            btnsPool[i].onClickEvt = onButtonClick;
-            btnsPool[i].onOverEvt = onButtonOver;
-            btnsPool[i].onOutEvt = onButtonOut;
+            i.onClickEvt = onButtonClick;
+            i.onOverEvt = onButtonOver;
+            i.onOutEvt = onButtonOut;
          }
       }
       
@@ -188,7 +188,7 @@ package casts.root
          
          if (!mc.buttonMode) return;
          
-         if (selectedOne != mc)
+         if (selectOne != mc)
          {
             TweenMax2.frameTo(mc, 1);
          }
