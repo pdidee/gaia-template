@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<site title="SKII MEN" menu="true" preloader="def_preloader.swf" flow="cross" routing="true">
+<site menu="false" preloader="def_preloader.swf" flow="cross" routing="true">
    <page id="root" src="root.swf" depth="middle">
       <asset id="preloader_1" src="preloader_1.swf"/>
       <asset id="tvc" src="video_lightbox.swf"/>
