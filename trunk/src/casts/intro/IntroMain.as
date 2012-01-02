@@ -1,10 +1,9 @@
 package casts.intro
 {
-   import com.gaiaframework.api.Gaia;
+   import _extension.GaiaPlus;
+   
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
-   
-   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -12,9 +11,6 @@ package casts.intro
    
    public class IntroMain extends AbstractPage
    {
-      // fla
-      public var mcMain:IntroMainView;
-      
       // cmd
       private var cmd:TimelineMax = new TimelineMax();
       
@@ -32,7 +28,6 @@ package casts.intro
       {
          visible = true;
          super.transitionIn();
-         mcMain.transitIn(transitionInComplete);
       }
       
       override public function transitionInComplete():void
@@ -44,7 +39,6 @@ package casts.intro
       override public function transitionOut():void
       {
          super.transitionOut();
-         mcMain.transitOut(transitionOutComplete);
       }
       
       override public function transitionOutComplete():void
@@ -66,7 +60,7 @@ package casts.intro
          stage.align = StageAlign.TOP_LEFT;
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       private function onRemove(e:Event):void
