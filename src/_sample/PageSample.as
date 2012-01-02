@@ -1,6 +1,6 @@
 package _sample
 {
-   import _extension.GaiaTest;
+   import _extension.GaiaPlus;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
@@ -146,7 +146,7 @@ package _sample
          gotoAndStop(1);
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       protected function onRemove(e:Event):void

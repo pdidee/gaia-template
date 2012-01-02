@@ -1,11 +1,11 @@
 package casts.root
 {
+   import _extension.GaiaPlus;
+   
    import casts._impls.IAddRemove;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractPage;
-   
-   import _extension.GaiaTest;
    
    import flash.display.Sprite;
    import flash.display.StageAlign;
@@ -64,7 +64,7 @@ package casts.root
          }
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       public function onRemove(e:Event):void

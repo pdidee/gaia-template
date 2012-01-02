@@ -6,15 +6,28 @@ package _extension
    import com.gaiaframework.api.IBase;
    import com.gaiaframework.api.IMovieClip;
    import com.gaiaframework.api.IPageAsset;
+   import com.gaiaframework.templates.AbstractBase;
    
    import flash.events.Event;
+   import flash.events.KeyboardEvent;
+   import flash.ui.Keyboard;
    
+   /**
+    * A extension utils for GAIA framework.
+    * @author boy, cjboy1984@gmail.com
+    */   
    public class GaiaPlus
    {
       private static const defaultPageId:String = 'root';
       
       // singleton
       private static var instance:GaiaPlus;
+      
+      // transition in/out utils
+      private var testTarget:AbstractBase;
+      private var testEnabled:Boolean;
+      private var transitIn:Function;
+      private var transitOut:Function;
       
       public function GaiaPlus(pvt:PrivateClass)
       {
@@ -32,6 +45,25 @@ package _extension
          
          return instance;
       }
+      
+      // ________________________________________________
+      //                                Transition in/out
+      
+      /**
+       * A transition test model. If you want to press "i" and "o" on your keyboard to test transition in-out functionality, please feel free to use it.
+       * @param $target          : A class inherited from AbstractBase class.
+       */      
+      public function initTest($target:AbstractBase):void
+      {
+         testTarget = $target;
+         if (testTarget.stage)
+         {
+            testTarget.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUPUP);
+         }
+      }
+      
+      public function enableTest():void { testEnabled = true; }
+      public function disableTest():void { testEnabled = false; }
       
       // ________________________________________________
       //                                        Preloader
@@ -58,7 +90,7 @@ package _extension
        * @param $assetId         : String. Check part of site.xml of GAIA Framework for detail.
        * @param $pageId          : String. Check part of site.xml of GAIA Framework for detail.
        * @param $returnCallback  : A callback function notify the asset is removed or closed.
-       * e.g.
+       * @usage
        * GaiaPlus.api.showAsset('tvc', 'root', callback);
        * 
        * function callback()
@@ -90,7 +122,7 @@ package _extension
        * Hide asset by given asset-id and page-id. It helps you to control asset's content directly.
        * @param $assetId         : String. Check part of site.xml of GAIA Framework for detail.
        * @param $pageId          : String. Check part of site.xml of GAIA Framework for detail.
-       * e.g.
+       * @usage
        * GaiaPlus.api.hideAsset('tvc', 'root');
        */      
       public function hideAsset($assetId:String, $pageId:String = defaultPageId):void
@@ -102,7 +134,8 @@ package _extension
          }
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                      Asset Utils
       
       public function getAsset($assetId:String, $pageId:String = defaultPageId):Object
       {
@@ -128,6 +161,21 @@ package _extension
       }
       
       // ################### protected ##################
+      
+      protected function onKeyUPUP(e:KeyboardEvent):void
+      {
+         if (!testEnabled) return;
+         
+         switch(e.keyCode)
+         {
+            case Keyboard.I:
+               testTarget.transitionIn();
+               break;
+            case Keyboard.O:
+               testTarget.transitionOut();
+               break;
+         }
+      }
       
       // #################### private ###################
       

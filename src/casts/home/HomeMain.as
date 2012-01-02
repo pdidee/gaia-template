@@ -1,13 +1,13 @@
 package casts.home
 {
+   import _extension.GaiaPlus;
+   
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractBase;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.easing.Quint;
-   
-   import _extension.GaiaTest;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -108,7 +108,7 @@ package casts.home
          gotoAndStop(1);
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       private function onRemove(e:Event):void

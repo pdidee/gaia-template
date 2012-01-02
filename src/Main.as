@@ -14,6 +14,8 @@
 
 package
 {
+	import _extension.GaiaPlus;
+	
 	import casts._impls.IMyPreloader;
 	
 	import com.gaiaframework.api.Gaia;
@@ -21,11 +23,6 @@ package
 	import com.gaiaframework.debug.GaiaDebug;
 	import com.gaiaframework.events.GaiaEvent;
 	
-	import _extension.GaiaTest;
-	
-	import _extension.GaiaPlus;
-	
-	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
@@ -60,7 +57,7 @@ package
       override protected function init():void
       {
          // enable or disable debug
-         GaiaTest.enabled = false;
+         GaiaPlus.api.enableTest();
          
          // I want to make preloader.swf complete it's transition-in and then do the loading job.
          GaiaPlus.api.setPreloader(Gaia.api.getPreloader());
