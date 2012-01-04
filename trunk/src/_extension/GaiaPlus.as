@@ -169,9 +169,11 @@ package _extension
          switch(e.keyCode)
          {
             case Keyboard.I:
+            case Keyboard.RIGHT:
                testTarget.transitionIn();
                break;
             case Keyboard.O:
+            case Keyboard.LEFT:
                testTarget.transitionOut();
                break;
          }
