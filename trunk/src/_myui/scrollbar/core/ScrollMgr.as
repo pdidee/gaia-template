@@ -11,7 +11,7 @@ package _myui.scrollbar.core
    public class ScrollMgr extends EventDispatcher
    {
       // Event
-      public static const SEEK_TO:String = 'SCROLL_SEEK_TO';
+      public static const VALUE_CHANGE:String = 'SCROLL_VALUE_CHANGE';
 
       // A static lists saving instance of ScrollMgr class.
       private static var mgrs:Array;
@@ -64,7 +64,7 @@ package _myui.scrollbar.core
       {
          _value = v;
          // note with event
-         dispatchEvent(new Event(SEEK_TO));
+         dispatchEvent(new Event(VALUE_CHANGE));
       }
 
       // --------------------- LINE ---------------------
