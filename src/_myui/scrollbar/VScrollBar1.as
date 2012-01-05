@@ -1,4 +1,4 @@
-package myui.scrollbar
+package _myui.scrollbar
 {
    import _myui.scrollbar.core.ScrollMgr;
    
