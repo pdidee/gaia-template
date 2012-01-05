@@ -5,33 +5,33 @@ package _myui.scrollbar.core
 
    /**
     * A scroll-bar basing on MVC-pattern.
-    * @auther  cjboy1984@gmail.com
-    * @date    May,13,2011
+    * @auther  boy, cjboy1984@gmail.com
+    * @date    Jan,01,2012
     */
-   public class MyScrollBarMgr extends EventDispatcher
+   public class ScrollMgr extends EventDispatcher
    {
       // Event
-      public static const SEEK_TO:String = 'MyScrollBarMgr_SEEK_TO';
+      public static const SEEK_TO:String = 'SCROLL_SEEK_TO';
 
-      // A static lists saving instance of MyScrollBarMgr class.
+      // A static lists saving instance of ScrollMgr class.
       private static var mgrs:Array;
 
       // target, seek percentage, mask reference...
-      private var _perc:Number; // 捲動的百分比，0~1
+      private var _value:Number; // 捲動的百分比，0~1
 
-      public function MyScrollBarMgr(pvt:PrivateClass)
+      public function ScrollMgr(pvt:PrivateClass)
       {
       }
 
-      // --------------------- LINE ---------------------
-
       // ________________________________________________
-      //                                           STATIC
+      //                                            Utils
 
       /**
-       * To get the Nth instance of MyScrollBarMgr class.
+       * To get the Nth instance of ScrollMgr class.
+       * @param i          The number.
+       * @return           The Nth instance of ScrollMgr class.
        */
-      public static function getMgrAt(i:int = 0):MyScrollBarMgr
+      public static function getMgrAt(i:int = 0):ScrollMgr
       {
          // Initialize the lists if it is null.
          if (!mgrs)
@@ -42,10 +42,10 @@ package _myui.scrollbar.core
          // Whether to create a new instance or NOT.
          while (i >= mgrs.length)
          {
-            var mgr:MyScrollBarMgr = new MyScrollBarMgr(new PrivateClass());
+            var mgr:ScrollMgr = new ScrollMgr(new PrivateClass());
             mgrs.push(mgr);
          }
-         return mgrs[i] as MyScrollBarMgr;
+         return mgrs[i] as ScrollMgr;
       }
 
       /**
@@ -59,26 +59,10 @@ package _myui.scrollbar.core
 
       // --------------------- LINE ---------------------
 
-      /**
-       * 捲動的百分比
-       */
-      public function get percentage():Number { return _perc; }
-      public function set percentage(v:Number):void
+      public function get value():Number { return _value; }
+      public function set value(v:Number):void
       {
-         var new_v:int;
-         if (v < 0)
-         {
-            new_v = 0;
-         }
-         if (v > 1)
-         {
-            new_v = 1
-         }
-         else
-         {
-            new_v = v;
-         }
-         _perc = v;
+         _value = v;
          // note with event
          dispatchEvent(new Event(SEEK_TO));
       }

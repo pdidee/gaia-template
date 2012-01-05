@@ -1,6 +1,6 @@
 package myui.scrollbar
 {
-   import _myui.scrollbar.core.MyScrollBarMgr;
+   import _myui.scrollbar.core.ScrollMgr;
    
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
@@ -39,7 +39,7 @@ package myui.scrollbar
       
       // manager
       protected var managerNo:int = 0;
-      protected function get mgr():MyScrollBarMgr { return MyScrollBarMgr.getMgrAt(managerNo); }
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(managerNo); }
       
       protected var _ta:MovieClip;          // target
       protected var _taInitPos:Point;       // target init-position
@@ -165,14 +165,14 @@ package myui.scrollbar
          thumbNewY      = 0;
          btnThumb.y     = 0;
          
-         mgr.addEventListener(MyScrollBarMgr.SEEK_TO, seekTo);
+         mgr.addEventListener(ScrollMgr.SEEK_TO, seekTo);
       }
       
       protected function onRemove(e:Event):void
       {
          ta = null;
          
-         mgr.removeEventListener(MyScrollBarMgr.SEEK_TO, seekTo);
+         mgr.removeEventListener(ScrollMgr.SEEK_TO, seekTo);
       }
       
       // --------------------- LINE ---------------------
@@ -226,7 +226,7 @@ package myui.scrollbar
          
          thumbNewY = btnThumb.y;
          // see seekTo
-         mgr.percentage = thumbNewY / _barRef;
+         mgr.value = thumbNewY / _barRef;
       }
       
       protected function disableScrolling(e:MouseEvent = null):void
@@ -254,7 +254,7 @@ package myui.scrollbar
          }
          
          // see seekTo
-         mgr.percentage = thumbNewY / _barRef;
+         mgr.value = thumbNewY / _barRef;
       }
       
       // --------------------- LINE ---------------------
@@ -266,7 +266,7 @@ package myui.scrollbar
          // bar
          if (!onDrag)
          {
-            thumbNewY = _barRef * mgr.percentage;
+            thumbNewY = _barRef * mgr.value;
             TweenMax.to(btnThumb, 0.2, { y:thumbNewY, ease:Linear.easeNone } );
          }
          
@@ -286,7 +286,7 @@ package myui.scrollbar
             var fixTaY:Number = _ta.y;
             if (_ta.y > _taInitPos.y) _ta.y = _taInitPos.y;
             if (_ta.y < (_taInitPos.y - (_ta.height - _mskRef))) _ta.y = _taInitPos.y - (_ta.height - _mskRef);
-            mgr.percentage = Math.abs(fixTaY - _taInitPos.y) / (_ta.height - mskRef);
+            mgr.value = Math.abs(fixTaY - _taInitPos.y) / (_ta.height - mskRef);
          }
       }
       
