@@ -14,7 +14,8 @@ package _myui.scrollbar
    import flash.utils.Timer;
    
    /**
-    * @author	cjboy | cjboy1984@gmail.com
+    * A vertical scroll bar with full functionality. You need to assign ta, taInitPos and mskRef to make it work.
+    * @author	boy, cjboy1984@gmail.com
     * @usage	Please make sure there are "btnThumb" MovieClip
     *          btnThumb must be putted on (0, 0)
     *          And then set following properties.

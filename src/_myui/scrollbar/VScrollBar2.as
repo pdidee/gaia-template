@@ -11,18 +11,17 @@ package _myui.scrollbar
    import flash.geom.Rectangle;
    
    /**
-    * @author	cjboy | cjboy1984@gmail.com
+    * A vertical scroll bar with basic functionality. There's just a dependency of ScrollMgr.
+    * @author	boy, cjboy1984@gmail.com
     * @usage	Please make sure there are "btnThumb" MovieClip
     *          btnThumb must be putted on (0, 0)
     *          And then set following properties.
     * ___________________________________________
     *                                     example
-    * import flash.geom.Point;
-    *
-    * mcSbar.ta = mcTa;
-    * mcSbar.taInitPos = new Point(0, 0);
-    * mcSbar.mskRef = 200;
-    * // mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
+    * // if you want to know the percentage of current position
+    * protected var mgrNo:int = 0; // <-- make sure the number is correct.
+    * protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+    * trace(mgr.value);
     */
    public class VScrollBar2 extends MovieClip
    {
