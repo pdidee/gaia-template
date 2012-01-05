@@ -1,5 +1,7 @@
 package _sample
 {
+   import boy.net.PhotoSelector;
+   
    import flash.events.Event;
    
    public class FormSample
