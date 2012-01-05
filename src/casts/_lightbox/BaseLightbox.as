@@ -1,8 +1,6 @@
 package casts._lightbox
 {
-   import _extension.GaiaTest;
-   
-   import casts._impls.IAddRemove;
+   import _extension.GaiaPlus;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
@@ -82,7 +80,7 @@ package casts._lightbox
          stage.addEventListener(Event.RESIZE, onStageResize);
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       protected function onRemove(e:Event):void
