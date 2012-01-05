@@ -5,6 +5,7 @@ package _myui.scrollbar
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
    
+   import flash.display.BlendMode;
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.MouseEvent;
@@ -43,6 +44,9 @@ package _myui.scrollbar
       public function VScrollBar2()
       {
          stop();
+         
+         blendMode = BlendMode.LAYER;
+         
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }

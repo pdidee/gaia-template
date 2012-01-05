@@ -35,7 +35,7 @@ package _myui.form
    public class PhotoCropper extends MovieClip
    {
       // fla
-      public var mcPhoto:MovieClip;
+      public var mcMeter:MovieClip;
       public var btnZoomIn:MyButton;
       public var btnZoomOut:MyButton;
       public var btnScaleBar:VScrollBar2;
@@ -70,8 +70,8 @@ package _myui.form
          // box
          isOver = false;
          photoBox = new Sprite();
-         photoBox.x = mcPhoto.x;
-         photoBox.y = mcPhoto.y;
+         photoBox.x = mcMeter.x;
+         photoBox.y = mcMeter.y;
          addChild(photoBox);
          
          // bmp
@@ -80,10 +80,10 @@ package _myui.form
          // mask
          photoMsk = new Shape();
          photoMsk.graphics.beginFill(0x00ff00);
-         photoMsk.graphics.drawRect(0, 0, mcPhoto.width, mcPhoto.height);
+         photoMsk.graphics.drawRect(0, 0, mcMeter.width, mcMeter.height);
          photoMsk.graphics.endFill();
-         photoMsk.x = mcPhoto.x;
-         photoMsk.y = mcPhoto.y;
+         photoMsk.x = mcMeter.x;
+         photoMsk.y = mcMeter.y;
          addChild(photoMsk);
          photoBox.mask = photoMsk;
          
@@ -102,10 +102,10 @@ package _myui.form
       {
          bmp.bitmapData = v;
          bmp.smoothing = true;
-         TweenMax.to(bmp, 0, {x:0, y:0, scaleX:1, scaleY:1, alpha:0});
-         TweenMax.to(bmp, 0.5, {alpha:1});
-         
          photoBox.addChild(bmp);
+         
+         TweenMax.to(bmp, 0, {x:0, y:0, scaleX:1, scaleY:1});
+         TweenMax.to(bmp, 0.5, {alpha:1});
          
          mgr.value = INIT_MGR_VALUE;
       }
@@ -206,21 +206,11 @@ package _myui.form
       
       protected function onMMove(e:MouseEvent):void
       {
-         var newx:Number = photoBox.mouseX - downPos.x;
-         var newy:Number = photoBox.mouseY - downPos.y;
+         bmp.x = photoBox.mouseX - downPos.x;
+         bmp.y = photoBox.mouseY - downPos.y;
+         checkPosition();
          
-         if (borderLimit)
-         {
-            // x
-            if (newx > 0) newx = 0;
-            else if (newx < mcPhoto.width - bmp.width) newx = mcPhoto.width - bmp.width;
-            // y
-            if (newy > 0) newy = 0;
-            else if (newy < mcPhoto.height - bmp.height) newy = mcPhoto.height - bmp.height;
-         }
-         
-         bmp.x = newx;
-         bmp.y = newy;
+         e.updateAfterEvent();
       }
       
       protected function onUp(e:MouseEvent):void
@@ -246,15 +236,33 @@ package _myui.form
       {
          if (!bmp || !bmp.bitmapData) return;
          
-         var scale:Number = mgr.value + 0.5;
+         var scale:Number = 2 * (1 - mgr.value);
+         var neww:Number = bmp.width / bmp.scaleX * scale;
+         var newh:Number = bmp.height / bmp.scaleY * scale;
          
-         TweenMax.to(bmp, 0.3, {transformAroundPoint:{point:boxCenter, scaleX:scale, scaleY:scale}});
+         if (neww >= mcMeter.width && newh >= mcMeter.height)
+         {
+            TweenMax.to(bmp, 0.3, {transformAroundPoint:{point:boxCenter, scaleX:scale, scaleY:scale}, onUpdate:checkPosition});
+         }
       }
       
       // ________________________________________________
       //                                            utils
       
-      protected function get boxCenter():Point { return new Point(mcPhoto.width>>1, mcPhoto.height>>1); }
+      protected function get boxCenter():Point { return new Point(mcMeter.width>>1, mcMeter.height>>1); }
+      
+      protected function checkPosition():void
+      {
+         if (borderLimit)
+         {
+            // x
+            if (bmp.x > 0) bmp.x = 0;
+            else if (bmp.x < mcMeter.width - bmp.width) bmp.x = mcMeter.width - bmp.width;
+            // y
+            if (bmp.y > 0) bmp.y = 0;
+            else if (bmp.y < mcMeter.height - bmp.height) bmp.y = mcMeter.height - bmp.height;
+         }
+      }
       
       // #################### private ###################
       
