@@ -1,26 +1,18 @@
 package
 {
+   import _extension.GaiaPlus;
+   
    import casts.loading.template.InOutBlockPreloader;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.api.IMovieClip;
    import com.gaiaframework.events.AssetEvent;
-   import com.gaiaframework.events.GaiaEvent;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
    
-   import _extension.GaiaTest;
-   
-   import _extension.GaiaPlus;
-   
    import flash.display.MovieClip;
-   import flash.display.Sprite;
-   import flash.display.StageAlign;
-   import flash.display.StageScaleMode;
    import flash.events.Event;
-   import flash.events.MouseEvent;
-   import flash.utils.setTimeout;
    
    public class DefaultPreloader extends InOutBlockPreloader
    {
@@ -150,7 +142,7 @@ package
          width100 = mcTrack.width;
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       // ################### protected ##################

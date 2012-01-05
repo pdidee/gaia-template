@@ -1,6 +1,7 @@
 package casts.loading
 {
-   import casts.loading.template.InOutBlockPreloader;
+   import _extension.GaiaPlus;
+   
    import casts.loading.template.InOutNonblockPreloader;
    
    import com.gaiaframework.events.AssetEvent;
@@ -8,8 +9,6 @@ package casts.loading
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
    import com.greensock.easing.Quint;
-   
-   import _extension.GaiaTest;
    
    import flash.display.MovieClip;
    import flash.events.Event;
@@ -143,7 +142,7 @@ package casts.loading
          visible = false;
          
          // debug
-         GaiaTest.init(this);
+         GaiaPlus.api.initTest(this);
       }
       
       // ################### protected ##################

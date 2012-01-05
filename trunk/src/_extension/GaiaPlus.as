@@ -41,6 +41,8 @@ package _extension
          if (!instance)
          {
             instance = new GaiaPlus(new PrivateClass());
+            // init
+            instance.testEnabled = true;
          }
          
          return instance;
