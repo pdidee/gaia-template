@@ -2,17 +2,16 @@ package casts.root
 {
    import _myui.buttons.BranchButton;
    
-   import casts._impls.IAddRemove;
-   
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
+   import com.greensock.TweenMax;
    
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.MouseEvent;
    import flash.geom.Point;
    
-   public class RootNavigation extends MovieClip implements IAddRemove
+   public class RootNavigation extends MovieClip
    {
       // fla
       public var btnHome:BranchButton;
@@ -36,16 +35,16 @@ package casts.root
       
       // --------------------- LINE ---------------------
       
-      public function get fixPos():Point
+      public function get pos():Point
       {
          if (Gaia.api)
          {
             var currBranch:String = Gaia.api.getCurrentBranch();
             
             // home
-            if (-1 != currBranch.search('root/home'))
+            if (-1 != currBranch.search('root/intro'))
             {
-               return new Point(sw>>1, sh);
+               return new Point(sw>>1, sh+50);
             }
             else
             {
@@ -58,18 +57,28 @@ package casts.root
       
       // --------------------- LINE ---------------------
 
-      public function onAdd(e:Event):void
+      // ################### protected ##################
+      
+      // #################### private ###################
+      
+      private function onAdd(e:Event):void
       {
          // basic
-         x = fixPos.x;
-         y = sh+50;
+         x = pos.x;
          stage.addEventListener(Event.RESIZE, onStageResize);
-
+         
+         // [init]
+         TweenMax.to(this, 0, {y:pos.y + 50});
+         // [actions]
+         TweenMax.to(this, 0.6, {y:pos.y});
+         
+         // In order to prevent user do navigating action before the 1st swf is loaded.
+         disableThis();
          initButtons();
          initFrameworkRelationship();
       }
       
-      public function onRemove(e:Event):void
+      private function onRemove(e:Event):void
       {
          // basic
          stage.removeEventListener(Event.RESIZE, onStageResize);
@@ -77,15 +86,43 @@ package casts.root
          destroyFrameworkRelationship();
       }
       
-      // ################### protected ##################
+      // ________________________________________________
+      //                                          setting
       
-      // #################### private ###################
+      private function initButtons():void
+      {
+         btnHome.branch = 'root/home';
+         btnCh1.branch = 'root/ch1*';
+         btnCh2.branch = 'root/ch2*';
+         btnCh3.branch = 'root/ch3';
+         btnCh4.branch = 'root/ch4';
+         btnCh5.branch = 'root/ch5';
+         
+         btnPool = Vector.<BranchButton>([
+            btnHome,
+            btnCh1,
+            btnCh2,
+            btnCh3,
+            btnCh4,
+            btnCh5
+         ]);
+         for each (var i:BranchButton in btnPool) 
+         {
+            i.onClickEvt = onButtonClick;
+            i.onOverEvt = onButtonOver;
+            i.onOutEvt = onButtonOut;
+         }
+      }
+      
+      // ________________________________________________
+      //                                        framework
       
       private function initFrameworkRelationship():void
       {
          if (!Gaia.api) return;
          
          Gaia.api.afterGoto(onAfterGoto);
+         Gaia.api.afterComplete(enableThis, true);
          updateButtonStates(Gaia.api.getCurrentBranch());
       }
       
@@ -133,32 +170,8 @@ package casts.root
          }
       }
       
-      // --------------------- LINE ---------------------
-      
-      private function initButtons():void
-      {
-         btnHome.branch = 'root/home';
-         btnCh1.branch = 'root/no1_option';
-         btnCh2.branch = 'root/no1_promotion*';
-         btnCh3.branch = 'root/no1_example';
-         btnCh4.branch = 'root/no1_sales';
-         btnCh5.branch = 'root/no1_me';
-         
-         btnPool = Vector.<BranchButton>([
-            btnHome,
-            btnCh1,
-            btnCh2,
-            btnCh3,
-            btnCh4,
-            btnCh5
-         ]);
-         for each (var i:MyButton in btnPool) 
-         {
-            i.onClickEvt = onButtonClick;
-            i.onOverEvt = onButtonOver;
-            i.onOutEvt = onButtonOut;
-         }
-      }
+      // ________________________________________________
+      //                                    mouse handler
       
       private function onButtonClick(e:MouseEvent):void
       {
@@ -194,12 +207,25 @@ package casts.root
          }
       }
       
+      // ________________________________________________
+      //                                            utils
+      
+      private function enableThis(e:GaiaEvent = null):void
+      {
+         mouseChildren = true;
+      }
+      
+      private function disableThis():void
+      {
+         mouseChildren = false;
+      }
+      
       // --------------------- LINE ---------------------
       
       private function onStageResize(e:Event = null):void
       {
-         x = fixPos.x;
-         y = fixPos.y;
+         x = pos.x;
+         y = pos.y;
       }
       
       // get stage.stageWidth/Height

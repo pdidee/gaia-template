@@ -27,7 +27,7 @@ package myui.scrollbar
     * mcSbar.mskRef = 200;
     * // mcSbar.barRef = 100; // 如果捲bar的thumb要特定移動範圍才設值
     */
-   public class VScrollBar extends MovieClip
+   public class VScrollBar1 extends MovieClip
    {
       // fla
       public var btnThumb:MovieClip;
@@ -54,7 +54,7 @@ package myui.scrollbar
       protected var taBoundaryChecker:Timer = new Timer(1000);
       protected var taBoundary:Rectangle;
       
-      public function VScrollBar()
+      public function VScrollBar1()
       {
          mouseChildren = false;
          

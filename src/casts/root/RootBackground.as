@@ -1,11 +1,9 @@
 package casts.root
 {
-   import casts._impls.IAddRemove;
-   
    import flash.display.MovieClip;
    import flash.events.Event;
    
-   public class RootBackground extends MovieClip implements IAddRemove
+   public class RootBackground extends MovieClip
    {
       
       public function RootBackground()
@@ -16,24 +14,24 @@ package casts.root
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
       
-      // --------------------- LINE ---------------------
+      // ################### protected ##################
       
-      public function onAdd(e:Event):void
+      // #################### private ###################
+      
+      private function onAdd(e:Event):void
       {
          // basic
          onStageResize();
          stage.addEventListener(Event.RESIZE, onStageResize);
       }
       
-      public function onRemove(e:Event):void
+      private function onRemove(e:Event):void
       {
          // basic
          stage.removeEventListener(Event.RESIZE, onStageResize);
       }
       
-      // ################### protected ##################
-      
-      // #################### private ###################
+      // --------------------- LINE ---------------------
       
       private function onStageResize(e:Event = null):void
       {
