@@ -31,7 +31,7 @@ package _myui.scrollbar
       protected const SCROLL_SPEED:Number = 15;
       
       // manager
-      protected var mgrNo:int = 0;
+      protected const mgrNo:int = 0;
       protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _barRef:Number; // 捲bar的可移動距離
@@ -81,7 +81,7 @@ package _myui.scrollbar
          btnThumb.y = thumbNewY;
          
          // model
-         mgr.addEventListener(ScrollMgr.SEEK_TO, seekTo);
+         mgr.addEventListener(ScrollMgr.VALUE_CHANGE, seekTo);
          
          // scroll
          addEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
@@ -91,7 +91,7 @@ package _myui.scrollbar
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(ScrollMgr.SEEK_TO, seekTo);
+         mgr.removeEventListener(ScrollMgr.VALUE_CHANGE, seekTo);
          
          // scroll
          removeEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);

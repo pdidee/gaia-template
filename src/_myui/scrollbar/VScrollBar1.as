@@ -39,7 +39,7 @@ package _myui.scrollbar
       protected var canScroll:Boolean = false;
       
       // manager
-      protected var mgrNo:int = 0;
+      protected const mgrNo:int = 0;
       protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _ta:MovieClip;          // target
@@ -166,14 +166,14 @@ package _myui.scrollbar
          thumbNewY      = 0;
          btnThumb.y     = 0;
          
-         mgr.addEventListener(ScrollMgr.SEEK_TO, seekTo);
+         mgr.addEventListener(ScrollMgr.VALUE_CHANGE, seekTo);
       }
       
       protected function onRemove(e:Event):void
       {
          ta = null;
          
-         mgr.removeEventListener(ScrollMgr.SEEK_TO, seekTo);
+         mgr.removeEventListener(ScrollMgr.VALUE_CHANGE, seekTo);
       }
       
       // --------------------- LINE ---------------------
