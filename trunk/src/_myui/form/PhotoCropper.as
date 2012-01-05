@@ -1,4 +1,4 @@
-package _sample.form
+package _myui.form
 {
    import _myui.scrollbar.VScrollBar2;
    import _myui.scrollbar.core.ScrollMgr;
@@ -93,7 +93,7 @@ package _sample.form
       
       // ________________________________________________
       //                                             main
-
+      
       /**
        * The photo, it's a BitmapData.
        */
