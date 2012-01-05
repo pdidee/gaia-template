@@ -173,8 +173,6 @@ package _myui.scrollbar
       {
          if (!mouseChildren) return;
          
-         trace(mgr.value);
-         
          // bar
          if (!onDrag)
          {
