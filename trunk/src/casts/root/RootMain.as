@@ -2,8 +2,6 @@ package casts.root
 {
    import _extension.GaiaPlus;
    
-   import casts._impls.IAddRemove;
-   
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.templates.AbstractPage;
    
@@ -12,7 +10,7 @@ package casts.root
    import flash.display.StageScaleMode;
    import flash.events.Event;
    
-   public class RootMain extends AbstractPage implements IAddRemove
+   public class RootMain extends AbstractPage
    {
       // fla
       public var mcNav:RootNavigation;
@@ -40,7 +38,9 @@ package casts.root
          transitionOutComplete();
       }
 
-      // --------------------- LINE ---------------------
+      // ################### protected ##################
+      
+      // #################### private ###################
       
       public function onAdd(e:Event):void
       {
@@ -70,14 +70,6 @@ package casts.root
       public function onRemove(e:Event):void
       {
       }
-      
-      // ################### protected ##################
-      
-      // #################### private ###################
-      
-      // get stage.stageWidth/Height
-      private function get sw():Number { return stage.stageWidth; }
-      private function get sh():Number { return stage.stageHeight; }
       
       // --------------------- LINE ---------------------
       

@@ -11,7 +11,7 @@ package _myui.scrollbar
    /**
     * @author     cjboy | cjboy1984@gmail.com
     */
-   public class MySlider_1 extends MovieClip
+   public class MySlider1 extends MovieClip
    {
       // fla
       public var btnThumb:MovieClip;
@@ -31,7 +31,7 @@ package _myui.scrollbar
       private var fmask:Sprite;
 
       /* constructor */
-      public function MySlider_1()
+      public function MySlider1()
       {
          tabEnabled = false;
          tabChildren = false;

@@ -1,7 +1,5 @@
 package _myui.buttons
 {
-   import casts._impls.IAddRemove;
-   
    import com.greensock.TweenMax;
    
    import flash.display.MovieClip;
@@ -37,7 +35,7 @@ package _myui.buttons
     *    // DO SOMETHING
     * }
     */
-   public class BranchButton extends MovieClip implements IAddRemove
+   public class BranchButton extends MovieClip
    {
       // easy function ( without arguments )
       public var onClick:Function = null;
@@ -115,16 +113,16 @@ package _myui.buttons
          }
       }
       
-      // --------------------- LINE ---------------------
+      // ################### protected ##################
       
-      public function onAdd(e:Event):void
+      protected function onAdd(e:Event):void
       {
          addEventListener(MouseEvent.ROLL_OVER, _onOver);
          addEventListener(MouseEvent.ROLL_OUT, _onOut);
          addEventListener(MouseEvent.CLICK, _onClick);
       }
       
-      public function onRemove(e:Event):void
+      protected function onRemove(e:Event):void
       {
          removeEventListener(MouseEvent.ROLL_OVER, _onOver);
          removeEventListener(MouseEvent.ROLL_OUT, _onOut);
@@ -134,7 +132,7 @@ package _myui.buttons
          TweenMax.killTweensOf(this);
       }
       
-      // ################### protected ##################
+      // --------------------- LINE ---------------------
       
       protected function _onOver(e:MouseEvent = null):void
       {
