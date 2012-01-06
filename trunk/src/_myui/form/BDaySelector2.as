@@ -8,7 +8,7 @@ package _myui.form
    import flash.events.Event;
    
    /**
-    * 
+    * A customized birthday selector with combobox style.
     * @author boy, cjboy1984@gmail.com
     * @usage
     * // Set base-class as BDayComboBox, and make sure there are cbYear, cbMonth and cbDay comboboxes.
@@ -16,7 +16,7 @@ package _myui.form
     * public var cbBirthday:BDayComboBox;
     * trace(cbBirthday.date);
     */   
-   public class BDaySelector extends MovieClip
+   public class BDaySelector2 extends MovieClip
    {
       // fla
       public var cbYear:ComboBox;
@@ -24,7 +24,7 @@ package _myui.form
       public var cbDay:ComboBox;
       
       /* constructor */
-      public function BDaySelector()
+      public function BDaySelector2()
       {
          stop();
          
