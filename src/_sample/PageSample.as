@@ -46,7 +46,8 @@ package _sample
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                       transition
       
       override public function transitionIn():void
       {
