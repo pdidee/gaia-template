@@ -13,8 +13,8 @@ package _myui.form
     * @usage
     * // Set base-class as BDayComboBox, and make sure there are cbYear, cbMonth and cbDay comboboxes.
     * // fla
-    * public var cbBirthday:BDayComboBox;
-    * trace(cbBirthday.date);
+    * public var bdSelector:BDayComboBox;
+    * trace(bdSelector.date);
     */   
    public class BDaySelector1 extends MovieClip
    {
