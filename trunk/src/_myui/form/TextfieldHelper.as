@@ -59,7 +59,8 @@ package _myui.form
                // move cursor to the end.
                tfPool[i].setSelection(tfPool[i].length, tfPool[i].length);
             }
-            tfPool[i].tabEnabled = i;
+            tfPool[i].tabEnabled = true;
+            tfPool[i].tabIndex = i;
          }
       }
       
