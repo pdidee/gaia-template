@@ -6,6 +6,10 @@ package casts._lightbox
    import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
+   import com.greensock.TweenMax;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.FramePlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -35,6 +39,9 @@ package casts._lightbox
       public function BaseLightbox()
       {
          super();
+         
+         // plugin
+         TweenPlugin.activate([AutoAlphaPlugin, FramePlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -78,6 +85,8 @@ package casts._lightbox
          // stage resize handler
          onStageResize();
          stage.addEventListener(Event.RESIZE, onStageResize);
+         
+         TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);

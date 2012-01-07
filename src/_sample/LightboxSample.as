@@ -2,6 +2,9 @@ package _sample
 {
    import casts._lightbox.BaseLightbox;
    
+   import com.greensock.TimelineMax;
+   import com.greensock.TweenMax;
+   
    import flash.events.Event;
    
    public class LightboxSample extends BaseLightbox
@@ -17,7 +20,29 @@ package _sample
       override public function transitionIn():void
       {
          super.transitionIn();
-         visible = true;
+         transitionInComplete();
+         
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax(
+            {
+               onStart:function()
+               {
+               },
+               onUpdate:function()
+               {
+               },
+               onComplete:function()
+               {
+               }
+            }
+         );
+         
+         // [init]
+         TweenMax.to(this, 0, {autoAlpha:1, scaleX:1, scaleY:1});
+         // [actions]
+         
+         cmd.play();
       }
       
       override public function transitionInComplete():void
@@ -28,30 +53,55 @@ package _sample
       override public function transitionOut():void
       {
          super.transitionOut();
+         
+         // stop cmd(TimelineMax)
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax(
+            {
+               onStart:function()
+               {
+               },
+               onUpdate:function()
+               {
+               },
+               onComplete:function()
+               {
+                  transitionOutComplete();
+               }
+            }
+         );
+         
+         // [init]
+         // [actions]
+         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}));
+         
+         cmd.play();
       }
       
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         visible = false;
       }
       
       // ################### protected ##################
       
       override protected function onAdd(e:Event):void
       {
+         super.onAdd(e);
       }
       
       override protected function onRemove(e:Event):void
       {
+         super.onRemove(e);
       }
       
       // --------------------- LINE ---------------------
       
       override protected function onStageResize(e:Event = null):void
       {
-//         x = sw;
-//         y = sh;
+         x = (sw>>1) - (GLOBAL.DocWidth>>1);
+         y = (sh>>1) - (GLOBAL.DocHeight>>1);
       }
       
       // #################### private ###################
