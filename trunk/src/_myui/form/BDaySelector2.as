@@ -2,10 +2,10 @@ package _myui.form
 {
    import com.adobe.utils.NumberFormatter;
    
-   import fl.controls.ComboBox;
-   
    import flash.display.MovieClip;
    import flash.events.Event;
+   
+   import myLib.controls.ComboBox;
    
    /**
     * A customized birthday selector with combobox style.
@@ -42,10 +42,10 @@ package _myui.form
       /**
        * year/month/day
        */      
-      public function get date():String { return cbYear.selectedLabel + '/' + cbMonth.selectedLabel + '/' + cbDay.selectedLabel; }
-      public function get year():String { return cbYear.selectedLabel; }
-      public function get month():String { return cbMonth.selectedLabel; }
-      public function get day():String { return cbDay.selectedLabel; }
+      public function get date():String { return cbYear.selectedData + '/' + cbMonth.selectedData + '/' + cbDay.selectedData; }
+      public function get year():String { return cbYear.selectedData; }
+      public function get month():String { return cbMonth.selectedData; }
+      public function get day():String { return cbDay.selectedData; }
       
       // ################### protected ##################
       
@@ -56,28 +56,31 @@ package _myui.form
          cbMonth.tabEnabled = false;
          cbDay.tabEnabled = false;
          
+         var str:String;
          var date:Date = new Date();
          var year:Number = date.getFullYear();
          
          // year
-         cbYear.removeAll();
+         while (cbYear.dataProvider.length) cbYear.dataProvider.removeItemAt(0);
          for (var i:int = 1911; i <= year; ++i)
          {
-            cbYear.addItem({label:i});
+            cbYear.dataProvider.addItem({label:i,data:i});
          }
          
          // month
-         cbMonth.removeAll();
+         while (cbMonth.dataProvider.length) cbMonth.dataProvider.removeItemAt(0);
          for (i = 1; i <= 12; ++i)
          {
-            cbMonth.addItem({label:NumberFormatter.addLeadingZero(i)});
+            str = NumberFormatter.addLeadingZero(i);
+            cbMonth.dataProvider.addItem({label:str,data:i});
          }
          
          // day
-         cbDay.removeAll();
+         while (cbDay.dataProvider.length) cbDay.dataProvider.removeItemAt(0);
          for (i = 1; i <= 31; ++i)
          {
-            cbDay.addItem({label:NumberFormatter.addLeadingZero(i)});
+            str = NumberFormatter.addLeadingZero(i);
+            cbDay.dataProvider.addItem({label:str,data:i});
          }
          
          // handler
@@ -100,18 +103,18 @@ package _myui.form
          // select Feb
          if(cbMonth.selectedIndex == 1)
          {
-            if(int(cbYear.selectedLabel) % 4 == 0)
+            if(int(cbYear.selectedIndex) % 4 == 0)
             {
-               if(cbDay.length < 29)
+               if(cbDay.dataProvider.length < 29)
                {
-                  cbDay.addItem({label:29});
+                  cbDay.dataProvider.addItem({label:29});
                }
             }
             else
             {
-               if(cbDay.length > 28)
+               if(cbDay.dataProvider.length > 28)
                {
-                  cbDay.removeItemAt(cbDay.length - 1);
+                  cbDay.dataProvider.removeItemAt(cbDay.dataProvider.length - 1);
                }
             }
          }
@@ -133,7 +136,7 @@ package _myui.form
                lastDay = 31;
                break;
             case 1: // 2
-               if(int(cbYear.selectedLabel) % 4 == 0)
+               if(int(cbYear.selectedIndex) % 4 == 0)
                {
                   lastDay = 29;
                }
@@ -150,19 +153,19 @@ package _myui.form
                break;
          }
          
-         var off:int = lastDay - cbDay.length;
+         var off:int = lastDay - cbDay.dataProvider.length;
          if(off > 0)
          {
             for(var i:int = off; i > 0; --i)
             {
-               cbDay.addItem({label:(lastDay - i + 1)});
+               cbDay.dataProvider.addItem({label:(lastDay - i + 1)});
             }
          }
          else if(off < 0)
          {
             for(var j:int = off; j < 0; ++j)
             {
-               cbDay.removeItemAt(cbDay.length - 1);
+               cbDay.dataProvider.removeItemAt(cbDay.dataProvider.length - 1);
             }
          }
       }
