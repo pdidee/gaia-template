@@ -32,7 +32,7 @@ package _myui.scrollbar
       protected const SCROLL_SPEED:Number = 15;
       
       // manager
-      protected const mgrNo:int = 0;
+      protected var mgrNo:int = 0;
       protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _barRef:Number; // 捲bar的可移動距離
@@ -59,7 +59,7 @@ package _myui.scrollbar
        */
       public function get barRef():Number { return _barRef; }
       public function set barRef(v:Number):void { _barRef = v; }
-
+      
       /**
        * The percentage of the position of btnThumb instance, range is 0~1
        */      
@@ -86,6 +86,7 @@ package _myui.scrollbar
          
          // model
          mgr.addEventListener(ScrollMgr.VALUE_CHANGE, seekTo);
+         mgr.addEventListener(ScrollMgr.VALUE_REVERT, seekTo);
          
          // scroll
          addEventListener(MouseEvent.MOUSE_DOWN, onSBarDown);
@@ -176,6 +177,7 @@ package _myui.scrollbar
       protected function seekTo(e:Event = null):void
       {
          if (!mouseChildren) return;
+         trace('seekTo >>', e.type);
          
          // bar
          if (!onDrag)

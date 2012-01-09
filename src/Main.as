@@ -57,7 +57,7 @@ package
       override protected function init():void
       {
          // enable or disable debug
-         GaiaPlus.api.enableTest();
+         GaiaPlus.api.disableTest();
          
          // I want to make preloader.swf complete it's transition-in and then do the loading job.
          GaiaPlus.api.setPreloader(Gaia.api.getPreloader());

@@ -71,11 +71,11 @@ package _myui.form
       {
          if (check())
          {
-            submitHelper.addVar('usr_name', tfName.text);
-            submitHelper.addVar('usr_email', tfEmail.text);
-            submitHelper.addVar('usr_tel', tfTel.text);
-            submitHelper.addVar('usr_addr', tfAddr.text);
-            submitHelper.addVar('usr_id', tfId.text);
+            submitHelper.addGETVars('usr_name', tfName.text);
+            submitHelper.addGETVars('usr_email', tfEmail.text);
+            submitHelper.addGETVars('usr_tel', tfTel.text);
+            submitHelper.addGETVars('usr_addr', tfAddr.text);
+            submitHelper.addGETVars('usr_id', tfId.text);
             
             submitHelper.send();
          }

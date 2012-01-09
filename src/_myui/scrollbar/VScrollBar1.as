@@ -40,7 +40,7 @@ package _myui.scrollbar
       protected var canScroll:Boolean = false;
       
       // manager
-      protected const mgrNo:int = 0;
+      protected var mgrNo:int = 0;
       protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _ta:MovieClip;          // target
