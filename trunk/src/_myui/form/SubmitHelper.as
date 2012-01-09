@@ -13,9 +13,16 @@ package _myui.form
     * A usr-info helper including upload(GET/POST) data. 
     * @author boy, cjboy1984@gmail.com
     * @usage
-    * var form:SubmitHelper = new SubmitHelper('http://123.com/submit.php', onDataSended, null);
-    * form.addVar('name', 'David', URLRequestMethod.GET);
-    * form.send();
+    * var submit:SubmitHelper = new SubmitHelper('http://123.com/submit.php', onDataSended, null);
+    * submit.addGETVars('name', 'David');
+    * submit.addPOSTVars('img', img_ba);
+    * submit.send();
+    * 
+    * protected function onDataSended(e:Event):void
+    * {
+    *    // json string
+    *    var data:Object = JSON.decode(String(submit.data));
+    * }
     */   
    public class SubmitHelper extends EventDispatcher
    {
@@ -23,6 +30,8 @@ package _myui.form
       protected var url:String;
       protected var getIDs:Vector.<String>;
       protected var getIDValues:Vector.<String>;
+      protected var postIDs:Array;
+      protected var postIDValues:Array;
       
       // loader
       protected var canSubmit:Boolean;
@@ -44,6 +53,9 @@ package _myui.form
          getIDs = new Vector.<String>();
          getIDValues = new Vector.<String>();
          
+         postIDs = new Array();
+         postIDValues = new Array();
+         
          onCompleteFunc = onComplete;
          onIOErrFunc = onIOErr;
          
@@ -53,7 +65,6 @@ package _myui.form
          urlLoader = new URLLoader();
          urlLoader.addEventListener(IOErrorEvent.IO_ERROR, onIOErr);
          urlLoader.addEventListener(Event.COMPLETE, onDataSended);
-         urlLoader.dataFormat = URLLoaderDataFormat.VARIABLES;
       }
       
       // ________________________________________________
@@ -63,28 +74,44 @@ package _myui.form
       {
          getIDs = new Vector.<String>();
          getIDValues = new Vector.<String>();
+         
+         postIDs = new Array();
+         postIDValues = new Array();
       }
       
-      public function addVar($id:String, $value:String, $method:String = URLRequestMethod.GET):void
+      /**
+       * Add a 'GET' parameter.
+       */
+      public function addGETVars($key:String, $value:*):void
       {
-         switch($method)
+         var no:int = getIDs.indexOf($key);
+         if (no == -1)
          {
-            case URLRequestMethod.GET:
-               var no:int = getIDs.indexOf($id);
-               if (no == -1)
-               {
-                  getIDs.push($id);
-                  getIDValues.push($value);
-               }
-               else
-               {
-                  getIDs[no] = $id;
-                  getIDValues[no] = $value;
-               }
-               break;
-            case URLRequestMethod.POST:
-               urlVar[$id] = $value;
-               break;
+            getIDs.push($key);
+            getIDValues.push(String($value));
+         }
+         else
+         {
+            getIDs[no] = $key;
+            getIDValues[no] = String($value);
+         }
+      }
+      
+      /**
+       * Add a 'POST' parameter.
+       */
+      public function addPOSTVars($key:String, $value:*):void
+      {
+         var no:int = postIDs.indexOf($key);
+         if (no == -1)
+         {
+            postIDs.push($key);
+            postIDValues.push($value);
+         }
+         else
+         {
+            postIDs[no] = $key;
+            postIDValues[no] = $value;
          }
       }
       
@@ -93,28 +120,41 @@ package _myui.form
       
       public function send():void
       {
-         var _url:String = new String(url);
+         var newURL:String = new String(url);
          
-         // get
+         // get var
          for (var i:int = 0; i < getIDs.length; ++i) 
          {
             if (i == 0)
             {
-               _url += '?' + getIDs[i] + '=' + getIDValues[i];
+               newURL += '?' + getIDs[i] + '=' + getIDValues[i];
             }
             else
             {
-               _url += '&' + getIDs[i] + '=' + getIDValues[i];
+               newURL += '&' + getIDs[i] + '=' + getIDValues[i];
             }
          }
-         trace("url =", url);
          
-         var urlReq:URLRequest = new URLRequest(url);
+         // post var
+         urlVar = new URLVariables();
+         for each (var key:* in postIDs) 
+         {
+            var no:int = postIDs.indexOf(key);
+            urlVar[key] = postIDValues[no];
+         }
+         
+         // req
+         var urlReq:URLRequest = new URLRequest();
+         urlReq.url = newURL;
          urlReq.method = URLRequestMethod.POST;
+         urlReq.data = urlVar;
          
          if (canSubmit)
          {
+            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
+            
             canSubmit = false;
+            //            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
             urlLoader.load(urlReq);
          }
       }

@@ -56,9 +56,9 @@ package _myui.form
       protected var photoMsk:Shape;
       
       // scroll
-      private var jump:Number = 0.05;
-      private const mgrNo:int = 0;
-      private function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      protected var jump:Number = 0.05;
+      protected var mgrNo:int = 0;
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       public function PhotoCropper()
       {
@@ -95,19 +95,41 @@ package _myui.form
       //                                             main
       
       /**
+       * Check the size of the given photo.
+       */      
+      public function checkPhoto(bmpData:BitmapData):Boolean
+      {
+         var ret:Boolean = true;
+         
+         if (bmpData.width < mcMeter.width || bmpData.height < mcMeter.height)
+         {
+            ret = false;
+         }
+         
+         return ret;
+      }
+      
+      /**
        * The photo, it's a BitmapData.
        */
       public function get photo():BitmapData { return bmp.bitmapData; }
       public function set photo(v:BitmapData):void 
       {
-         bmp.bitmapData = v;
-         bmp.smoothing = true;
-         photoBox.addChild(bmp);
-         
-         TweenMax.to(bmp, 0, {x:0, y:0, scaleX:1, scaleY:1});
-         TweenMax.to(bmp, 0.5, {alpha:1});
-         
-         mgr.value = INIT_MGR_VALUE;
+         if (v)
+         {
+            bmp.bitmapData = v;
+            bmp.smoothing = true;
+            photoBox.addChild(bmp);
+            
+            TweenMax.to(bmp, 0, {x:0, y:0, scaleX:1, scaleY:1});
+            TweenMax.to(bmp, 0.5, {alpha:1});
+            
+            mgr.value = INIT_MGR_VALUE;
+         }
+         else
+         {
+            if (bmp.bitmapData) bmp.bitmapData.dispose();
+         }
       }
       
       // ################### protected ##################
@@ -176,7 +198,10 @@ package _myui.form
          isOver = true;
          
          // cursor
-         Mouse.cursor = MouseCursor.HAND;
+         if (!stage.hasEventListener(MouseEvent.MOUSE_MOVE))
+         {
+            Mouse.cursor = MouseCursor.HAND;
+         }
       }
       
       protected function onBoxOut(e:MouseEvent):void
