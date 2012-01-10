@@ -177,7 +177,6 @@ package _myui.scrollbar
       protected function seekTo(e:Event = null):void
       {
          if (!mouseChildren) return;
-         trace('seekTo >>', e.type);
          
          // bar
          if (!onDrag)

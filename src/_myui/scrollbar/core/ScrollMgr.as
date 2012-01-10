@@ -40,11 +40,19 @@ package _myui.scrollbar.core
       }
       
       /**
-       * Revert value to last time.
+       * Revert value to last time or the given one. It dispatch "VALUE_REVERT" event.
        */
-      public function revertValue():void
+      public function revertValue(v:Number = Number.MIN_VALUE):void
       {
-         _value = _oldValue;
+         if (v != Number.MIN_VALUE)
+         {
+            _value = _oldValue;
+         }
+         else
+         {
+            _oldValue = _value;
+            _value = v;
+         }
          // notify
          dispatchEvent(new Event(VALUE_REVERT));
       }
