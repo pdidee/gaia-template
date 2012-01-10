@@ -1,7 +1,10 @@
 package
 {
-   
-   public class GLOBAL
+   /**
+    * A global scope data container.
+    * @author boy, cjboy1984@gmail.com
+    */
+   public class GB
    {
       
       // ________________________________________________

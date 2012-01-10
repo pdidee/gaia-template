@@ -158,8 +158,8 @@ package _sample
       
       protected function onStageResize(e:Event = null):void
       {
-         x = (sw>>1) - (GLOBAL.DocWidth>>1);
-         y = (sh>>1) - (GLOBAL.DocHeight>>1);
+         x = (sw>>1) - (GB.DocWidth>>1);
+         y = (sh>>1) - (GB.DocHeight>>1);
       }
       
       // ________________________________________________

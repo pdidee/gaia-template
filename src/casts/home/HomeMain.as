@@ -41,7 +41,7 @@ package casts.home
          visible = true;
          
          // intro
-         if (GLOBAL.firstTimeVisit && intro)
+         if (GB.firstTimeVisit && intro)
          {
             intro.addEventListener(Event.COMPLETE, onIntroComplete);
             intro.transitionIn();
@@ -119,8 +119,8 @@ package casts.home
       
       private function onStageResize(e:Event = null):void
       {
-         x = (sw>>1) - (GLOBAL.DocWidth>>1);
-         y = (sh>>1) - (GLOBAL.DocHeight>>1);
+         x = (sw>>1) - (GB.DocWidth>>1);
+         y = (sh>>1) - (GB.DocHeight>>1);
       }
       
       private function get sw():Number { return stage.stageWidth; }
@@ -155,9 +155,9 @@ package casts.home
          );
          
          // [init]
-         if (GLOBAL.firstTimeVisit)
+         if (GB.firstTimeVisit)
          {
-            GLOBAL.firstTimeVisit = false;
+            GB.firstTimeVisit = false;
          }
          else
          {
