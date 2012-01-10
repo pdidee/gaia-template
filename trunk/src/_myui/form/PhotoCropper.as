@@ -14,6 +14,7 @@ package _myui.form
    import flash.display.Sprite;
    import flash.events.Event;
    import flash.events.MouseEvent;
+   import flash.geom.Matrix;
    import flash.geom.Point;
    import flash.ui.Mouse;
    import flash.ui.MouseCursor;
@@ -32,6 +33,8 @@ package _myui.form
     * cropper.setPhotoPadding(0, 0, 0, 0);
     * // give photo, or give it null to destroy it!
     * cropper.photo = xxx;
+    * // get the snapshot
+    * trace(cropper.photoSnap);
     */
    public class PhotoCropper extends MovieClip
    {
@@ -121,6 +124,9 @@ package _myui.form
       // ________________________________________________
       //                                             main
       
+      /**
+       * Set 4-direction padding for the photo.
+       */
       public function setPhotoPadding(left:Number, right:Number, top:Number, bottom:Number):void
       {
          paddingLeft = left;
@@ -133,7 +139,7 @@ package _myui.form
       }
       
       /**
-       * Check the size of the given photo.
+       * Check the size of the photo is larger than the minimum limits.
        */
       public function checkPhoto(bmpData:BitmapData):Boolean
       {
@@ -175,6 +181,33 @@ package _myui.form
             if (bmp.bitmapData) bmp.bitmapData.dispose();
          }
       }
+      
+      /**
+       * The scaled and cropped (considering the padding) snapshot of the photo.
+       */
+      public function get photoSnap():BitmapData
+      {
+         var transx:Number = bmp.x + paddingLeft;
+         var transy:Number = bmp.y + paddingRight;
+         
+         var mtx:Matrix = new Matrix();
+         mtx.translate(transx, transy);
+         mtx.scale(bmp.scaleX, bmp.scaleY);
+         
+         var ret:BitmapData = new BitmapData(meterWidth, meterHeight, false, 0xffffffff);
+         ret.draw(bmp, mtx);
+         
+         return ret;
+      }
+      
+      /**
+       * The photo position.
+       */
+      public function get photoPos():Point { return new Point(bmp.x, bmp.y); }
+      /**
+       * The photo scale.
+       */
+      public function get photoScale():Number { return bmp.scaleX; }
       
       // ################### protected ##################
       
