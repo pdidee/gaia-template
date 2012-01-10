@@ -39,7 +39,7 @@ package _sample
       // init facebook
       private function fbInit():void
       {
-         Facebook.init(GLOBAL.APP_ID);
+         Facebook.init(GB.APP_ID);
       }
       
       // before login facebook, remember to do init() job at first
@@ -47,7 +47,7 @@ package _sample
       {
          // add loading
          
-         Facebook.login(fbLogin_Complete, { perms:GLOBAL.PERMISSION } );
+         Facebook.login(fbLogin_Complete, { perms:GB.PERMISSION } );
       }
       
       // login complete
@@ -238,8 +238,8 @@ package _sample
          // photos
          var bmpData_1:BitmapData = new BitmapData(100, 100);
          var bmp_1:Bitmap = new Bitmap(bmpData_1);
-         var msg:String = "message" + "\n" + GLOBAL.CAMPAIGN_URL;
-         var params_1:Object = {file:bmp_1, message:msg, fileName:GLOBAL.APP_NAME + "_1", tags:ttags};
+         var msg:String = "message" + "\n" + GB.CAMPAIGN_URL;
+         var params_1:Object = {file:bmp_1, message:msg, fileName:GB.APP_NAME + "_1", tags:ttags};
          Facebook.api('/' + aid + '/photos', fbPostPhoto_Complete, params_1, 'POST'); // upload the photos to the assigned album by the giving album id
          //Facebook.api('/me/photos', fbPostPhoto_Complete, params_1, 'POST'); // upload the photos to the latest album
       }

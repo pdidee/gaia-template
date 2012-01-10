@@ -40,7 +40,7 @@ package
 			super();
          
 			siteXML = "site.xml";
-         GLOBAL.firstTimeVisit = true;
+         GB.firstTimeVisit = true;
 		}
       
       // --------------------- LINE ---------------------
@@ -81,7 +81,7 @@ package
          GaiaDebug.log('');
          GaiaDebug.log("========== Main.onBeforeGoto(" + e.fullBranch + ") ==========");
          
-         GLOBAL.lastBranch = Gaia.api.getCurrentBranch();
+         GB.lastBranch = Gaia.api.getCurrentBranch();
       }
       
       private function onAfterGoto(e:GaiaEvent):void

@@ -19,7 +19,7 @@ package _myui.form
    import flash.ui.MouseCursor;
    
    /**
-    * SKII photo scale and cropper.
+    * Photo scale and cropper. (mostly used by SKII project)
     * @author boy, cjboy1984@gmail.com
     * @usage
     * // mcPhoto, btnZoomIn, btnZoomOut, btnScaleBar
@@ -29,7 +29,7 @@ package _myui.form
     * 
     * // setting
     * cropper.borderLimit = true; // default
-    * // give photo
+    * // give photo, or give it null to destroy it!
     * cropper.photo = xxx;
     */
    public class PhotoCropper extends MovieClip
