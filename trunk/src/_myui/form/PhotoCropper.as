@@ -22,13 +22,14 @@ package _myui.form
     * Photo scale and cropper. (mostly used by SKII project)
     * @author boy, cjboy1984@gmail.com
     * @usage
-    * // mcPhoto, btnZoomIn, btnZoomOut, btnScaleBar
+    * // mcPhoto, btnZoomIn, btnZoomOut, btnScaleBar, mcHint
     * 
     * // fla
     * public var cropper:PhotoCropper;
     * 
     * // setting
     * cropper.borderLimit = true; // default
+    * cropper.setPhotoPadding(0, 0, 0, 0);
     * // give photo, or give it null to destroy it!
     * cropper.photo = xxx;
     */
@@ -39,6 +40,7 @@ package _myui.form
       public var btnZoomIn:MyButton;
       public var btnZoomOut:MyButton;
       public var btnScaleBar:VScrollBar2;
+      public var mcHint:MovieClip;
       
       // flag
       public var borderLimit:Boolean = true;
@@ -48,6 +50,16 @@ package _myui.form
       
       // photo
       protected var bmp:Bitmap;
+      protected var orgW:Number;
+      protected var orgH:Number;
+      // photo padding
+      protected var paddingLeft:Number;
+      protected var paddingRight:Number;
+      protected var paddingTop:Number;
+      protected var paddingBottom:Number;
+      // photo meter
+      public var meterWidth:Number;
+      public var meterHeight:Number;
       // box
       protected var photoBox:Sprite;
       protected var downPos:Point; // mosue-down position
@@ -56,7 +68,7 @@ package _myui.form
       protected var photoMsk:Shape;
       
       // scroll
-      protected var jump:Number = 0.05;
+      protected var jump:Number = 0.05; // scale jump
       protected var mgrNo:int = 0;
       protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
@@ -87,6 +99,21 @@ package _myui.form
          addChild(photoMsk);
          photoBox.mask = photoMsk;
          
+         // padding
+         paddingLeft = 0;
+         paddingRight = 0;
+         paddingTop = 0;
+         paddingBottom = 0;
+         
+         // meter
+         meterWidth = mcMeter.width;
+         meterHeight = mcMeter.height;
+         
+         // hint
+         mcHint.mouseChildren = mcHint.mouseEnabled = false;
+         mcHint.alpha = 0;
+         mcHint.visible = false;
+         
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
@@ -94,14 +121,25 @@ package _myui.form
       // ________________________________________________
       //                                             main
       
+      public function setPhotoPadding(left:Number, right:Number, top:Number, bottom:Number):void
+      {
+         paddingLeft = left;
+         paddingRight = right;
+         paddingTop = top;
+         paddingBottom = bottom;
+         
+         meterWidth = mcMeter.width + paddingLeft + paddingRight;
+         meterHeight = mcMeter.height + paddingTop + paddingBottom
+      }
+      
       /**
        * Check the size of the given photo.
-       */      
+       */
       public function checkPhoto(bmpData:BitmapData):Boolean
       {
          var ret:Boolean = true;
          
-         if (bmpData.width < mcMeter.width || bmpData.height < mcMeter.height)
+         if (bmpData.width < meterWidth || bmpData.height < meterHeight)
          {
             ret = false;
          }
@@ -115,14 +153,20 @@ package _myui.form
       public function get photo():BitmapData { return bmp.bitmapData; }
       public function set photo(v:BitmapData):void 
       {
+         if (bmp) TweenMax.killTweensOf(bmp);
+         
          if (v)
          {
             bmp.bitmapData = v;
+            bmp.x = -paddingLeft;
+            bmp.y = -paddingTop;
+            bmp.scaleX = bmp.scaleY = 1;
             bmp.smoothing = true;
             photoBox.addChild(bmp);
             
-            TweenMax.to(bmp, 0, {x:0, y:0, scaleX:1, scaleY:1});
-            TweenMax.to(bmp, 0.5, {alpha:1});
+            // save info
+            orgW = bmp.width;
+            orgH = bmp.height;
             
             mgr.value = INIT_MGR_VALUE;
          }
@@ -174,6 +218,9 @@ package _myui.form
          
          // scale
          mgr.addEventListener(ScrollMgr.VALUE_CHANGE, onScaleChange);
+         
+         // hint
+         mcHint.addEventListener(Event.ENTER_FRAME, hintFollowThumb);
       }
       
       protected function onRemove(e:Event):void
@@ -186,7 +233,14 @@ package _myui.form
          stage.removeEventListener(MouseEvent.MOUSE_UP, onUp);
          
          // scale
-         mgr.addEventListener(ScrollMgr.VALUE_CHANGE, onScaleChange);
+         mgr.removeEventListener(ScrollMgr.VALUE_CHANGE, onScaleChange);
+         
+         // hint
+         mcHint.removeEventListener(Event.ENTER_FRAME, hintFollowThumb);
+         
+         // gs
+         TweenMax.killTweensOf(bmp);
+         TweenMax.killTweensOf(mcHint);
       }
       
       // ________________________________________________
@@ -262,13 +316,60 @@ package _myui.form
          if (!bmp || !bmp.bitmapData) return;
          
          var scale:Number = 2 * (1 - mgr.value);
-         var neww:Number = bmp.width / bmp.scaleX * scale;
-         var newh:Number = bmp.height / bmp.scaleY * scale;
+         var neww:Number = orgW * scale;
+         var newh:Number = orgH * scale;
          
-         if (neww >= mcMeter.width && newh >= mcMeter.height)
+         if (neww < meterWidth)
          {
-            TweenMax.to(bmp, 0.3, {transformAroundPoint:{point:boxCenter, scaleX:scale, scaleY:scale}, onUpdate:checkPosition});
+            scale = meterWidth / orgW;
+            neww = meterWidth;
+            newh = orgH * scale;
+            
+            // hint
+            showHintAWhile();
+            
+            mgr.revertValue(1-scale/2);
          }
+         else if (newh < meterHeight)
+         {
+            scale = meterHeight / orgH;
+            neww = orgW * scale;
+            newh = meterHeight;
+            
+            // hint
+            showHintAWhile();
+            
+            mgr.revertValue(1-scale/2);
+         }
+         else
+         {
+            // hint
+            hideHint();
+         }
+         
+         TweenMax.to(bmp, 0.3, {transformAroundPoint:{point:boxCenter, scaleX:scale, scaleY:scale}, onUpdate:checkPosition});
+      }
+      
+      // ________________________________________________
+      //                                             hint
+      
+      protected function showHintAWhile():void
+      {
+         TweenMax.killTweensOf(mcHint);
+         TweenMax.to(mcHint, 0.3, {autoAlpha:1});
+         TweenMax.to(mcHint, 0.3, {autoAlpha:0, delay:1});
+      }
+      
+      protected function hideHint():void
+      {
+         TweenMax.killTweensOf(mcHint);
+         TweenMax.to(mcHint, 0.1, {autoAlpha:0});
+      }
+      
+      protected function hintFollowThumb(e:Event):void
+      {
+         mcHint.x = btnScaleBar.x + btnScaleBar.width;
+         mcHint.y = btnScaleBar.y + btnScaleBar.barRef * mgr.value;
       }
       
       // ________________________________________________
@@ -281,11 +382,11 @@ package _myui.form
          if (borderLimit)
          {
             // x
-            if (bmp.x > 0) bmp.x = 0;
-            else if (bmp.x < mcMeter.width - bmp.width) bmp.x = mcMeter.width - bmp.width;
+            if (bmp.x >  -paddingLeft) bmp.x = -paddingLeft;
+            else if (bmp.x < mcMeter.width - bmp.width + paddingRight) bmp.x = mcMeter.width - bmp.width + paddingRight;
             // y
-            if (bmp.y > 0) bmp.y = 0;
-            else if (bmp.y < mcMeter.height - bmp.height) bmp.y = mcMeter.height - bmp.height;
+            if (bmp.y >  -paddingTop) bmp.y = -paddingTop;
+            else if (bmp.y < mcMeter.height - bmp.height + paddingBottom) bmp.y = mcMeter.height - bmp.height + paddingBottom;
          }
       }
       
