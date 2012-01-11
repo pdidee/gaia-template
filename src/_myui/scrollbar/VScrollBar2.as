@@ -12,7 +12,7 @@ package _myui.scrollbar
    import flash.geom.Rectangle;
    
    /**
-    * A vertical scroll bar with basic functionality. There's just a dependency of ScrollMgr.
+    * A vertical scroll bar with basic functionality. There's just a dependency of ScrollMgr and mostly used as a slider scaling the photo.
     * @author	boy, cjboy1984@gmail.com
     * @usage	Please make sure there are "btnThumb" MovieClip
     *          btnThumb must be putted on (0, 0)
@@ -23,6 +23,8 @@ package _myui.scrollbar
     * protected var mgrNo:int = 0; // <-- make sure the number is correct.
     * protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
     * trace(mgr.value);
+    * // or limit the value (it dispatch another type of event)
+    * mgr.revertValue(100);
     */
    public class VScrollBar2 extends MovieClip
    {
@@ -179,7 +181,7 @@ package _myui.scrollbar
          if (!mouseChildren) return;
          
          // bar
-         if (!onDrag)
+         if (!onDrag || e.type == ScrollMgr.VALUE_REVERT)
          {
             thumbNewY = _barRef * mgr.value;
             TweenMax.to(btnThumb, 0.2, { y:thumbNewY, ease:Linear.easeNone } );
