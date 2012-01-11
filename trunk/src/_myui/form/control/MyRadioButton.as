@@ -9,11 +9,12 @@ package _myui.form.control
    /**
     * RadioButton
     * @author boy, cjboy1984@gmail.com
-    * // Inherit the class.
+    * // Suggest to inherit this class.
     * // Override the following function, onOver, onOut, onClick, setSelected and setNonSelected.
     * group = 'abc_group';
     * selected = false;
     * // get selected one by the group
+    * MyRadioButton.getSelect('abc');
     */
    public class MyRadioButton extends MovieClip
    {
@@ -91,9 +92,9 @@ package _myui.form.control
 //         printPool();
       }
       
-      public function getSelect($group:String):Object
+      public static function getSelect($group:String):Object
       {
-         var lists:Vector.<Object> = getGroups(_group);
+         var lists:Vector.<Object> = getGroups($group);
          for each (var obj:Object in lists) 
          {
             if (obj.selected)
@@ -184,7 +185,7 @@ package _myui.form.control
       // ________________________________________________
       //                                            group
       
-      protected function getGroups($group:String):Vector.<Object>
+      protected static function getGroups($group:String):Vector.<Object>
       {
          for each (var node:KeyNode in pool) 
          {
