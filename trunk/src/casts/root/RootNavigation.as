@@ -4,7 +4,10 @@ package casts.root
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
+   import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
    import flash.events.Event;
@@ -14,20 +17,26 @@ package casts.root
    public class RootNavigation extends MovieClip
    {
       // fla
-      public var btnHome:BranchButton;
-      public var btnCh1:BranchButton;
-      public var btnCh2:BranchButton;
-      public var btnCh3:BranchButton;
-      public var btnCh4:BranchButton;
-      public var btnCh5:BranchButton;
+      public var btn1:BranchButton;
+      public var btn2:BranchButton;
+      public var btn3:BranchButton;
+      public var btn4:BranchButton;
+      public var btn5:BranchButton;
+      public var btn6:BranchButton;
       
       // branch
       private var btnPool:Vector.<BranchButton>;
       private var selectOne:BranchButton;
       
+      // gs
+      private var cmd:TimelineMax = new TimelineMax();
+      
       public function RootNavigation()
       {
          super();
+         
+         // gs
+         TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -91,20 +100,20 @@ package casts.root
       
       private function initButtons():void
       {
-         btnHome.branch = 'root/home';
-         btnCh1.branch = 'root/ch1*';
-         btnCh2.branch = 'root/ch2*';
-         btnCh3.branch = 'root/ch3';
-         btnCh4.branch = 'root/ch4';
-         btnCh5.branch = 'root/ch5';
+         btn1.branch = 'root/home';
+         btn2.branch = 'root/ch1*';
+         btn3.branch = 'root/ch2*';
+         btn4.branch = 'root/ch3';
+         btn5.branch = 'root/ch4';
+         btn6.branch = 'root/ch5';
          
          btnPool = Vector.<BranchButton>([
-            btnHome,
-            btnCh1,
-            btnCh2,
-            btnCh3,
-            btnCh4,
-            btnCh5
+            btn1,
+            btn2,
+            btn3,
+            btn4,
+            btn5,
+            btn6
          ]);
          for each (var i:BranchButton in btnPool) 
          {
