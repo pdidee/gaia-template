@@ -8,25 +8,12 @@ package _myui.form
    import flash.events.Event;
    import flash.events.MouseEvent;
    
-   /**
-    * A friend button for friend list.
-    * @author boy, cjboy1984@gmail.com
-    * @usage
-    * var box:FriendBox = new FriendBox();
-    * box.uid = '12345';
-    * box.screenName = 'David';
-    * box.img_url = 'http://123.com/1.jpg';
-    */   
    public class FriendBox extends MovieClip
    {
       // loader
       protected static var totalLoader:LoaderMax;
       protected var imgLoader:ImageLoader;
       protected var _perc:Number;
-      
-      // info
-      protected var _uid:String;
-      protected var _screenName:String;
       
       public function FriendBox()
       {
@@ -37,28 +24,6 @@ package _myui.form
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
-      }
-      
-      // ________________________________________________
-      //                                             info
-      
-      public function get uid():String { return _uid; }
-      public function set uid(v:String):void { _uid = v; }
-      
-      public function get screenName():String { return _screenName; }
-      public function set screenName(v:String):void { _screenName = v; }
-      
-      public function get img_url():String { return imgLoader ? imgLoader.url : null; }
-      public function set img_url(v:String):void
-      {
-         if (!totalLoader) return;
-         
-         imgLoader = new ImageLoader(v, {
-            container:this,
-            onProgress:onLoading,
-            onComplete:onLoadComplete
-         });
-         totalLoader.append(imgLoader);
       }
       
       // ________________________________________________
@@ -86,6 +51,21 @@ package _myui.form
       }
       
       public static function get perc():Number { return totalLoader.progress; }
+      
+      // ________________________________________________
+      //                                         set info
+      
+      public function init(uid:String, img_url:String):void
+      {
+         if (!totalLoader) return;
+         
+         imgLoader = new ImageLoader(img_url, {
+            container:this,
+            onProgress:onLoading,
+            onComplete:onLoadComplete
+         });
+         totalLoader.append(imgLoader);
+      }
       
       // ################### protected ##################
       

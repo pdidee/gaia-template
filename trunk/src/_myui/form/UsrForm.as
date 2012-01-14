@@ -30,7 +30,22 @@ package _myui.form
          submitHelper = new SubmitHelper('http://123.com/submit.php', onSended, onIOErr);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                           submit
+      
+      public function submit():void
+      {
+         if (check())
+         {
+            submitHelper.addGETVars('usr_name', tfName.text);
+            submitHelper.addGETVars('usr_email', tfEmail.text);
+            submitHelper.addGETVars('usr_tel', tfTel.text);
+            submitHelper.addGETVars('usr_addr', tfAddr.text);
+            submitHelper.addGETVars('usr_id', tfId.text);
+            
+            submitHelper.send();
+         }
+      }
       
       public function check():Boolean
       {
@@ -65,20 +80,6 @@ package _myui.form
          }
          
          return ret;
-      }
-      
-      public function submit():void
-      {
-         if (check())
-         {
-            submitHelper.addGETVars('usr_name', tfName.text);
-            submitHelper.addGETVars('usr_email', tfEmail.text);
-            submitHelper.addGETVars('usr_tel', tfTel.text);
-            submitHelper.addGETVars('usr_addr', tfAddr.text);
-            submitHelper.addGETVars('usr_id', tfId.text);
-            
-            submitHelper.send();
-         }
       }
       
       // ################### protected ##################

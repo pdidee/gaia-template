@@ -44,16 +44,14 @@ package _myui.form
       /**
        * year/month/day
        */
-//      public function get date():String { return cbYear.selectedData + '/' + cbMonth.selectedData + '/' + cbDay.selectedData; }
-//      public function get year():String { return cbYear.selectedData; }
-//      public function get month():String { return cbMonth.selectedData; }
-//      public function get day():String { return cbDay.selectedData; }
+      public function get year():String { return String(cbYear.selectedData || cbYear.selectedLabel); }
+      public function get month():String { return String(cbMonth.selectedData || cbMonth.selectedLabel); }
+      public function get day():String { return String(cbDay.selectedData || cbDay.selectedLabel); }
       
       // ################### protected ##################
       
       private function onAdd(e:Event):void
       {
-         var str:String;
          var date:Date = new Date();
          var year:Number = date.getFullYear();
          
@@ -61,23 +59,21 @@ package _myui.form
          cbYear.removeAll();
          for (var i:int = 1952; i <= year; ++i)
          {
-            cbYear.addItem(String(i));
+            cbYear.addItem(String(i), i);
          }
          
          // month
          cbMonth.removeAll();
          for (i = 1; i <= 12; ++i)
          {
-            str = NumberFormatter.addLeadingZero(i);
-            cbMonth.addItem(NumberFormatter.addLeadingZero(i));
+            cbMonth.addItem(NumberFormatter.addLeadingZero(i), i);
          }
          
          // day
          cbDay.removeAll();
          for (i = 1; i <= 31; ++i)
          {
-            str = NumberFormatter.addLeadingZero(i);
-            cbDay.addItem(NumberFormatter.addLeadingZero(i));
+            cbDay.addItem(NumberFormatter.addLeadingZero(i), i);
          }
          
          // handler
