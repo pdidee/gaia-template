@@ -49,7 +49,7 @@ package _myui.form
       public var borderLimit:Boolean = true;
       
       // const
-      protected const INIT_MGR_VALUE:Number = 0.5; // mgr.value
+      protected const DEFAULT_VALUE:Number = 0.5; // mgr.value
       
       // photo
       protected var bmp:Bitmap;
@@ -87,7 +87,7 @@ package _myui.form
          photoBox = new Sprite();
          photoBox.x = mcMeter.x;
          photoBox.y = mcMeter.y;
-         addChild(photoBox);
+         addChildAt(photoBox, getChildIndex(mcMeter));
          
          // bmp
          bmp = new Bitmap();
@@ -109,6 +109,7 @@ package _myui.form
          paddingBottom = 0;
          
          // meter
+         mcMeter.visible = false;
          meterWidth = mcMeter.width;
          meterHeight = mcMeter.height;
          
@@ -174,7 +175,7 @@ package _myui.form
             orgW = bmp.width;
             orgH = bmp.height;
             
-            mgr.value = INIT_MGR_VALUE;
+            mgr.value = DEFAULT_VALUE;
          }
          else
          {
@@ -191,8 +192,8 @@ package _myui.form
          var transy:Number = bmp.y + paddingRight;
          
          var mtx:Matrix = new Matrix();
-         mtx.translate(transx, transy);
          mtx.scale(bmp.scaleX, bmp.scaleY);
+         mtx.translate(transx, transy);
          
          var ret:BitmapData = new BitmapData(meterWidth, meterHeight, false, 0xffffffff);
          ret.draw(bmp, mtx);
@@ -223,7 +224,7 @@ package _myui.form
          photoBox.addEventListener(MouseEvent.MOUSE_DOWN, onBoxDown);
          
          // scroll
-         btnScaleBar.headPos = INIT_MGR_VALUE;
+         btnScaleBar.headPos = DEFAULT_VALUE;
          
          // [buttons]
          var newv:Number;
@@ -346,7 +347,11 @@ package _myui.form
       
       protected function onScaleChange(e:Event):void
       {
-         if (!bmp || !bmp.bitmapData) return;
+         if (!bmp || !bmp.bitmapData)
+         {
+            mgr.revertValue(DEFAULT_VALUE);
+            return;
+         }
          
          var scale:Number = 2 * (1 - mgr.value);
          var neww:Number = orgW * scale;

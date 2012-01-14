@@ -21,13 +21,15 @@ package _myui.form
     * protected function onDataSended(e:Event):void
     * {
     *    // json string
-    *    var data:Object = JSON.decode(String(submit.data));
+    *    var data:Object = JSON.decode(String(e.target.data));
     * }
+    * 
+    * // or stop it
+    * submit.stop();
     */   
    public class SubmitHelper extends EventDispatcher
    {
       // server info
-      protected var url:String;
       protected var getIDs:Vector.<String>;
       protected var getIDValues:Vector.<String>;
       protected var postIDs:Array;
@@ -45,19 +47,15 @@ package _myui.form
       // return data
       protected var returnData:*;
       
-      public function SubmitHelper($url:String, onComplete:Function = null, onIOErr:Function = null)
+      public function SubmitHelper()
       {
          canSubmit = true;
-         url = $url;
          
          getIDs = new Vector.<String>();
          getIDValues = new Vector.<String>();
          
          postIDs = new Array();
          postIDValues = new Array();
-         
-         onCompleteFunc = onComplete;
-         onIOErrFunc = onIOErr;
          
          // vars
          urlVar = new URLVariables();
@@ -70,7 +68,7 @@ package _myui.form
       // ________________________________________________
       //                                     URLVariables
       
-      public function clearVars():void
+      public function removeVars():void
       {
          getIDs = new Vector.<String>();
          getIDValues = new Vector.<String>();
@@ -118,9 +116,13 @@ package _myui.form
       // ________________________________________________
       //                                             load
       
-      public function send():void
+      public function send($url:String, onComplete:Function = null, onIOErr:Function = null):void
       {
-         var newURL:String = new String(url);
+         var newURL:String = new String($url);
+         
+         // callback function
+         onCompleteFunc = onComplete;
+         onIOErrFunc = onIOErr;
          
          // get var
          for (var i:int = 0; i < getIDs.length; ++i) 
@@ -151,15 +153,15 @@ package _myui.form
          
          if (canSubmit)
          {
-            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
+//            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
             
             canSubmit = false;
-            //            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+//            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
             urlLoader.load(urlReq);
          }
       }
       
-      public function dispose():void
+      public function stop():void
       {
          // loader
          if (!canSubmit)
@@ -168,7 +170,7 @@ package _myui.form
          }
          
          // var
-         clearVars();
+         removeVars();
       }
       
       // ________________________________________________

@@ -109,19 +109,25 @@ package _myui.form.control
       public function set selected(v:Boolean):void
       {
          _selected = v;
-         
-         var lists:Vector.<Object> = getGroups(_group);
-         for each (var obj:Object in lists) 
+         if (_selected)
          {
-            if (obj == this)
+            var lists:Vector.<Object> = getGroups(_group);
+            for each (var obj:Object in lists) 
             {
-               obj.setSelected();
+               if (obj == this)
+               {
+                  obj.setSelected();
+               }
+               else
+               {
+                  obj._selected = false;
+                  obj.setNonSelected();
+               }
             }
-            else
-            {
-               obj._selected = false;
-               obj.setNonSelected();
-            }
+         }
+         else
+         {
+            setNonSelected();
          }
       }
       

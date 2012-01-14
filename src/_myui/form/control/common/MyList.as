@@ -111,8 +111,8 @@ package _myui.form.control.common
       public function resetSelection():void { _selectedIndex = -1; }
       
       public function get selectedIndex():int { return _selectedIndex; }
-      public function get selectedLabel():String { return listPool[_selectedIndex].label; }
-      public function get selectedData():* { return listPool[_selectedIndex].data; }
+      public function get selectedLabel():String { return _selectedIndex >= 0 ? listPool[_selectedIndex].label : null; }
+      public function get selectedData():* { return _selectedIndex >= 0 ? listPool[_selectedIndex].data : null; }
       public function get length():uint { return listPool.length; }
       
       // ################### protected ##################
