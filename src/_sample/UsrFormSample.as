@@ -1,11 +1,13 @@
-package _myui.form
+package _sample
 {
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.IOErrorEvent;
    import flash.text.TextField;
+   import _myui.form.SubmitHelper;
+   import _myui.form.TextfieldHelper;
    
-   public class UsrForm extends MovieClip
+   public class UsrFormSample extends MovieClip
    {
       // fla
       public var tfName:TextField;
@@ -18,7 +20,7 @@ package _myui.form
       private var submitHelper:SubmitHelper;
       private var tfHelper:TextfieldHelper;
       
-      public function UsrForm()
+      public function UsrFormSample()
       {
          // helper
          tfHelper = new TextfieldHelper();
