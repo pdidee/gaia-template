@@ -50,6 +50,9 @@ package _myui.form
       
       protected function onRemove(e:Event):void
       {
+         removeEventListener(MouseEvent.ROLL_OVER, onOver);
+         removeEventListener(MouseEvent.ROLL_OUT, onOut);
+         removeEventListener(MouseEvent.CLICK, onClick);
       }
       
       // ________________________________________________

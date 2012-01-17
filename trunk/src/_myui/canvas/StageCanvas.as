@@ -91,7 +91,7 @@ package _myui.canvas
          // basic
          stage.removeEventListener(Event.RESIZE, onStageResize);
          
-         canvas.bitmapData.dispose();
+         if (canvas.bitmapData) canvas.bitmapData.dispose();
       }
       
       protected function onStageResize(e:Event):void
