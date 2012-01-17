@@ -42,7 +42,7 @@ package casts.root
       
       // #################### private ###################
       
-      public function onAdd(e:Event):void
+      private function onAdd(e:Event):void
       {
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -67,7 +67,7 @@ package casts.root
          GaiaPlus.api.initTest(this);
       }
       
-      public function onRemove(e:Event):void
+      private function onRemove(e:Event):void
       {
       }
       
