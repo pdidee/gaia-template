@@ -75,7 +75,7 @@ package _myui.form
       // ________________________________________________
       //                                            photo
       
-      public function loadURL(v:String, complete:Function, progress:Function = null):void 
+      public function loadURL(v:String, complete:Function = null, progress:Function = null):void 
       {
          completeHander = complete;
          progressHander = progress;
