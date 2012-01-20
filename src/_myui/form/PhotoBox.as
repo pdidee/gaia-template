@@ -104,6 +104,16 @@ package _myui.form
          return imgLoader;
       }
       
+      public function dispose():void
+      {
+         // clear old
+         if (imgLoader)
+         {
+            while (pbox.numChildren) pbox.removeChildAt(0);
+            imgLoader.dispose(true);
+         }
+      }
+      
       //      public function set srcBmp(v:String):void 
       //      {
       //      }
