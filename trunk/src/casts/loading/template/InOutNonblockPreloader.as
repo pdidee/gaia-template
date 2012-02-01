@@ -1,26 +1,23 @@
 package casts.loading.template
 {
-   import casts._impls.IAddRemove;
    import casts._impls.IMyPreloader;
-   import casts.impls.IMyPreloaderView;
    
    import com.gaiaframework.api.Gaia;
-   import com.gaiaframework.events.AssetEvent;
    import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPreloader;
    
-   import flash.display.Sprite;
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
    
-   public class InOutNonblockPreloader extends AbstractPreloader implements IMyPreloader,IAddRemove
+   public class InOutNonblockPreloader extends AbstractPreloader implements IMyPreloader
    {
       // a call-back function that release GAIA, let it can continue its flow.
       protected var _releaseGaia:Function;
       
-      // history
+      // A boolean represents if it's a branch of the current path.
       protected var isShow:Boolean = true;
+      // framework history
       protected var oldBranch:String = '';
       
       public function InOutNonblockPreloader()
@@ -35,8 +32,7 @@ package casts.loading.template
       
       // ________________________________________________
       //                         Customized flow function
-      // Default, Gaia do loading job and preloader transition-in parallelly.
-      // This api provide a function to make Gaia to wait preloader to finish its transition-in and then do loading job.
+      // Default, Gaia do loading job and call transitionIn parallelly.
       
       public function addBeforePreload():void {}
       public function removeBeforePreload():void {}
@@ -113,15 +109,9 @@ package casts.loading.template
          onStageResize();
          stage.addEventListener(Event.RESIZE, onStageResize);
          
-         // reset layer
+         // framework history
          if (Gaia.api)
          {
-            var layer:Sprite = Gaia.api.getDepthContainer(Gaia.PRELOADER);
-            if (!layer.contains(parent))
-            {
-               layer.addChildAt(parent, 0);
-            }
-            
             oldBranch = Gaia.api.getCurrentBranch();
          }
       }
