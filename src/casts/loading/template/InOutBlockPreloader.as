@@ -1,25 +1,24 @@
 package casts.loading.template
 {
-   import casts._impls.IAddRemove;
    import casts._impls.IMyPreloader;
    
    import com.gaiaframework.api.Gaia;
    import com.gaiaframework.events.GaiaEvent;
    import com.gaiaframework.templates.AbstractPreloader;
    
-   import flash.display.Sprite;
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
    
-   public class InOutBlockPreloader extends AbstractPreloader implements IMyPreloader,IAddRemove
+   public class InOutBlockPreloader extends AbstractPreloader implements IMyPreloader
    {
       // a call-back function that release GAIA, let it can continue its flow.
       protected var callByTransitIn:Boolean = true;
       protected var _releaseGaia:Function;
       
-      // history
+      // A boolean represents if it's a branch of the current path.
       protected var isShow:Boolean = true;
+      // framework history
       protected var oldBranch:String = '';
       
       public function InOutBlockPreloader()
@@ -34,10 +33,9 @@ package casts.loading.template
       
       // ________________________________________________
       //                         Customized flow function
-      // Default, Gaia do loading job and preloader transition-in parallelly.
-      // This api provide a function to make Gaia to wait preloader to finish its transition-in and then do loading job.
-
-      // Make Gaia to wait transition-in finished and then do something else.
+      // Default, Gaia do loading job and call transitionIn parallelly.
+      
+      // Force Gaia to wait transition. Detail refers to GaiaPlus.as.
       public function addBeforePreload():void
       {
          releaseGaia = Gaia.api.beforePreload(transitIn, true);
@@ -54,10 +52,9 @@ package casts.loading.template
          // bring to top
          parent.parent.setChildIndex(parent, parent.parent.numChildren-1);
          
-         // Whether to show or hide this refers to the flow direction
-         // down-to-up won't show this
+         // It's a limit that it won't show up while moving from sub-page to superior-page. 
          var searchRes:int = oldBranch.search(Gaia.api.getCurrentBranch());
-         isShow = (searchRes == -1);
+         isShow = (searchRes == -1); // A boolean represents if it's a branch of the current path.
          if (isShow)
          {
             callByTransitIn = true;
@@ -129,15 +126,9 @@ package casts.loading.template
          onStageResize();
          stage.addEventListener(Event.RESIZE, onStageResize);
          
-         // reset layer
+         // framework history
          if (Gaia.api)
          {
-            var layer:Sprite = Gaia.api.getDepthContainer(Gaia.PRELOADER);
-            if (!layer.contains(parent))
-            {
-               layer.addChildAt(parent, 0);
-            }
-            
             oldBranch = Gaia.api.getCurrentBranch();
          }
       }
