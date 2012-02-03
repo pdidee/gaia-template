@@ -10,6 +10,8 @@ package
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
    import flash.events.Event;
@@ -30,6 +32,9 @@ package
       public function DefaultPreloader()
       {
          super();
+         
+         // gs
+         TweenPlugin.activate([AutoAlphaPlugin]);
       }
       
       // --------------------- LINE ---------------------
@@ -55,7 +60,6 @@ package
             {
                onStart:function()
                {
-                  visible = true;
                },
                onComplete:function()
                {
@@ -66,12 +70,12 @@ package
          );
          
          // [init]
-         alpha = 0;
-         mcThumb.width = 0;
-         mcThumb.alpha = mcTrack.alpha = 1;
+         TweenMax.to(this, 0, {autoAlpha:0});
+         TweenMax.to(mcThumb, 0, {alpha:0, width:0});
+         TweenMax.to(mcTrack, 0, {alpha:0});
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.6, { alpha:1, ease:Quad.easeOut } ));
+         cmd.insert(TweenMax.to(this, 0.6, {alpha:1, ease:Quad.easeOut}));
          
          cmd.play();
       }
@@ -104,10 +108,10 @@ package
          {
             // [init]
             // [actions]
-            cmd.insert(TweenMax.to(mcThumb, 0.6, { width:width100 } ));
-            cmd.insert(TweenMax.to(mcThumb, 0.6, { alpha:0 } ), 0.6);
-            cmd.insert(TweenMax.to(mcTrack, 0.6, { alpha:0 } ), 0.6);
-            cmd.insert(TweenMax.to(this, 1, { alpha:0 } ), 1.2);
+            cmd.insert(TweenMax.to(mcThumb, 0.6, {width:width100}));
+            cmd.insert(TweenMax.to(mcThumb, 0.6, {alpha:0}), 0.6);
+            cmd.insert(TweenMax.to(mcTrack, 0.6, {alpha:0}), 0.6);
+            cmd.insert(TweenMax.to(this, 1, {autoAlpha:0}), 1.2);
             
             cmd.play();
          }
@@ -120,8 +124,6 @@ package
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         visible = false;
-         
          changePreloader();
       }
       
@@ -129,7 +131,7 @@ package
       
       override public function onProgress(event:AssetEvent):void
       {
-         TweenMax.to(mcThumb, 1, { width:width100 * event.perc } );
+         TweenMax.to(mcThumb, 1, {width:width100 * event.perc});
       }
       
       // --------------------- LINE ---------------------
@@ -138,6 +140,7 @@ package
       {
          super.onAdd(e);
          
+         visible = false;
          alpha = 0;
          width100 = mcTrack.width;
          
