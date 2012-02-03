@@ -9,6 +9,8 @@ package casts.loading
    import com.greensock.TweenMax;
    import com.greensock.easing.Quad;
    import com.greensock.easing.Quint;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
    import flash.events.Event;
@@ -30,6 +32,9 @@ package casts.loading
       {
          super();
          isShow = false;
+         
+         // gs
+         TweenPlugin.activate([AutoAlphaPlugin]);
       }
       
       // --------------------- LINE ---------------------
@@ -69,13 +74,12 @@ package casts.loading
          );
          
          // [init]
-         visible = true;
-         TweenMax.to(this, 0, {alpha:1, scaleX:1, scaleY:1});
+         TweenMax.to(this, 0, {autoAlpha:1, scaleX:1, scaleY:1});
          TweenMax.to(mcThumb, 0, {alpha:1, width:0});
          TweenMax.to(mcTrack, 0, {alpha:1});
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.4, { alpha:1, ease:Quad.easeOut } ));
+         cmd.insert(TweenMax.to(this, 0.4, {alpha:1, ease:Quad.easeOut}));
          
          cmd.play();
       }
@@ -110,10 +114,10 @@ package casts.loading
          {
             // [init]
             // [actions]
-            cmd.insert(TweenMax.to(mcThumb, 0.4, { width:width100 } ));
-            cmd.insert(TweenMax.to(mcThumb, 0.4, { alpha:0 } ), 0.4);
-            cmd.insert(TweenMax.to(mcTrack, 0.4, { alpha:0 } ), 0.4);
-            cmd.insert(TweenMax.to(this, 0.4, { alpha:0, ease:Quint.easeIn } ), 0.8);
+            cmd.insert(TweenMax.to(mcThumb, 0.4, {width:width100}));
+            cmd.insert(TweenMax.to(mcThumb, 0.4, {alpha:0}), 0.4);
+            cmd.insert(TweenMax.to(mcTrack, 0.4, {alpha:0}), 0.4);
+            cmd.insert(TweenMax.to(this, 0.4, {autoAlpha:0, ease:Quint.easeIn}), 0.8);
          }
          
          cmd.play();
@@ -122,14 +126,13 @@ package casts.loading
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         visible = false;
       }
       
       // --------------------- LINE ---------------------
       
       override public function onProgress(event:AssetEvent):void
       {
-         TweenMax.to(mcThumb, 1, { width:width100 * event.perc } );
+         TweenMax.to(mcThumb, 1, {width:width100 * event.perc});
       }
       
       // --------------------- LINE ---------------------
@@ -137,9 +140,9 @@ package casts.loading
       override public function onAdd(e:Event):void
       {
          super.onAdd(e);
-         
-         alpha = 0;
+
          visible = false;
+         alpha = 0;
          
          // debug
          GaiaPlus.api.initTest(this);
