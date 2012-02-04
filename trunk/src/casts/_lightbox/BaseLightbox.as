@@ -29,9 +29,6 @@ package casts._lightbox
       // return callback function
       public var returnCallback:Function;
       
-      // parent branch
-      protected var parentBranch:Array = ['null'];
-      
       // cmd
       protected var cmd:TimelineMax = new TimelineMax();
       
@@ -65,8 +62,8 @@ package casts._lightbox
       
       override public function transitionOut():void
       {
-         super.transitionOut();
          deactivateAutoTransitOut();
+         super.transitionOut();
       }
       
       override public function transitionOutComplete():void
@@ -136,17 +133,7 @@ package casts._lightbox
       
       protected function onBeforeGoto(e:GaiaEvent):void
       {
-         var doTransitOut:Boolean = true;
-         for each (var branch:String in parentBranch) 
-         {
-            if (-1 != e.validBranch.indexOf(branch))
-            {
-               doTransitOut = false;
-               break;
-            }
-         }
-         
-         if (doTransitOut) transitionOut();
+         transitionOut();
       }
       
       // --------------------- LINE ---------------------
