@@ -2,7 +2,7 @@
 <site menu="false" preloader="def_preloader.swf" flow="cross" routing="true">
    <page id="root" src="root.swf" depth="middle">
       <asset id="preloader_1" src="preloader_1.swf" depth="top"/>
-      <asset id="tvc" src="video_lightbox.swf" depth="top"/>
+      <asset id="tvc" src="tvc.swf" depth="top"/>
       
       <!-- intro -->
       <page id="intro" title="intro" src="home/intro.swf">
