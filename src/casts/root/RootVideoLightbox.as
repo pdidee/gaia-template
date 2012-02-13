@@ -96,7 +96,7 @@ package casts.root
             onComplete:function()
             {
                // video
-               mcPlayer.stopVid();
+               stopVid();
                
                // framework
                returnToParent();

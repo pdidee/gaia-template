@@ -10,7 +10,6 @@ package _sample
    import com.greensock.plugins.AutoAlphaPlugin;
    import com.greensock.plugins.TweenPlugin;
    
-   import flash.display.BlendMode;
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
@@ -38,8 +37,7 @@ package _sample
       {
          super();
          
-         blendMode = BlendMode.LAYER;
-         
+         // gs
          TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
