@@ -16,7 +16,7 @@ package casts.root
     * @author boy, cjboy1984@gmail.com
     * @usage
     * // assign resource.
-    * GaiaPlus.api.getAsset('tvc', 'root').video_src = 'video.flv';
+    * GaiaPlus.api.getAssetContent('tvc', 'root').video_src = 'video.flv';
     * // show and play it.
     * GaiaPlus.api.showAsset('tvc', 'root', null);
     */   
