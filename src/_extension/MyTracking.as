@@ -10,25 +10,16 @@ package _extension
       private static var _instance:MyTracking;
       
       // flag
-      protected var enabled:Boolean;
+      protected var enabled:Boolean = true;
+      protected var jsConsoleEnabled:Boolean = true;
       
       public function MyTracking(pvt:PrivateClass)
       {
          // do nothing
       }
       
-      // --------------------- LINE ---------------------
-      
-      public static function get api():MyTracking
-      {
-         if (!_instance)
-         {
-            _instance = new MyTracking(new PrivateClass());
-            _instance.enabled = true;
-         }
-         
-         return _instance;
-      }
+      // ________________________________________________
+      //                                    configuration
       
       public function enable():void
       {
@@ -40,7 +31,18 @@ package _extension
          enabled = false;
       }
       
-      // --------------------- LINE ---------------------
+      public function enableJSConsole():void
+      {
+         jsConsoleEnabled = true;
+      }
+      
+      public function disableJSConsole():void
+      {
+         jsConsoleEnabled = false;
+      }
+      
+      // ________________________________________________
+      //                                         tracking
       
       /**
        * Add tracking code for MiGo and Google Analaytics
@@ -52,7 +54,14 @@ package _extension
       {
          if (!enabled) return;
          
-         GaiaDebug.log('track_MiGo_GA : "' + $code + '", "' + $name + '", "' + $param + '"');
+         if (jsConsoleEnabled)
+         {
+            GaiaDebug.log('track_MiGo_GA : "' + $code + '", "' + $name + '", "' + $param + '"');
+         }
+         else
+         {
+            trace('track_MiGo_GA : "' + $code + '", "' + $name + '", "' + $param + '"');
+         }
          
          track_MiGo($code, $name, $param);
          track_GA($code);
@@ -89,6 +98,20 @@ package _extension
             var arr:Array = ["_trackPageview", $code];
             ExternalInterface.call("_gaq.push", arr);
          }
+      }
+      
+      // ________________________________________________
+      //                                        singleton
+      
+      public static function get api():MyTracking
+      {
+         if (!_instance)
+         {
+            _instance = new MyTracking(new PrivateClass());
+            _instance.enabled = true;
+         }
+         
+         return _instance;
       }
       
       // ################### protected ##################
