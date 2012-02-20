@@ -23,11 +23,6 @@ package _sample
       private var previousBranch:String;
       
       // cmd
-      public var t1:Number = 0;
-      public var t2:Number = 0;
-      public var t3:Number = 0;
-      public var t4:Number = 0;
-      public var t5:Number = 0;
       private var cmd:TimelineMax = new TimelineMax();
       
       protected function get sw():Number { return stage.stageWidth; }
@@ -72,7 +67,7 @@ package _sample
          );
          
          // [init]
-         TweenMax.to(this, 0, {autoAlpha:1, scaleX:1, scaleY:1, t1:0, t2:0, t3:0, t4:0, t5:0});
+         TweenMax.to(this, 0, {autoAlpha:1, scaleX:1, scaleY:1});
          // [actions]
          // This if-else statement is for sub-pages.
          // Condition 1 is for going to this page directly.

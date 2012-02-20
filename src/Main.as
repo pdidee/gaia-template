@@ -81,7 +81,7 @@ package
          GaiaDebug.log('');
          GaiaDebug.log("========== Main.onBeforeGoto(" + e.fullBranch + ") ==========");
          
-         GB.lastBranch = Gaia.api.getCurrentBranch();
+         GB.prevBranch = Gaia.api.getCurrentBranch();
       }
       
       private function onAfterGoto(e:GaiaEvent):void
