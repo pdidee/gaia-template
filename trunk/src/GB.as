@@ -17,7 +17,7 @@ package
       //                                        framework
       
       public static var firstTimeVisit:Boolean = true;
-      public static var lastBranch:String = '';
+      public static var prevBranch:String = '';
       
       // --------------------- LINE ---------------------
       
