@@ -53,7 +53,6 @@ package _myui.form.control
       // list
       protected var listPos1:Point = new Point(0, -70); // the transition start position.
       protected var listPos2:Point = new Point(0, 24); // the transition complete position.
-      protected var listMsk:Shape = new Shape();
       
       // flag
       protected var canOpen:Boolean = false;
@@ -120,7 +119,6 @@ package _myui.form.control
          
          // focus
          canOpen = false;
-         isAtTarget = false;
          FocusMgr.api.addEventListener(FocusMgr.FOCUS_CHANGE, onFocusChange);
          
          // list
@@ -133,6 +131,9 @@ package _myui.form.control
          mcClick.removeEventListener(MouseEvent.ROLL_OVER, onOver);
          mcClick.removeEventListener(MouseEvent.ROLL_OUT, onOut);
          mcClick.removeEventListener(MouseEvent.CLICK, onClick);
+         
+         // this
+         removeEventListener(MouseEvent.CLICK, onThisClick);
          
          // both CAPTURING_PHASE & BUBBLING_PHASE phase
          stage.removeEventListener(MouseEvent.CLICK, onStageClick, true);
@@ -173,6 +174,38 @@ package _myui.form.control
          }
       }
       
+      protected function onListItemClick():void
+      {
+         isAtTarget = false;
+         tfLabel.text = mcList.selectedLabel;
+         
+         FocusMgr.api.setFocus(null);
+         
+         dispatchEvent(new Event(Event.CHANGE));
+      }
+      
+      protected function onThisClick(e:MouseEvent):void
+      {
+         isAtTarget = true;
+      }
+      
+      protected function onStageClick(e:MouseEvent):void
+      {
+         if (e.eventPhase == EventPhase.CAPTURING_PHASE) return;
+         
+         // whether to clear focus
+         if (e.eventPhase == EventPhase.AT_TARGET || !isAtTarget)
+         {
+            FocusMgr.api.setFocus(null);
+         }
+         
+         // flag
+         if (e.eventPhase == EventPhase.BUBBLING_PHASE)
+         {
+            isAtTarget = false;
+         }
+      }
+      
       // ________________________________________________
       //                                           action
       
@@ -201,14 +234,6 @@ package _myui.form.control
          TweenMax.to(mcList, 0.5, {y:listPos1.y, ease:Strong.easeOut});
       }
       
-      // --------------------- LINE ---------------------
-      
-      protected function onListItemClick():void
-      {
-         tfLabel.text = mcList.selectedLabel;
-         dispatchEvent(new Event(Event.CHANGE));
-      }
-      
       // ________________________________________________
       //                                    focus handler
       
@@ -218,6 +243,9 @@ package _myui.form.control
          {
             // flag
             canOpen = true;
+            
+            // this
+            addEventListener(MouseEvent.CLICK, onThisClick);
             
             // both CAPTURING_PHASE & BUBBLING_PHASE phase
             stage.addEventListener(MouseEvent.CLICK, onStageClick, true);
@@ -232,6 +260,9 @@ package _myui.form.control
             // flag
             canOpen = false;
             
+            // this
+            removeEventListener(MouseEvent.CLICK, onThisClick);
+            
             // both CAPTURING_PHASE & BUBBLING_PHASE phase
             stage.removeEventListener(MouseEvent.CLICK, onStageClick, true);
             stage.removeEventListener(MouseEvent.CLICK, onStageClick);
@@ -239,23 +270,6 @@ package _myui.form.control
             // view
             hideList();
             doMouseOut();
-         }
-      }
-      
-      protected function onStageClick(e:MouseEvent):void
-      {
-         if (e.eventPhase == EventPhase.CAPTURING_PHASE) return;
-         
-         // whether to clear focus
-         if (FocusMgr.api.focus && e.eventPhase == EventPhase.AT_TARGET || !isAtTarget)
-         {
-            FocusMgr.api.setFocus(null);
-         }
-         
-         // flag
-         if (e.eventPhase == EventPhase.BUBBLING_PHASE)
-         {
-            isAtTarget = false;
          }
       }
       
