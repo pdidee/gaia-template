@@ -47,6 +47,7 @@ package _myui.form.control
       // fla
       public var mcClick:MovieClip;
       public var tfLabel:TextField;
+      public var mcMsk:MovieClip;
       public var mcList:MyList;
       
       // list
@@ -68,13 +69,9 @@ package _myui.form.control
          tabEnabled = false;
          
          // list mask
-         listMsk.x = -20;
-         listMsk.y = 23;
-         listMsk.graphics.beginFill(0x0000ff);
-         listMsk.graphics.drawRect(0, 0, mcClick.width + 20, 94);
-         listMsk.graphics.endFill();
-         addChildAt(listMsk, getChildIndex(mcList)+1);
-         mcList.mask = listMsk;
+         mcMsk.alpha = 1;
+         mcMsk.mouseChildren = mcMsk.mouseEnabled = false;
+         mcList.mask = mcMsk;
          
          // gs
          TweenPlugin.activate([AutoAlphaPlugin]);
