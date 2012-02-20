@@ -31,7 +31,7 @@ package _myui.scrollbar
       // fla
       public var btnThumb:MyButton;
       
-      protected const SCROLL_SPEED:Number = 15;
+      protected var SCROLL_SPEED:Number = 15;
       
       // manager
       protected var mgrNo:int = 0;
@@ -76,11 +76,18 @@ package _myui.scrollbar
          mgr.value = v;
       }
       
+      // ________________________________________________
+      //                                    optional info
+      
+      public function setSCROLL_SPEED(v:Number):void
+      {
+         SCROLL_SPEED = v;
+      }
+      
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
       {
-         mgr.value = 0.5;
          onDrag = false;
          _barRef = height - btnThumb.height;
          thumbNewY = _barRef * mgr.value;

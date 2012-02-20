@@ -1,5 +1,8 @@
 package _myui.form.control.common
 {
+   import _myui.scrollbar.VScrollBar2;
+   import _myui.scrollbar.core.ScrollMgr;
+   
    import com.greensock.TweenMax;
    
    import flash.display.MovieClip;
@@ -9,12 +12,11 @@ package _myui.form.control.common
    import flash.geom.Point;
    import flash.utils.getDefinitionByName;
    
-   import myLib.form.IField;
-   
    public class MyList extends MovieClip
    {
       // fla
       public var mcMsk:MovieClip;
+      public var mcSbar:VScrollBar2;
       public function get identifier():Object { return getChildAt(numChildren-1); }
       
       // callback
@@ -35,6 +37,10 @@ package _myui.form.control.common
       protected var listBox:Sprite = new Sprite();
       protected var listPool:Vector.<MyListCell> = new Vector.<MyListCell>();
       
+      // manager
+      protected var mgrNo:int = 0;
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      
       public function MyList()
       {
          super();
@@ -49,6 +55,9 @@ package _myui.form.control.common
          listBox.y = boxPos.y;
          listBox.mask = mcMsk;
          addChildAt(listBox, getChildIndex(mcMsk));
+         
+         // scroll
+         mcSbar.setSCROLL_SPEED(1);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -74,7 +83,7 @@ package _myui.form.control.common
          
          if (listPool.length > rowCount && !hasEventListener(MouseEvent.MOUSE_WHEEL))
          {
-            addEventListener(MouseEvent.MOUSE_WHEEL, scroll);
+            //            addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheeling);
          }
       }
       
@@ -106,6 +115,9 @@ package _myui.form.control.common
       public function resetListPosition():void
       {
          TweenMax.to(listBox, 0, {y:boxPos.y});
+         
+         // scroll-mgr
+         mgr.value = 0;
       }
       
       public function resetSelection():void { _selectedIndex = -1; }
@@ -119,18 +131,23 @@ package _myui.form.control.common
       
       protected function onAdd(e:Event):void
       {
+         // scroll-mgr
+         mgr.addEventListener(ScrollMgr.VALUE_CHANGE, onScrollValueChange);
       }
       
       protected function onRemove(e:Event):void
       {
+         // scroll-mgr
+         mgr.removeEventListener(ScrollMgr.VALUE_CHANGE, onScrollValueChange);
+         
          // mouse
-         removeEventListener(MouseEvent.MOUSE_WHEEL, scroll);
+         //         removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheeling);
       }
       
       // ________________________________________________
       //                                    mouse handler
       
-      protected function scroll(e:MouseEvent):void
+      protected function onMouseWheeling(e:MouseEvent):void
       {
          if (alpha < 1 || !visible || !canScroll) return;
          
@@ -158,6 +175,15 @@ package _myui.form.control.common
          {
             onItemClick();
          }
+      }
+      
+      // ________________________________________________
+      //                                       scroll-bar
+      
+      protected function onScrollValueChange(e:Event):void
+      {
+         var newy:Number = boxPos.y - mgr.value * (listHeight - mskRef);
+         TweenMax.to(listBox, 0.2, {y:newy});
       }
       
       // #################### private ###################
