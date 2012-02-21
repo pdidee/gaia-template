@@ -43,7 +43,6 @@ package _myui.form
       public var btnZoomIn:MyButton;
       public var btnZoomOut:MyButton;
       public var btnScaleBar:VScrollBar2;
-      public var mcHint:MovieClip;
       
       // flag
       public var borderLimit:Boolean = true;
@@ -55,6 +54,10 @@ package _myui.form
       protected var bmp:Bitmap;
       protected var orgW:Number;
       protected var orgH:Number;
+      protected var minSX:Number;
+      protected var minSY:Number;
+      protected var maxSX:Number = 2;
+      protected var maxSY:Number = 2;
       // photo padding
       protected var paddingLeft:Number;
       protected var paddingRight:Number;
@@ -113,11 +116,6 @@ package _myui.form
          meterWidth = mcMeter.width;
          meterHeight = mcMeter.height;
          
-         // hint
-         mcHint.mouseChildren = mcHint.mouseEnabled = false;
-         mcHint.alpha = 0;
-         mcHint.visible = false;
-         
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
@@ -171,9 +169,12 @@ package _myui.form
             bmp.smoothing = true;
             photoBox.addChild(bmp);
             
-            // save info
+            // save raw info
             orgW = bmp.width;
             orgH = bmp.height;
+            minSX = meterWidth / bmp.width;
+            minSY = meterHeight / bmp.height;
+            if (minSX > minSY) minSY = minSX; else if (minSX < minSY) minSX = minSY;
             
             mgr.value = DEFAULT_VALUE;
          }
@@ -252,9 +253,6 @@ package _myui.form
          
          // scale
          mgr.addEventListener(ScrollMgr.VALUE_CHANGE, onScaleChange);
-         
-         // hint
-         mcHint.addEventListener(Event.ENTER_FRAME, hintFollowThumb);
       }
       
       protected function onRemove(e:Event):void
@@ -269,12 +267,8 @@ package _myui.form
          // scale
          mgr.removeEventListener(ScrollMgr.VALUE_CHANGE, onScaleChange);
          
-         // hint
-         mcHint.removeEventListener(Event.ENTER_FRAME, hintFollowThumb);
-         
          // gs
          TweenMax.killTweensOf(bmp);
-         TweenMax.killTweensOf(mcHint);
       }
       
       // ________________________________________________
@@ -353,7 +347,20 @@ package _myui.form
             return;
          }
          
-         var scale:Number = 2 * (1 - mgr.value);
+         var rValue:Number = 1 - mgr.value;
+         var scale:Number;
+         if (rValue == DEFAULT_VALUE)
+         {
+            scale = 1;
+         }
+         else if (rValue > DEFAULT_VALUE)
+         {
+            scale = maxSX * (rValue - DEFAULT_VALUE) / 0.5 + 1;
+         }
+         else if (rValue < DEFAULT_VALUE)
+         {
+            scale = 1 - (1 - minSX) * (DEFAULT_VALUE - rValue) / 0.5;
+         }
          var neww:Number = orgW * scale;
          var newh:Number = orgH * scale;
          
@@ -362,52 +369,18 @@ package _myui.form
             scale = meterWidth / orgW;
             neww = meterWidth;
             newh = orgH * scale;
-            
-            // hint
-            showHintAWhile();
-            
-            mgr.revertValue(1-scale/2);
          }
          else if (newh < meterHeight)
          {
             scale = meterHeight / orgH;
             neww = orgW * scale;
             newh = meterHeight;
-            
-            // hint
-            showHintAWhile();
-            
-            mgr.revertValue(1-scale/2);
          }
          else
          {
-            // hint
-            hideHint();
          }
          
          TweenMax.to(bmp, 0.3, {transformAroundPoint:{point:boxCenter, scaleX:scale, scaleY:scale}, onUpdate:checkPosition});
-      }
-      
-      // ________________________________________________
-      //                                             hint
-      
-      protected function showHintAWhile():void
-      {
-         TweenMax.killTweensOf(mcHint);
-         TweenMax.to(mcHint, 0.3, {autoAlpha:1});
-         TweenMax.to(mcHint, 0.3, {autoAlpha:0, delay:1});
-      }
-      
-      protected function hideHint():void
-      {
-         TweenMax.killTweensOf(mcHint);
-         TweenMax.to(mcHint, 0.1, {autoAlpha:0});
-      }
-      
-      protected function hintFollowThumb(e:Event):void
-      {
-         mcHint.x = btnScaleBar.x + btnScaleBar.width;
-         mcHint.y = btnScaleBar.y + btnScaleBar.barRef * mgr.value;
       }
       
       // ________________________________________________
