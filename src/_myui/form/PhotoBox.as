@@ -75,32 +75,27 @@ package _myui.form
       // ________________________________________________
       //                                            photo
       
-      public function loadURL(v:String, complete:Function = null, progress:Function = null):void 
+      public function loadURL(url:String, complete:Function = null, progress:Function = null):void 
       {
          completeHander = complete;
          progressHander = progress;
          
          // clear old
-         if (imgLoader)
-         {
-            while (pbox.numChildren) pbox.removeChildAt(0);
-            imgLoader.dispose(true);
-         }
+         dispose();
          
-         imgLoader = new ImageLoader(v, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
+         imgLoader = new ImageLoader(url, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
          imgLoader.load(true);
       }
       
-      public function getLoader(url:String):ImageLoader
+      public function getLoader(url:String, complete:Function = null, progress:Function = null):ImageLoader
       {
-         // clear old
-         if (imgLoader)
-         {
-            while (pbox.numChildren) pbox.removeChildAt(0);
-            imgLoader.dispose(true);
-         }
+         completeHander = complete;
+         progressHander = progress;
          
-         imgLoader = new ImageLoader(url, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside"});
+         // clear old
+         dispose();
+         
+         imgLoader = new ImageLoader(url, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
          return imgLoader;
       }
       
@@ -110,7 +105,11 @@ package _myui.form
          if (imgLoader)
          {
             while (pbox.numChildren) pbox.removeChildAt(0);
-            imgLoader.dispose(true);
+            try
+            {
+               imgLoader.dispose(true);
+            } 
+            catch(err:Error) {}
          }
       }
       
@@ -137,7 +136,10 @@ package _myui.form
       // ________________________________________________
       //                                          loading
       
-      public function get perc():Number { return imgLoader.bytesLoaded / imgLoader.bytesTotal; }
+      public function get perc():Number
+      {
+         return imgLoader.bytesLoaded / imgLoader.bytesTotal;
+      }
       
       // ################### protected ##################
       
