@@ -1,4 +1,4 @@
-﻿<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+﻿<html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
@@ -6,14 +6,14 @@
    <meta name="Creative Director" content="" />
    <meta name="Art Director" content="" />
    <meta name="Designer" content="" />
-   <meta name="Programmer" content="Boy, cjboy1984@gmail.com" />
+   <meta name="Programmer" content="cjboy, cjboy1984@gmail.com" />
+   <meta name="Keywords" content="seo, search engine optimisation, optimization" />
 
-   <!-- Sharing meta-data -->
-   <!-- Size of the thumbnail is 120x120 -->
-   <meta name="keywords" content="Demo" />
-   <meta name="title" content="" />
-   <meta name="description" content="" />
-   <link rel="image_src" href="" />
+   <!-- facebook markup -->
+   <meta property="og:title" content="boy facebook" />
+   <meta property="og:image" content="pic.png" />
+   <meta property="og:site_name" content="boy facebook app" />
+   <meta property="og:description" content="boy description" />
 
    <title>Demo</title>
 
@@ -37,7 +37,7 @@
    <script type="text/javascript" src="commons/scripts/swfobject/swfobject.js"></script>
    <script type="text/javascript" src="commons/scripts/swfaddress/swfaddress.js"></script>
    <script type="text/javascript" src="commons/scripts/swffit/swffit.js"></script>
-   <!-- Facebook Graph API necessary libs -->
+   <!-- Facebook -->
    <script type="text/javascript" src="http://connect.facebook.net/zh_TW/all.js"></script>
 
    <script type="text/javascript">
@@ -75,23 +75,13 @@
       window.open('http://twitter.com/home/?status='.concat(encodeURIComponent(document.title)).concat(' ').concat(encodeURIComponent(url)));
    }
 
-	<!-- In order to let js call flash function -->
-	var swfId = 'MyFlash';
-	var swfObj;
-   function initSWF(swfID)
-   {
-      if(navigator.appName.indexOf("Microsoft") != -1)
-      {
-         swf = window[swfId];
-      }
-      else
-      {
-         swf = document[swfId];
-      }
-   }
-	
    <!-- Flash -->
-   var isIE = navigator.userAgent.search("MSIE") > -1; // 中文輸入solution，true => IE，false => Other
+	var swf;
+	var swfId = 'MyFlash';
+   function initSWF()
+   {
+      swf = document.getElementById(swfId);
+   }
    var flashvars = 
 	{
 		app_id:'152204381520601',
@@ -104,10 +94,15 @@
    {
       flashvars.data = swfobject.getQueryParamValue("data");
    }
+	//var isIE = navigator.userAgent.search("MSIE") > -1; // 中文輸入solution，true => IE，false => Other
    //var params = {wmode:(isIE ? 'opaque' : 'window'), allowscriptaccess:'always'};
-   var params = {wmode:'transparent', allowscriptaccess:'always'};
+   var params = 
+	{
+		wmode:'transparent',
+		allowscriptaccess:'always'
+	};
    var attributes = {id:swfId, name:swfId};
-   swfobject.embedSWF('main.swf', swfId, '100%', '520px', '10.2', "commons/expressInstall.swf", flashvars, params, attributes);
+   swfobject.embedSWF('main.swf', swfId, '100%', '520px', '10.0', "commons/expressInstall.swf", flashvars, params, attributes);
    //swffit.fit('MyFlash', 1000, 500); // 用swffit來定義swf的最小寬高
    </script>
 </head>
