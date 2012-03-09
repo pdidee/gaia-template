@@ -7,7 +7,8 @@ package casts.home
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
-   import com.greensock.easing.Quint;
+   import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.TweenPlugin;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -17,7 +18,7 @@ package casts.home
    {
       // fla
       public function get intro():AbstractBase { return page && assets && assets.intro ? AbstractBase(assets.intro.content) : null; }
-      public function get nav():Object { Object(Gaia.api.getPage('root').content.mcNav); }
+      public function get nav():Object { return Object(Gaia.api.getPage('root').content.mcNav); }
       
       // cmd
       private var justatimer:Number;
@@ -26,6 +27,9 @@ package casts.home
       public function HomeMain()
       {
          super();
+         
+         // gs
+         TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -37,19 +41,27 @@ package casts.home
       {
          super.transitionIn();
          transitionInComplete();
-         alpha = 1;
-         visible = true;
          
-         // intro
-         if (GB.firstTimeVisit && intro)
-         {
-            intro.addEventListener(Event.COMPLETE, onIntroComplete);
-            intro.transitionIn();
-         }
-         else
-         {
-            myTransitionIn();
-         }
+         // stop cmd(TimelineMax)
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax({
+            onStart:function()
+            {
+            },
+            onUpdate:function()
+            {
+            },
+            onComplete:function()
+            {
+            }
+         });
+         
+         // [init]
+         // [actions]
+         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:1}));
+         
+         cmd.play();
       }
       
       override public function transitionInComplete():void
@@ -81,6 +93,7 @@ package casts.home
          
          // [init]
          // [actions]
+         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}));
          
          cmd.play();
       }
@@ -125,53 +138,6 @@ package casts.home
       
       private function get sw():Number { return stage.stageWidth; }
       private function get sh():Number { return stage.stageHeight; }
-      
-      // --------------------- LINE ---------------------
-      
-      private function onIntroComplete(e:Event):void
-      {
-         intro.removeEventListener(Event.COMPLETE, onIntroComplete);
-         myTransitionIn();
-      }
-      
-      private function myTransitionIn():void
-      {
-         cmd.stop();
-         cmd.kill();
-         cmd = new TimelineMax(
-            {
-               onStart:function()
-               {
-                  visible = true;
-                  alpha = 1;
-               },
-               onUpdate:function()
-               {
-               },
-               onComplete:function()
-               {
-               }
-            }
-         );
-         
-         // [init]
-         if (GB.firstTimeVisit)
-         {
-            GB.firstTimeVisit = false;
-         }
-         else
-         {
-         }
-         
-         // [actions]
-         // navigation
-         if (Gaia.api)
-         {
-            cmd.insert(TweenMax.to(nav, 1.0, { y:nav.fixPos.y, ease:Quint.easeOut } ), 3.3);
-         }
-         
-         cmd.play();
-      }
       
       // --------------------- LINE ---------------------
       

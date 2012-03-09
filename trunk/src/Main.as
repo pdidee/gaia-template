@@ -15,6 +15,7 @@
 package
 {
 	import _extension.GaiaPlus;
+	import _extension.JSBridge;
 	
 	import casts._impls.IMyPreloader;
 	
@@ -56,17 +57,20 @@ package
       
       override protected function init():void
       {
-         // enable or disable debug
+         // Debugger
          GaiaPlus.api.disableTest();
-         
-         // I want to make preloader.swf complete it's transition-in and then do the loading job.
+         // Make preloader.swf complete it's transition-in and then do the loading job.
          GaiaPlus.api.setPreloader(Gaia.api.getPreloader());
          
-         // layer
+         // JS-AS bridge, then you can use js.getSwf() on javascript to access flash function.
+         JSBridge.init();
+         
+         // Gaia.PRELOADER layer can catch MouseEvent.
          var layer_1:Sprite = Gaia.api.getDepthContainer(Gaia.PRELOADER);
          layer_1.mouseEnabled = true;
          layer_1.mouseChildren = true;
          
+         // framwork
          Gaia.api.beforeGoto(onBeforeGoto);
          Gaia.api.afterGoto(onAfterGoto);
 
