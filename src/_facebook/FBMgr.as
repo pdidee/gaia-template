@@ -89,7 +89,7 @@ package _facebook
        *    fb_key:152204381520601,
        *    perms:'user_about_me,user_photos'
        * }
-       */      
+       */
       public function init(param:Object = null, callbackFunc:Function = null):void
       {
          // js callback
