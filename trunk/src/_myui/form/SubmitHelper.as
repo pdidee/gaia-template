@@ -26,7 +26,7 @@ package _myui.form
     * 
     * // or stop it
     * submit.stop();
-    */   
+    */
    public class SubmitHelper extends EventDispatcher
    {
       // server info
@@ -116,6 +116,12 @@ package _myui.form
       // ________________________________________________
       //                                             load
       
+      /**
+       * Sends and loads data from the specified URL.
+       * @param $url
+       * @param onComplete    Callback function and its prototype is function(e:Event):void;.
+       * @param onIOErr       Callback function and its prototype is function(e:IOErrorEvent):void;.
+       */
       public function send($url:String, onComplete:Function = null, onIOErr:Function = null):void
       {
          var newURL:String = new String($url);
@@ -153,10 +159,10 @@ package _myui.form
          
          if (canSubmit)
          {
-//            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
+            //            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
             
             canSubmit = false;
-//            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+            //            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
             urlLoader.load(urlReq);
          }
       }
