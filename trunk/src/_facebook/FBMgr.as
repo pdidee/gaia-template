@@ -84,11 +84,8 @@ package _facebook
       
       /**
        * Initialize facebook manager with a configuration.
-       * @param
-       * {
-       *    fb_key:152204381520601,
-       *    perms:'user_about_me,user_photos'
-       * }
+       * @param param         {fb_key:152204381520601,perms:'user_about_me,user_photos'}
+       * @param callbackFunc
        */
       public function init(param:Object = null, callbackFunc:Function = null):void
       {
@@ -325,7 +322,7 @@ package _facebook
       
       public function get isLogin():Boolean { return _uid != null; }
       public function get app_key():String { return _app_key; }
-      public function get access_token():String { return ''; }
+      public function get access_token():String { return _access_token; }
       public function get uid():String { return _uid; }
       public function get perms():String { return _perms; }
       public function get email():String { return _email; }
