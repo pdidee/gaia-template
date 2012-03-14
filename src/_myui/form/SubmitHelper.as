@@ -4,7 +4,6 @@ package _myui.form
    import flash.events.EventDispatcher;
    import flash.events.IOErrorEvent;
    import flash.net.URLLoader;
-   import flash.net.URLLoaderDataFormat;
    import flash.net.URLRequest;
    import flash.net.URLRequestMethod;
    import flash.net.URLVariables;
@@ -159,7 +158,7 @@ package _myui.form
          
          if (canSubmit)
          {
-            //            trace("SubmitHelper.send | urlReq.url =", urlReq.url);
+            //            trace("{as} SubmitHelper.send | urlReq.url =", urlReq.url);
             
             canSubmit = false;
             //            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -180,12 +179,13 @@ package _myui.form
       }
       
       // ________________________________________________
-      //                                      Return data
+      //                                             info
       
       /**
        * The return data.
        */
       public function get data():* { return returnData; }
+      public function get can():Boolean { return canSubmit; }
       
       // ################### protected ##################
       
