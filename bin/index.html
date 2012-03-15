@@ -1,4 +1,5 @@
-﻿<html>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
@@ -76,34 +77,22 @@
    }
 
    <!-- Flash -->
-	var swf;
-	var swfId = 'MyFlash';
-   function initSWF()
-   {
-      swf = document.getElementById(swfId);
-   }
-   var flashvars = 
+	var flashvars = 
 	{
-		app_id:'152204381520601',
-		permission:'user_about_me, user_birthday, user_photos, email, read_friendlists, publish_stream',
-		canvas_id:'null',
-		base_url:''
+		key:'152204381520601',
+		perms:'user_about_me, user_birthday, user_photos, email, read_friendlists, publish_stream',
+		prefix_url:''
 	};
    // use swfobject to get parameters, e.g: index.html?data=123
    if (swfobject.getQueryParamValue("data"))
    {
       flashvars.data = swfobject.getQueryParamValue("data");
    }
-	//var isIE = navigator.userAgent.search("MSIE") > -1; // 中文輸入solution，true => IE，false => Other
-   //var params = {wmode:(isIE ? 'opaque' : 'window'), allowscriptaccess:'always'};
-   var params = 
-	{
-		wmode:'transparent',
-		allowscriptaccess:'always'
-	};
+	var swfId = 'MyFlash';
    var attributes = {id:swfId, name:swfId};
-   swfobject.embedSWF('main.swf', swfId, '100%', '520px', '10.0', "commons/expressInstall.swf", flashvars, params, attributes);
-   //swffit.fit('MyFlash', 1000, 500); // 用swffit來定義swf的最小寬高
+   var params = {wmode:'transparent', allowscriptaccess:'always'};
+   swfobject.embedSWF('main.swf', 'MyFlash', '100%', '520px', '10.0', "commons/expressInstall.swf", flashvars, params, attributes);
+   swffit.fit('MyFlash', 1000, 500); // 用swffit來定義swf的最小寬高
    </script>
 </head>
 
