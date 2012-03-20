@@ -76,7 +76,14 @@ package _myui.form
          postData.push(data);
       }
       
-      public function build(url:String):URLRequest
+      /**
+       * Return a URLRequest object.
+       * @param url
+       * @param method     'auto', 'post', 'get'
+       * @return 
+       * 
+       */
+      public function build(url:String, method:String = 'auto'):URLRequest
       {
          var newURL:String = new String(url);
          
@@ -103,8 +110,28 @@ package _myui.form
          // req
          var req:URLRequest = new URLRequest();
          req.url = newURL;
-         req.method = URLRequestMethod.POST;
-         req.data = vars;
+         if (method == 'auto')
+         {
+            if (postData.length)
+            {
+               req.method = URLRequestMethod.POST;
+               req.data = vars;
+            }
+         }
+         else
+         {
+            if (method == 'post')
+            {
+               req.method = URLRequestMethod.POST;
+               req.data = vars;
+            }
+            else if (method == 'get')
+            {
+               req.method = URLRequestMethod.GET;
+            }
+         }
+         
+         Trace2('{as} ReqBuilder | url = ' + newURL);
          
          return req;
       }
