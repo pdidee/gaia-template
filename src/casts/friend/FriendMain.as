@@ -1,21 +1,21 @@
 package casts.friend
 {
-   import _extension.Trace2;
+   import _facebook.FBMgr;
    
-   import _myui.canvas.StageCanvas;
-   import _myui.scrollbar.MySlider1;
-   
-   import _weibo.WeiboMgr;
+   import _myui.form.PhotoBox;
+   import _myui.scrollbar.VScrollBar1;
    
    import casts._lightbox.BaseLightbox;
    
-   import com.gaiaframework.api.Gaia;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
+   import com.greensock.easing.Quint;
    import com.greensock.loading.LoaderMax;
    import com.greensock.plugins.BlurFilterPlugin;
+   import com.greensock.plugins.ColorTransformPlugin;
    import com.greensock.plugins.TweenPlugin;
    
+   import flash.display.Bitmap;
    import flash.display.BlendMode;
    import flash.display.MovieClip;
    import flash.events.Event;
@@ -26,32 +26,38 @@ package casts.friend
    public class FriendMain extends BaseLightbox
    {
       // fla
-      public var mcDialog:MovieClip; // a dialog that is shown when mouse over.
-      public var mcFBox:MovieClip; // friend box container.
-      public var btnSlider:MySlider1; // scroll bar.
-      public var btnClose:MyButton;
-      public var btnSubmit:MyButton;
-      
-      // posittion of mcDialog
-      private var dpos:Point;
+      public var mcBody:MovieClip;
+      public var mcLoading:MovieClip;
+      // step
+      public function get mcStep():MovieClip { return MovieClip(mcBody.mcStep); }
+      // other
+      public function get tfNo():TextField { return TextField(mcBody.tfNo); }
+      public function get mcNo():MovieClip { return MovieClip(mcBody.mcNo); }
+      public function get btnClose():MyButton { return MyButton(mcBody.btnClose); }
+      public function get btnNext():MyButton { return MyButton(mcBody.btnNext); }
+      public function get btnPrev():MyButton { return MyButton(mcBody.btnPrev); }
+      public function get btnSubmit():MyButton { return MyButton(mcBody.btnSubmit); }
+      public function get mcBox():MovieClip { return MovieClip(mcBody.mcStep.mcBox); }
+      public function get btnVBar():VScrollBar1 { return VScrollBar1(mcBody.mcStep.btnVBar); }
       
       // box pool
-      private var totalLoader:LoaderMax;
+      private var loaderPapa:LoaderMax;
       private var boxPool:Vector.<FriendBoxEX>;
       
       // select pool
-      private const SELECT_MAX:int = 3; // selection limits.
+      private const SELECT_MAX:int = 4; // selection limits.
       private var selectPool:Vector.<FriendBoxEX>;
+      
+      private const posX:Array = [-250, -812];
       
       public function FriendMain()
       {
          super();
          
          blendMode = BlendMode.LAYER;
-         mcDialog.mouseEnabled = mcDialog.mouseChildren = false;
          
          // gs
-         TweenPlugin.activate([BlurFilterPlugin]);
+         TweenPlugin.activate([BlurFilterPlugin, ColorTransformPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -77,23 +83,24 @@ package casts.friend
                },
                onComplete:function()
                {
+                  tryGetFriend();
                }
             }
          );
          
          // [init]
-         initSlider();
-         initButton();
-         TweenMax.to(this, 0, {autoAlpha:0, scaleX:1, scaleY:1});
-         // dialog
-         TweenMax.to(mcDialog, 0, {autoAlpha:0});
-         dpos = new Point(mcFBox.x, mcFBox.y);
-         addEventListener(MouseEvent.MOUSE_MOVE, dialogFollow);
+         TweenMax.to(this, 0, {autoAlpha:1});
+         TweenMax.to(mcBody, 0, {frame:1, x:375, y:410, autoAlpha:0, scaleX:0.8, scaleY:0.8, blurFilter:{blurY:20}});
+         // step
+         TweenMax.to(mcStep, 0, {x:-250});
+         // button
+         initButton1();
+         btnNext.buttonMode = false;
+         TweenMax.to(btnNext, 0, {alpha:0.5});
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:1}));
+         cmd.insert(TweenMax.to(mcLoading, 0.3, {autoAlpha:1}));
          
-         cmd.delay = 0.4;
          cmd.play();
       }
       
@@ -120,16 +127,18 @@ package casts.friend
                },
                onComplete:function()
                {
+                  destroyScroll();
+                  destroyNoView();
+                  
                   transitionOutComplete();
                }
             }
          );
          
          // [init]
-         destroySlider();
-         removeEventListener(MouseEvent.MOUSE_MOVE, dialogFollow);
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}));
+         cmd.insert(TweenMax.to(mcBody, 0.2, {x:375, y:410, scaleX:0.8, scaleY:0.8, blurFilter:{blurY:20}}));
+         cmd.insert(TweenMax.to(this, 0.2, {autoAlpha:0}));
          
          cmd.play();
       }
@@ -151,64 +160,63 @@ package casts.friend
       // ________________________________________________
       //                                           slider
       
-      protected function initSlider():void
+      protected function initScroll():void
       {
-         if (!WeiboMgr.api.friends) return;
+         if (!FBMgr.api.friends) return;
          
-         var offx:Number = 60;
-         var offy:Number = 69;
+         var offx:Number = 170;
+         var offy:Number = 49;
          
          // friend
-         var boxWidth:Number = Math.floor(WeiboMgr.api.friends.length / 2) + 1;
-         totalLoader = new LoaderMax();
+         var boxHeight:Number = Math.floor(FBMgr.api.friends.length / 3) + 1;
+         loaderPapa = new LoaderMax({auditSize:false});
          boxPool = new Vector.<FriendBoxEX>();
-         for (var i:int = 0; i < WeiboMgr.api.friends.length; ++i) 
+         for (var i:int = 0; i < FBMgr.api.friends.length; ++i) 
          {
             var box:FriendBoxEX = new FriendBoxEX();
-            box.x = 11 + Math.floor(i/2) * offx;
-            box.y = 18 + (i%2) * offy;
-            box.uid = WeiboMgr.api.friends[i].uid;
-            box.nickname = WeiboMgr.api.friends[i].name;
-            box.onOverHandler = onFBoxOver;
-            box.onOutHandler = onFBoxOut;
-            box.onClickHandler = onFBoxClick;
-            mcFBox.addChild(box);
+            box.x = 0 + Math.floor(i%3) * offx;
+            box.y = 0 + Math.floor(i/3) * offy;
+            box.uid = FBMgr.api.friends[i].uid || '';
+            box.tfName.text = box.nickname = FBMgr.api.friends[i].name || '';
+            box.onOverEvt = onFBoxOver;
+            box.onOutEvt = onFBoxOut;
+            box.onClickEvt = onFBoxClick;
+            mcBox.addChild(box);
             
             boxPool.push(box);
             
-            totalLoader.append(box.getLoader(WeiboMgr.api.friends[i].profile_image_url));
+            loaderPapa.append(box.loadPicture());
          }
-         totalLoader.load(true);
+         loaderPapa.maxConnections = 20;
+         loaderPapa.load();
          
          // box bg
-         mcFBox.graphics.clear();
-         mcFBox.graphics.beginFill(0x0000ff, 0);
-         mcFBox.graphics.drawRect(0, 0, boxWidth * offx, 120);
-         mcFBox.graphics.endFill();
+         mcBox.graphics.clear();
+         mcBox.graphics.beginFill(0x0000ff, 0);
+         mcBox.graphics.drawRect(0, 0, 510, boxHeight * offy);
+         mcBox.graphics.endFill();
          
-         btnSlider.ta = mcFBox;
-         btnSlider.barRef = 408;
-         btnSlider.mskRef = 490;
-         btnSlider.taInitPos = new Point(230, 219);
+         btnVBar.ta = mcBox;
+         btnVBar.barRef = 235;
+         btnVBar.mskRef = 280;
+         btnVBar.taInitPos = new Point(5, 5);
          
-         mcFBox.x = btnSlider.taInitPos.x;
-         mcFBox.y = btnSlider.taInitPos.y;
+         TweenMax.to(mcBox, 0, {x:btnVBar.taInitPos.x, y:btnVBar.taInitPos.y});
          
          // select
          selectPool = new Vector.<FriendBoxEX>();
       }
       
-      protected function destroySlider():void
+      protected function destroyScroll():void
       {
-         while (mcFBox.numChildren) mcFBox.removeChildAt(0);
-         if (totalLoader) totalLoader.dispose(true);
-         Trace2(mcFBox.numChildren);
+         while (mcBox.numChildren) mcBox.removeChildAt(0);
+         if (loaderPapa) loaderPapa.dispose(true);
       }
       
       // ________________________________________________
       //                                           button
       
-      protected function initButton():void
+      protected function initButton1():void
       {
          btnClose.gotoAndStop(1);
          btnClose.buttonMode = true;
@@ -220,39 +228,93 @@ package casts.friend
             transitionOut();
          };
          
-         btnSubmit.gotoAndStop(1);
-         btnSubmit.buttonMode = true;
-         btnSubmit.onClick = function()
+         btnNext.gotoAndStop(1);
+         btnNext.buttonMode = true;
+         btnNext.onClick = function()
          {
             if (!this.buttonMode) return;
-            this.buttonMode = false;
-            
-            if (Gaia.api.getCurrentBranch() == 'root/list')
-            {
-               transitionOut();
-            }
-            else
-            {
-               Gaia.api.goto('root/list');
-            }
+            gotoStep2();
          };
+      }
+      
+      protected function initButton2():void
+      {
+         btnPrev.gotoAndStop(1);
+         btnPrev.buttonMode = true;
+         btnPrev.onClick = function()
+         {
+            if (!this.buttonMode) return;
+            gotoStep1();
+         };
+      }
+      
+      private function gotoStep1():void
+      {
+         // stop cmd(TimelineMax)
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax({
+            onStart:function()
+            {
+            },
+            onUpdate:function()
+            {
+            },
+            onComplete:function()
+            {
+               mouseChildren = true;
+            }
+         });
+         
+         // [init]
+         btnVBar.mgr.value = 0;
+         mouseChildren = false;
+         mcBody.gotoAndStop(1);
+         initButton1();
+         
+         // [actions]
+         cmd.insert(TweenMax.to(mcStep, 0.7, {x:posX[0], ease:Quint.easeInOut}));
+         
+         cmd.play();
+      }
+      
+      private function gotoStep2():void
+      {
+         // stop cmd(TimelineMax)
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax({
+            onStart:function()
+            {
+            },
+            onUpdate:function()
+            {
+            },
+            onComplete:function()
+            {
+               mouseChildren = true;
+            }
+         });
+         
+         // [init]
+         mouseChildren = false;
+         mcBody.gotoAndStop(2);
+         initButton2();
+         
+         // [actions]
+         cmd.insert(TweenMax.to(mcStep, 0.7, {x:posX[1], ease:Quint.easeInOut}));
+         
+         cmd.play();
       }
       
       // #################### private ###################
       
       private function onFBoxOver(e:MouseEvent):void
       {
-         var btn:FriendBoxEX = FriendBoxEX(e.currentTarget);
-         var pos1:Point = btn.localToGlobal(new Point());
-         dpos = globalToLocal(pos1);
-         TweenMax.to(mcDialog, 0.5, {autoAlpha:1});
-         
-         setOverName(btn.nickname);
       }
       
       private function onFBoxOut(e:MouseEvent):void
       {
-         TweenMax.to(mcDialog, 0.5, {autoAlpha:0});
       }
 
       private function onFBoxClick(e:MouseEvent):void
@@ -292,26 +354,100 @@ package casts.friend
                i.enableIt();
             }
          }
+         
+         updateNoView();
+         updateButtonView();
+      }
+      
+      private function updateNoView():void
+      {
+         destroyNoView();
+         
+         for (var i:int = 0; i < selectPool.length; ++i) 
+         {
+            if (selectPool[i].bmpData)
+            {
+               var bmp:Bitmap = new Bitmap(selectPool[i].bmpData.clone(), 'auto', true);
+               bmp.width = 20;
+               bmp.height = 20;
+               bmp.x = i * 26;
+               mcNo.addChild(bmp);
+            }
+         }
+         
+         // txt
+         tfNo.text = '已選' + String(selectPool.length) + '位，最多' + SELECT_MAX + '位';
+      }
+      
+      private function destroyNoView():void
+      {
+         while (mcNo.numChildren)
+         {
+            mcNo.removeChildAt(0);
+         }
+      }
+      
+      private function updateButtonView():void
+      {
+         if (currentFrame == 1)
+         {
+            if (selectPool.length == 0)
+            {
+               btnNext.buttonMode = false;
+               btnNext.alpha = 0.5;
+            }
+            else
+            {
+               btnNext.buttonMode = true;
+               btnNext.alpha = 1.0
+            }
+         }
+         else if (currentFrame == 2)
+         {
+         }
       }
       
       // ________________________________________________
-      //                                mouse over (name)
+      //                                               fb
       
-      private function dialogFollow(e:MouseEvent):void
+      private function tryGetFriend():void
       {
-         TweenMax.to(mcDialog, 0.4, {x:dpos.x, y:dpos.y});
+         if (!FBMgr.api.friends && GB.release)
+         {
+            FBMgr.api.getFriends(allDone);
+         }
+         else
+         {
+            allDone();
+         }
       }
       
-      private function get dialogName():TextField { return TextField(mcDialog.tfName); }
-      private function get dialogMsk():MovieClip { return MovieClip(mcDialog.mcMsk); }
-      private function get dialogBg():MovieClip { return MovieClip(mcDialog.mcBg); }
-      
-      private function setOverName(v:String):void
+      private function allDone():void
       {
-         dialogName.text = v;
-         dialogName.width = dialogName.textWidth + 30; // adjust width
-         TweenMax.to(dialogMsk, 0.3, {width:dialogName.width}); // adjust width
-         TweenMax.to(dialogBg, 0.3, {width:dialogName.width}); // adjust width
+         // stop cmd(TimelineMax)
+         cmd.stop();
+         cmd.kill();
+         cmd = new TimelineMax({
+            onStart:function()
+            {
+            },
+            onUpdate:function()
+            {
+            },
+            onComplete:function()
+            {
+               destroyScroll();
+               initScroll();
+            }
+         });
+         
+         // [init]
+         
+         // [actions]
+         cmd.insert(TweenMax.to(mcLoading, 0.3, {autoAlpha:0}));
+         cmd.insert(TweenMax.to(mcBody, 0.7, {x:375, y:410, autoAlpha:1, scaleX:1, scaleY:1, blurFilter:{blurY:0}, ease:Quint.easeOut}), 0.3);
+         
+         cmd.play();
       }
       
       // --------------------- LINE ---------------------
