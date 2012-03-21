@@ -8,7 +8,7 @@ package _facebook
    import flash.display.BitmapData;
    import flash.external.ExternalInterface;
    import flash.system.Security;
-   
+
    /**
     * 
     * @author cj, cjboy1984@gmail.com
@@ -45,18 +45,20 @@ package _facebook
       private var _friends:Vector.<FBFriend>;
       
       // init callback
-      private var initComplete:Function;
+      private var initCallback:Function;
       // login callback
-      private var loginComplete:Function;
+      private var loginCallback:Function;
+      // feed callback
+      private var feed_LinkCallback:Function;
       // friend callback
-      private var friendComplete:Function;
+      private var friendCallback:Function;
       // album callback
-      private var albumComplete1:Function; // load
-      private var albumComplete2:Function; // create
+      private var albumCallback1:Function; // load
+      private var albumCallback2:Function; // create
       // photo callback
-      private var photoComplete:Function;
+      private var photoCallback:Function;
       // appreq callback
-      private var appreqUIComplete:Function;
+      private var appreqUICallback:Function;
       
       // singleton
       private static var _instance:FBMgr;
@@ -103,7 +105,7 @@ package _facebook
          Trace2('{as} FBMgr | init');
          Trace2('     app_key = ' + _app_key);
          Trace2('     perms = ' + _perms);
-         initComplete = callbackFunc;
+         initCallback = callbackFunc;
          
          var options:Object = 
             {
@@ -114,12 +116,12 @@ package _facebook
       
       public function stop():void
       {
-         initComplete = null;
-         loginComplete = null;
-         friendComplete = null;
-         albumComplete1 = null;
-         albumComplete2 = null;
-         photoComplete = null;
+         initCallback = null;
+         loginCallback = null;
+         friendCallback = null;
+         albumCallback1 = null;
+         albumCallback2 = null;
+         photoCallback = null;
       }
       
       // ________________________________________________
@@ -128,7 +130,7 @@ package _facebook
       public function login(callback:Function = null):void
       {
          Trace2('{as} FBMgr | login');
-         loginComplete = callback;
+         loginCallback = callback;
          
          // login > profile > picture url > picture
          Facebook.login(onLoginComplete, {scope:_perms});
@@ -157,7 +159,7 @@ package _facebook
       public function getFriends(callback:Function = null):void
       {
          Trace2('{as} FBMgr | getFriends');
-         friendComplete = callback;
+         friendCallback = callback;
          
          Facebook.api('/me/friends', onGetFriendsComplete);
       }
@@ -169,7 +171,7 @@ package _facebook
             var ret:Vector.<FBFriend> = new Vector.<FBFriend>();
             for each (var i:FBFriend in friends) 
             {
-               if (i.name.search(keyWord) != -1 || i.username.search(keyWord) != -1)
+               if (i.name.search(keyWord) != -1)
                {
                   ret.push(i);
                }
@@ -187,7 +189,8 @@ package _facebook
       // ________________________________________________
       //                                          publish
       
-      public function postFeed_Link_UI($link:String, callback:Function = null, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description'):void
+      // todo
+      public function postFeed_Link_UI($link:String, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', callback:Function = null):void
       {
          Trace2('{as} FBMgr | postFeed_Link_UI');
          var obj:Object = 
@@ -198,21 +201,27 @@ package _facebook
                caption:$caption,
                description:$description
             };
-         Facebook.ui('feed', obj, onPublishFeed_UIComplete, DISPLAY);
+         Facebook.ui('feed', obj, onPublishFeed_UI, DISPLAY);
       }
       
-      public function postFeed_Link($link:String, callback:Function = null, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description'):void
+      // todo
+      public function postFeed_Link($link:String, $name:String = 'name', $caption:String = 'caption', $description:String = 'description', $message:String = 'message', $picture:String = '', callback:Function = null):void
       {
-         //var obj = 
-         //{
-         //message:'test with 洪毓翔, Erikson Chen',
-         //message_tags:{id:'1652211998',offset:10,length:4},
-         //caption:'caption',
-         //description:"description<center/>description<center/>http://www.google.com",
-         //link:'http://dl.dropbox.com/u/3587501/httpdoc/index.html',
-         //picture:'http://dl.dropbox.com/u/3587501/httpdoc/pic.jpg'
-         //}
-         //FB.api('/me/feed', 'POST', obj, function(a){console.log('a = ', a);});
+         Trace2('{as} FBMgr | postFeed_Link');
+         
+         feed_LinkCallback = callback;
+         
+         var obj:Object = 
+            {
+               name:$name,
+               caption:$caption,
+               description:$description,
+               message:$message,
+               link:$link
+            };
+         if ($picture.length > 0) obj.picture = $picture;
+         
+         Facebook.api('/me/feed', onPostFeed_Link, obj, 'post');
       }
       
       public function postFeed_Link_Sharer():void
@@ -228,7 +237,7 @@ package _facebook
       public function postAppreq_UI(message:String, to_ids:Array, callback:Function = null):void
       {
          Trace2('{as} FBMgr | postAppreq_UI');
-         appreqUIComplete = callback;
+         appreqUICallback = callback;
          
          var ids:String = '';
          for (var i:int = 0; i < to_ids.length; ++i) 
@@ -242,7 +251,7 @@ package _facebook
                message:message,
                to:ids
             };
-         Facebook.ui('apprequests', data, onPostAppreq_UIComplete, DISPLAY);
+         Facebook.ui('apprequests', data, onPostAppreq, DISPLAY);
       }
       
       // ________________________________________________
@@ -251,9 +260,9 @@ package _facebook
       public function getAlbums(callback:Function = null):void
       {
          Trace2('{as} FBMgr | getAlbums');
-         albumComplete1 = callback;
+         albumCallback1 = callback;
          
-         Facebook.api('/me/albums', onGetAlbumsComplete, null, 'GET');
+         Facebook.api('/me/albums', onGetAlbums, null, 'GET');
       }
       
       /**
@@ -264,7 +273,7 @@ package _facebook
        */
       public function createAlbum($name:String, $message:String = '', callback:Function = null):void
       {
-         albumComplete2 = callback;
+         albumCallback2 = callback;
          
          var create:Boolean = true;
          for each (var a:FBAlbum in _albums) 
@@ -291,14 +300,14 @@ package _facebook
                   message:$message
                };
             _latest_aid = null;
-            Facebook.api('/me/albums', onCreateAlbumComplete, obj, 'POST');
+            Facebook.api('/me/albums', onCreateAlbum, obj, 'POST');
          }
          else
          {
             // callback
-            if (albumComplete2 as Function)
+            if (albumCallback2 as Function)
             {
-               albumComplete2();
+               albumCallback2();
             }
          }
       }
@@ -306,7 +315,7 @@ package _facebook
       public function postPhoto(album_id:String, message:String, image:BitmapData, callback:Function = null):void
       {
          Trace2('{as} FBMgr | postPhoto');
-         photoComplete = callback;
+         photoCallback = callback;
          
          var obj:Object = 
             {
@@ -314,12 +323,12 @@ package _facebook
                file:image,
                fileName:'test'
             };
-         Facebook.api('/' + album_id + '/photos', onPostPhotoComplete, obj, 'POST');
+         Facebook.api('/' + album_id + '/photos', onPostPhoto, obj, 'POST');
       }
       
       // ________________________________________________
       //                                      information
-      
+
       public function get isLogin():Boolean { return _uid != null; }
       public function get app_key():String { return _app_key; }
       public function get access_token():String { return _access_token; }
@@ -431,9 +440,9 @@ package _facebook
          }
          
          // callback function
-         if (initComplete as Function)
+         if (initCallback as Function)
          {
-            initComplete();
+            initCallback();
          }
       }
       
@@ -456,6 +465,7 @@ package _facebook
          }
          else
          {
+            loginCallback(); // still notify when failed
             Trace2('{as} FBMgr | onLoginComplete | fail = ', fail);
          }
       }
@@ -517,9 +527,9 @@ package _facebook
          }
          
          // callback function
-         if (loginComplete as Function)
+         if (loginCallback as Function)
          {
-            loginComplete();
+            loginCallback();
          }
       }
       
@@ -534,37 +544,23 @@ package _facebook
             while (fArr.length)
             {
                var f:Object = fArr.pop();
-               _friends.push(new FBFriend(f.id));
+               _friends.push(new FBFriend(f.id, f.name));
             }
-            
-            // get further info
-            _fcount = 0;
-            for (var i:int = 0; i < _friends.length; ++i) 
-            {
-               _friends[i].getFurtherInfo(onGetFriendFurtherInfo);
-            }
+            sortFriends();
          }
          else
          {
             Trace2('{as} FBMgr | getFriendsComplete | fail = ', fail);
          }
-      }
-      
-      private function onGetFriendFurtherInfo():void
-      {
-         if (++_fcount == _friends.length)
+         
+         // callback function
+         if (friendCallback as Function)
          {
-            sortFriends();
-            
-            Trace2('{as} getFriendFurtherInfo | friends = ', friends);
-            if (friendComplete as Function)
-            {
-               friendComplete();
-            }
+            friendCallback();
          }
       }
       
-      private function onGetAlbumsComplete(success:Object, fail:Object):void
+      private function onGetAlbums(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -582,13 +578,13 @@ package _facebook
          }
          
          // callback function
-         if (albumComplete1 as Function)
+         if (albumCallback1 as Function)
          {
-            albumComplete1();
+            albumCallback1();
          }
       }
       
-      private function onCreateAlbumComplete(success:Object, fail:Object):void
+      private function onCreateAlbum(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -604,13 +600,13 @@ package _facebook
          }
          
          // callback function
-         if (albumComplete2 as Function)
+         if (albumCallback2 as Function)
          {
-            albumComplete2();
+            albumCallback2();
          }
       }
       
-      private function onPostPhotoComplete(success:Object, fail:Object):void
+      private function onPostPhoto(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -622,17 +618,27 @@ package _facebook
          }
          
          // callback function
-         if (albumComplete2 as Function)
+         if (albumCallback2 as Function)
          {
-            albumComplete2();
+            albumCallback2();
+         }
+      }
+         
+      private function onPublishFeed_UI():void
+      {
+      }
+         
+      private function onPostFeed_Link(success:Object, fail:Object):void
+      {
+         
+         // callback function
+         if (feed_LinkCallback as Function)
+         {
+            feed_LinkCallback();
          }
       }
       
-      private function onPublishFeed_UIComplete():void
-      {
-      }
-      
-      private function onPostAppreq_UIComplete(res:Object):void
+      private function onPostAppreq(res:Object):void
       {
          if (res)
          {
@@ -640,9 +646,9 @@ package _facebook
          }
          
          // callback function
-         if (appreqUIComplete as Function)
+         if (appreqUICallback as Function)
          {
-            appreqUIComplete();
+            appreqUICallback();
          }
       }
       
