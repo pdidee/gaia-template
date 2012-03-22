@@ -35,7 +35,7 @@ package _myui.scrollbar
       
       // manager
       protected var mgrNo:int = 0;
-      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      public function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _barRef:Number; // 捲bar的可移動距離
       protected var thumbNewY:int; // thumb的y值，因為有滑鼠滾輪功能所以存在

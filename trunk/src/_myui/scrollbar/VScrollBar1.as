@@ -41,7 +41,7 @@ package _myui.scrollbar
       
       // manager
       protected var mgrNo:int = 0;
-      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      public function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
       
       protected var _ta:MovieClip;          // target
       protected var _taInitPos:Point;       // target init-position
