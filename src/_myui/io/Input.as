@@ -1,11 +1,9 @@
 package _myui.io
 {
-   import flash.display.DisplayObject;
    import flash.display.Stage;
    import flash.events.Event;
    import flash.events.KeyboardEvent;
    import flash.events.MouseEvent;
-   import flash.geom.Point;
    import flash.utils.Dictionary;
    
    /**
@@ -16,9 +14,9 @@ package _myui.io
     * @usage
     * Construct MyInput                - MyInput.init(stage);
     * Destruct MyInput                 - MyInput.dispose();
-    * Detect key-down                  - MyInput.keyDown('shift', 'a'); // return true if 'shift' and 'a' are both pressed!
-    * Detect key-up                    - MyInput.keyUp('B'); // return true if 'B' is released!
-    * Detect key-press(buffer)         - MyInput.keyPress('c') // return ture if 'c' is in press-buffer. Buffer will be cleared every enter-frame(the lowest priority)
+    * Detect key-down                  - MyInput.keyDown(Keyboard.SHIFT, Keyboard.A); // return true if 'shift' and 'a' are both pressed!
+    * Detect key-up                    - MyInput.keyUp(Keyboard.B); // return true if 'B' is released!
+    * Detect key-press(buffer)         - MyInput.keyPress(Keyboard.C) // return ture if 'c' is in press-buffer. Buffer will be cleared every enter-frame(the lowest priority)
     */
    public class Input
    {
@@ -29,10 +27,7 @@ package _myui.io
       protected static const MOUSE_UP_OR_LOST:String = 'mouseUpOrLost';
       
       /// Mouse stuff.
-      protected var mousePos:Point = new Point(-1000, -1000);
-      protected var mouseTrackable:Boolean = false; /// True if flash knows what the mouse is doing.
-      protected var mouseDetected:Boolean = false; /// True if flash detected at least one mouse event.
-      protected var mouseIsDown:Boolean = false;
+      protected var isMouseDown:Boolean = false;
       
       /// Keyboard stuff. For these dictionaries, the keys are keyboard key-codes. The value is always true (a nil indicates no event was caught for a particular key).
       protected var keysDown:Dictionary;
@@ -57,8 +52,6 @@ package _myui.io
        */
       public static function init(s:Stage, autoClear:Boolean = true):void
       {
-         if (api.stage) return;
-         
          api.keysDown = new Dictionary();
          api.keysPressed = new Dictionary();
          api.keysUp = new Dictionary();
@@ -70,11 +63,12 @@ package _myui.io
          
          s.addEventListener(KeyboardEvent.KEY_DOWN, api._onKeyDown, false, 0, true);
          s.addEventListener(KeyboardEvent.KEY_UP, api._onKeyUp, false, 0, true);
+         
          s.addEventListener(MouseEvent.MOUSE_UP, api._onMouseUp, false, 0, true);
          s.addEventListener(MouseEvent.MOUSE_DOWN, api._onMouseDown, false, 0, true);
-         s.addEventListener(MouseEvent.MOUSE_MOVE, api._onMouseMove, false, 0, true);
          s.addEventListener(Event.MOUSE_LEAVE, api._onMouseLeave, false, 0, true);
          s.addEventListener(Event.DEACTIVATE, api._onDeactivate, false, 0, true);
+         
          api.stage = s;
       }
       
@@ -89,16 +83,14 @@ package _myui.io
          api.keysPressed = null;
          api.keysUp = null;
          
-         api.mouseTrackable = false;
-         api.mouseDetected = false;
-         api.mouseIsDown = false;
+         api.isMouseDown = false;
          
          api.stage.removeEventListener(Event.ENTER_FRAME, api._onEnterFrame);
          api.stage.removeEventListener(KeyboardEvent.KEY_DOWN, api._onKeyDown);
          api.stage.removeEventListener(KeyboardEvent.KEY_UP, api._onKeyUp);
+         
          api.stage.removeEventListener(MouseEvent.MOUSE_UP, api._onMouseUp);
          api.stage.removeEventListener(MouseEvent.MOUSE_DOWN, api._onMouseDown);
-         api.stage.removeEventListener(MouseEvent.MOUSE_MOVE, api._onMouseMove);
          api.stage.removeEventListener(Event.MOUSE_LEAVE, api._onMouseLeave);
          api.stage.removeEventListener(Event.DEACTIVATE, api._onDeactivate);
          
@@ -137,16 +129,9 @@ package _myui.io
          return api.keySearch(api.keysPressed, args);
       }
       
-      // ################### protected ##################
+      public static function get mouseDown():Boolean { return api.isMouseDown; }
       
-      /**
-       * clear key up and key pressed dictionaries.
-       */
-      protected function clear():void
-      {
-         api.keysUp = new Dictionary();
-         api.keysPressed = new Dictionary();
-      }
+      // ################### protected ##################
       
       /**
        * Used internally by keyDown(), keyUp() and keyPress().
@@ -156,8 +141,8 @@ package _myui.io
          var ret:uint = 0;
          for (var i:uint = 0; i < keys.length; ++i)
          {
+//            if (d[KeyCodes[keys[i]]])
             if (d[keys[i]])
-               //            if (d[KeyCodes[keys[i]]])
             {
                ++ret;
             }
@@ -198,26 +183,12 @@ package _myui.io
       }
       
       /**
-       * Record the mouse position, and clamp it to the size of the stage. Not a direct event listener (called by others).
+       * clear key up and key pressed dictionaries.
        */
-      protected function handleMouseEvent(e:MouseEvent):void
+      protected function clear():void
       {
-         /// Strage bug where totally bogus mouse positions are reported... ?
-         if (Math.abs(e.stageX) < 900000)
-         {
-            api.mousePos.x = e.stageX < 0 ? 0 : e.stageX > api.stage.stageWidth ? api.stage.stageWidth : e.stageX;
-            api.mousePos.y = e.stageY < 0 ? 0 : e.stageY > api.stage.stageHeight ? api.stage.stageHeight : e.stageY;
-         }
-         api.mouseTrackable = true;
-         api.mouseDetected = true;
-      }
-      
-      /**
-       * Get the mouse position in the local coordinates of an object.
-       */
-      protected function mousePositionIn(o:DisplayObject):Point
-      {
-         return o.globalToLocal(api.mousePos);
+         api.keysUp = new Dictionary();
+         api.keysPressed = new Dictionary();
       }
       
       /**
@@ -225,8 +196,7 @@ package _myui.io
        */
       protected function _onMouseDown(e:MouseEvent):void
       {
-         api.mouseIsDown = true;
-         handleMouseEvent(e);
+         api.isMouseDown = true;
       }
       
       /**
@@ -234,17 +204,7 @@ package _myui.io
        */
       protected function _onMouseUp(e:MouseEvent):void
       {
-         api.mouseIsDown = false;
-         handleMouseEvent(e);
-         api.stage.dispatchEvent(new Event(MOUSE_UP_OR_LOST));
-      }
-      
-      /**
-       * Record a mouse move event.
-       */
-      protected function _onMouseMove(e:MouseEvent):void
-      {
-         handleMouseEvent(e);
+         api.isMouseDown = false;
       }
       
       /**
@@ -252,9 +212,7 @@ package _myui.io
        */
       protected function _onMouseLeave(e:Event):void
       {
-         api.mouseIsDown = false;
-         api.stage.dispatchEvent(new Event(MOUSE_UP_OR_LOST));
-         api.mouseTrackable = false;
+         api.isMouseDown = false;
       }
       
       /**
@@ -262,15 +220,13 @@ package _myui.io
        */
       protected function _onDeactivate(e:Event):void
       {
-         api.mouseIsDown = false;
-         api.stage.dispatchEvent(new Event(MOUSE_UP_OR_LOST));
-         api.mouseTrackable = false;
+         api.isMouseDown = false;
       }
       
       // ________________________________________________
       //                                         sinleton
       
-      protected function get api():Input
+      protected static function get api():Input
       {
          if (!obj)
          {
