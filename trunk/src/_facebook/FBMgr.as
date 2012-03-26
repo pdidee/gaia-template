@@ -7,6 +7,8 @@ package _facebook
    
    import flash.display.BitmapData;
    import flash.external.ExternalInterface;
+   import flash.net.URLRequest;
+   import flash.net.navigateToURL;
    import flash.system.Security;
 
    /**
@@ -38,11 +40,22 @@ package _facebook
       private var _albums:Vector.<FBAlbum> = new Vector.<FBAlbum>();
       private var _photo_ids:Array = new Array();
       private var _latest_aid:String; // album id
+      private var _latest_pid:String; // photo id
       private var _latest_appreq_id:String; // appreq id
+      
+      // queue
+      private var isRuning:Boolean = false;
+      private var no:uint = 0;
+      private var func:Vector.<Function>; // function
+      private var funcParams:Vector.<Array>; // parameters of the function
       
       // friend
       private var _fcount:int;
       private var _friends:Vector.<FBFriend>;
+      
+      // album
+      private var _album_name:String;
+      private var _album_msg:String;
       
       // init callback
       private var initCallback:Function;
@@ -59,6 +72,8 @@ package _facebook
       private var photoCallback:Function;
       // appreq callback
       private var appreqUICallback:Function;
+      // command queue callback
+      private var funcCallback:Function;
       
       // singleton
       private static var _instance:FBMgr;
@@ -79,6 +94,53 @@ package _facebook
          }
          
          return _instance;
+      }
+      
+      // ________________________________________________
+      //                                    queue command
+      
+      /**
+       * A serial command executer. But be ware of that only some api can be run serially.
+       * @param callback      A callback function will be called when all the command is finished.
+       * @param fc            An array of functions to be execute.
+       * @param params        An array of parameters to be passed into the corresponding function.
+       * @usage
+       * // login > get albums > create album
+       * var fc:Array = [
+       *    FBMgr.api.login,
+       *    FBMgr.api.getAlbums,
+       *    FBMgr.api.createAlbum,
+       * ];
+       * var params:Array = [
+       *    null,
+       *    null,
+       *    [null, 'album name', 'album msg']
+       * ];
+       * FBMgr.api.runBatch(someCallback, fc, params);
+       */
+      public function runBatch(callback:Function = null, fc:Array = null, params:Array = null):void
+      {
+         if (fc && params && fc.length != params.length) return;
+         if (isRuning) return;
+         
+         funcCallback = callback;
+         
+         func = new Vector.<Function>();
+         for each (var f:Function in fc) 
+         {
+            func.push(f);
+         }
+         
+         funcParams = new Vector.<Array>();
+         for each (var p:Array in params) 
+         {
+            funcParams.push(p);
+         }
+         
+         isRuning = true;
+         
+         no = 0;
+         func[no].apply(null, funcParams[no]);
       }
       
       // ________________________________________________
@@ -111,7 +173,7 @@ package _facebook
             {
                frictionlessRequests:true
             };
-         Facebook.init(_app_key, onInitComplete, options);
+         Facebook.init(_app_key, onInit, options);
       }
       
       public function stop():void
@@ -132,25 +194,8 @@ package _facebook
          Trace2('{as} FBMgr | login');
          loginCallback = callback;
          
-         // login > profile > picture url > picture
-         Facebook.login(onLoginComplete, {scope:_perms});
-      }
-      
-      private function getProfile():void
-      {
-         Trace2('{as} FBMgr | getProfile');
-         Facebook.api('/me', onGetProfileComplete);
-      }
-      
-      /**
-       * Get url of profile picture.
-       * @param type    square (50x50), small (50 pixels wide, variable height), normal (100 pixels wide, variable height), and large (about 200 pixels wide, variable height)
-       */
-      private function getProfilePhotoURL(type:String = 'square'):void
-      {
-         Trace2('{as} FBMgr | getProfilePhotoURL | type = ' + type);
-         _pic_type = type;
-         Facebook.api('/me?fields=picture&type=' + _pic_type + '&', onGetProfilePhotoURLComplete);
+         // login > profile > picture url
+         Facebook.login(onLogin, {scope:_perms});
       }
       
       // ________________________________________________
@@ -161,7 +206,7 @@ package _facebook
          Trace2('{as} FBMgr | getFriends');
          friendCallback = callback;
          
-         Facebook.api('/me/friends', onGetFriendsComplete);
+         Facebook.api('/me/friends', onGetFriends);
       }
       
       public function findFriends(keyWord:String):Vector.<FBFriend>
@@ -271,7 +316,7 @@ package _facebook
        * @param $message   Album description.
        * @param callback
        */
-      public function createAlbum($name:String, $message:String = '', callback:Function = null):void
+      public function createAlbum(callback:Function = null, $name:String = '', $message:String = ''):void
       {
          albumCallback2 = callback;
          
@@ -312,10 +357,12 @@ package _facebook
          }
       }
       
-      public function postPhoto(album_id:String, message:String, image:BitmapData, callback:Function = null):void
+      public function postPhoto1(album_id:String, message:String, image:BitmapData, callback:Function = null):void
       {
-         Trace2('{as} FBMgr | postPhoto');
+         Trace2('{as} FBMgr | postPhoto1');
          photoCallback = callback;
+         
+         _latest_pid = null;
          
          var obj:Object = 
             {
@@ -324,6 +371,17 @@ package _facebook
                fileName:'test'
             };
          Facebook.api('/' + album_id + '/photos', onPostPhoto, obj, 'POST');
+      }
+      
+      public function postPhoto2(album_id:String, message:String, image:BitmapData, callback:Function = null):void
+      {
+         Trace2('{as} FBMgr | postPhoto2');
+      }
+      
+      public function postProfilePhoto(photo_id:String):void
+      {
+         var url:String = 'http://www.facebook.com/photo.php?fbid=' + photo_id + '&makeprofile=1';
+         navigateToURL(new URLRequest(url), '_blank');
       }
       
       // ________________________________________________
@@ -347,6 +405,7 @@ package _facebook
       public function get photo_ids():Array { return _photo_ids; }
       
       public function get latest_aid():String { return _latest_aid; }
+      public function get latest_pid():String { return _latest_pid; }
       public function get latest_appreq_id():String { return _latest_appreq_id; }
       
       // ________________________________________________
@@ -423,7 +482,26 @@ package _facebook
       
       // #################### private ###################
       
-      private function onInitComplete(success:Object, fail:Object):void
+      private function getProfile():void
+      {
+         Trace2('{as} FBMgr | getProfile');
+         Facebook.api('/me', onGetProfile);
+      }
+      
+      /**
+       * Get url of profile picture.
+       * @param type    square (50x50), small (50 pixels wide, variable height), normal (100 pixels wide, variable height), and large (about 200 pixels wide, variable height)
+       */
+      private function getProfilePhotoURL(type:String = 'square'):void
+      {
+         Trace2('{as} FBMgr | getProfilePhotoURL | type = ' + type);
+         _pic_type = type;
+         Facebook.api('/me?fields=picture&type=' + _pic_type + '&', onGetProfilePhotoURL);
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onInit(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -444,9 +522,12 @@ package _facebook
          {
             initCallback();
          }
+         
+         // command queue
+         exeNextFunc();
       }
       
-      private function onLoginComplete(success:Object, fail:Object):void
+      private function onLogin(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -465,12 +546,12 @@ package _facebook
          }
          else
          {
-            loginCallback(); // still notify when failed
             Trace2('{as} FBMgr | onLoginComplete | fail = ', fail);
+            loginCallback(); // still notify when failed
          }
       }
       
-      private function onGetProfileComplete(success:Object, fail:Object):void
+      private function onGetProfile(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -487,7 +568,7 @@ package _facebook
             Trace2('     gender = ' + _gender);
             Trace2('     email = ' + _email);
             
-            // next
+            // next, see getProfilePhotoURL();
             getProfilePhotoURL();
          }
          else
@@ -496,7 +577,7 @@ package _facebook
          }
       }
       
-      private function onGetProfilePhotoURLComplete(success:Object, fail:Object):void
+      private function onGetProfilePhotoURL(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -505,18 +586,26 @@ package _facebook
             {
                case 'square':
                   _pic_url_square = new String(success.picture);
+                  
+                  _pic_url_small = square2Small(_pic_url_square);
+                  _pic_url_normal = square2Normal(_pic_url_square);
+                  _pic_url_large = square2Large(_pic_url_square);
+                  
                   tryLoadPolicy(_pic_url_square); // security
                   break;
                case 'small':
                   _pic_url_small = new String(success.picture); // security
+                  
                   tryLoadPolicy(_pic_url_small);
                   break;
                case 'normal':
                   _pic_url_normal = new String(success.picture); // security
+                  
                   tryLoadPolicy(_pic_url_normal); // security
                   break;
                case 'large':
                   _pic_url_large = new String(success.picture);
+                  
                   tryLoadPolicy(_pic_url_large); // security
                   break;
             }
@@ -531,9 +620,12 @@ package _facebook
          {
             loginCallback();
          }
+         
+         // command queue
+         exeNextFunc();
       }
       
-      private function onGetFriendsComplete(success:Object, fail:Object):void
+      private function onGetFriends(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -558,6 +650,9 @@ package _facebook
          {
             friendCallback();
          }
+         
+         // command queue
+         exeNextFunc();
       }
       
       private function onGetAlbums(success:Object, fail:Object):void
@@ -582,6 +677,9 @@ package _facebook
          {
             albumCallback1();
          }
+         
+         // command queue
+         exeNextFunc();
       }
       
       private function onCreateAlbum(success:Object, fail:Object):void
@@ -589,8 +687,6 @@ package _facebook
          if (success)
          {
             Trace2('{as} FBMgr | onCreateAlbumComplete | success = ', success);
-            var a:FBAlbum = _albums[_albums.length-1];
-            a.id = new String(success.id);
             
             _latest_aid = new String(success.id);
          }
@@ -604,6 +700,9 @@ package _facebook
          {
             albumCallback2();
          }
+         
+         // command queue
+         exeNextFunc();
       }
       
       private function onPostPhoto(success:Object, fail:Object):void
@@ -611,6 +710,8 @@ package _facebook
          if (success)
          {
             Trace2('{as} FBMgr | onPostPhotoComplete | success = ', success);
+            
+            _latest_pid = new String(success.id);
          }
          else
          {
@@ -618,9 +719,9 @@ package _facebook
          }
          
          // callback function
-         if (albumCallback2 as Function)
+         if (photoCallback as Function)
          {
-            albumCallback2();
+            photoCallback();
          }
       }
          
@@ -648,7 +749,29 @@ package _facebook
          // callback function
          if (appreqUICallback as Function)
          {
-            appreqUICallback();
+            appreqUICallback(res);
+         }
+      }
+      
+      private function exeNextFunc():void
+      {
+         // command queue
+         if (isRuning)
+         {
+            ++no;
+            if (func.length > no && func[no])
+            {
+               func[no].apply(null, funcParams[no]);;
+            }
+            else
+            {
+               isRuning = false;
+               
+               if (funcCallback as Function)
+               {
+                  funcCallback();
+               }
+            }
          }
       }
       

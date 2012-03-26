@@ -33,6 +33,13 @@
       margin: 0 auto;
       background-color:#ffffff;
    }
+   #fblike
+	{
+	   position: absolute;
+	   top: 8px;
+	   right: 0px;
+	   z-index: 9999;
+	}
    </style>
 
    <!-- Prgression Framework necessary libs -->
@@ -98,10 +105,15 @@
 </head>
 
 <body>
+	<!-- Facebook Graph API element div -->
+   <div id='fb-root'></div>
+   <!-- Facebook Like -->
+	<div id="fblike">
+      <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
+   </div>
+   
    <!-- Flash -->
    <div id='FlashContainer'>
-      <!-- Facebook Graph API element div -->
-      <div id='fb-root'></div>
       <!-- Flash element div -->
       <div id='MyFlash'></div>
    </div>
