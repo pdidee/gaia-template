@@ -1,5 +1,9 @@
 package _myui.form
 {
+   import com.greensock.loading.DataLoader;
+   import com.greensock.loading.ImageLoader;
+   import com.greensock.loading.LoaderMax;
+   
    import flash.events.Event;
    import flash.events.EventDispatcher;
    import flash.events.IOErrorEvent;
@@ -38,6 +42,9 @@ package _myui.form
       protected var canSubmit:Boolean;
       protected var urlLoader:URLLoader;
       protected var urlVar:URLVariables;
+      
+      // test
+      private var ldr:DataLoader;
       
       // handler
       protected var onCompleteFunc:Function;
@@ -153,15 +160,22 @@ package _myui.form
          // req
          var urlReq:URLRequest = new URLRequest();
          urlReq.url = newURL;
-         urlReq.method = URLRequestMethod.POST;
-         urlReq.data = urlVar;
+         if (postIDs.length)
+         {
+            urlReq.method = URLRequestMethod.POST;
+            urlReq.data = urlVar;
+         }
+         else
+         {
+            urlReq.method = URLRequestMethod.GET;
+         }
          
          if (canSubmit)
          {
-            //            trace("{as} SubmitHelper.send | urlReq.url =", urlReq.url);
+            trace("{as} SubmitHelper.send | urlReq.url =", urlReq.url);
             
             canSubmit = false;
-            //            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
+//            urlLoader.dataFormat = URLLoaderDataFormat.BINARY;
             urlLoader.load(urlReq);
          }
       }
