@@ -97,7 +97,7 @@ package _facebook
       }
       
       // ________________________________________________
-      //                                    queue command
+      //                                            batch
       
       /**
        * A serial command executer. But be ware of that only some api can be run serially.
@@ -522,9 +522,6 @@ package _facebook
          {
             initCallback();
          }
-         
-         // command queue
-         exeNextFunc();
       }
       
       private function onLogin(success:Object, fail:Object):void
@@ -547,7 +544,10 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | onLoginComplete | fail = ', fail);
-            loginCallback(); // still notify when failed
+            
+            // still notify when failed
+            terminateBatch();
+            loginCallback();
          }
       }
       
@@ -574,6 +574,10 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | getProfileComplete | fail = ', fail);
+            
+            // still notify when failed
+            terminateBatch();
+            loginCallback();
          }
       }
       
@@ -613,6 +617,9 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | getProfilePhotoComplete | fail = ', fail);
+            
+            // still notify when failed
+            terminateBatch();
          }
          
          // callback function
@@ -643,6 +650,9 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | getFriendsComplete | fail = ', fail);
+            
+            // still notify when failed
+            terminateBatch();
          }
          
          // callback function
@@ -670,6 +680,9 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | onGetAlbumsComplete | fail = ', fail);
+            
+            // still notify when failed
+            terminateBatch();
          }
          
          // callback function
@@ -693,6 +706,9 @@ package _facebook
          else
          {
             Trace2('{as} FBMgr | onCreateAlbumComplete | fail = ', fail);
+            
+            // still notify when failed
+            terminateBatch();
          }
          
          // callback function
@@ -731,7 +747,6 @@ package _facebook
          
       private function onPostFeed_Link(success:Object, fail:Object):void
       {
-         
          // callback function
          if (feed_LinkCallback as Function)
          {
@@ -753,6 +768,9 @@ package _facebook
          }
       }
       
+      // ________________________________________________
+      //                                            batch
+      
       private function exeNextFunc():void
       {
          // command queue
@@ -771,6 +789,19 @@ package _facebook
                {
                   funcCallback();
                }
+            }
+         }
+      }
+      
+      private function terminateBatch():void
+      {
+         if (isRuning)
+         {
+            isRuning = false;
+            
+            if (funcCallback as Function)
+            {
+               funcCallback();
             }
          }
       }
