@@ -11,8 +11,8 @@ package _myui.form
    {
       // photo
       protected var photo:PhotoBox;
-      protected var pw:Number; // photo width
-      protected var ph:Number; // photo height
+      protected function get pw():Number { return photo.pw; } // photo width
+      protected function get ph():Number { return photo.ph; } // photo height
       
       public function FriendBox(photoWidth:Number, photoHeight:Number)
       {
