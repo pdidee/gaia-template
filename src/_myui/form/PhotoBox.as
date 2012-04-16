@@ -35,8 +35,10 @@ package _myui.form
    public class PhotoBox extends Sprite
    {
       // photo width and height
-      protected var pw:Number;
-      protected var ph:Number;
+      protected var _pw:Number;
+      protected var _ph:Number;
+      public function get pw():Number { return _pw; }
+      public function get ph():Number { return _ph; }
       
       // photo mask
       protected var pmsk:Shape;
@@ -57,13 +59,13 @@ package _myui.form
          addChild(pbox);
          
          // photo width/height
-         pw = photoWidth;
-         ph = photoHeight;
+         _pw = photoWidth;
+         _ph = photoHeight;
          
          // mask
          pmsk = new Shape();
          pmsk.graphics.beginFill(0x0000ff);
-         pmsk.graphics.drawRect(0, 0, pw, ph);
+         pmsk.graphics.drawRect(0, 0, _pw, _ph);
          pmsk.graphics.endFill();
          addChild(pmsk);
          pbox.mask = pmsk;
@@ -83,7 +85,7 @@ package _myui.form
          // clear old
          dispose();
          
-         imgLoader = new ImageLoader(url, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
+         imgLoader = new ImageLoader(url, {container:pbox, width:_pw, height:_ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
          imgLoader.load(true);
       }
       
@@ -95,7 +97,7 @@ package _myui.form
          // clear old
          dispose();
          
-         imgLoader = new ImageLoader(url, {container:pbox, width:pw, height:ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
+         imgLoader = new ImageLoader(url, {container:pbox, width:_pw, height:_ph, scaleMode:"proportionalOutside", onProgress:onImgLoading, onComplete:onImgLoaded});
          return imgLoader;
       }
       
@@ -123,8 +125,8 @@ package _myui.form
       
       public function get photo():Bitmap { return imgLoader ? imgLoader.rawContent : null; }
       
-      public function get photoWidth():Number { return pw; }
-      public function get photoHeight():Number { return ph; }
+      public function get photoWidth():Number { return _pw; }
+      public function get photoHeight():Number { return _ph; }
       public function get photoScale():Number { return imgLoader ? imgLoader.rawContent.scaleX : 0; }
       
       public function get photoX():Number { return imgLoader ? imgLoader.rawContent.x : 0; }
