@@ -44,7 +44,7 @@ package casts.friend
       
       // ________________________________________________
       //                                           bitmap
-
+      
       public function loadPicture():LoaderMax
       {
          buttonMode = false;
@@ -58,7 +58,7 @@ package casts.friend
             }
          });
          
-         var url:String = 'https://graph.facebook.com/' + uid + '?fields=picture&type=square&access_token=' + FBMgr.api.access_token;
+         var url:String = 'https://graph.facebook.com/' + uid + '?fields=picture&type=square&access_token=' + FBMgr.api.accessToken;
          var infoLoader:DataLoader = new DataLoader(url, {onComplete:onGetFutherInfo});
          
          loaderPapa.append(infoLoader);

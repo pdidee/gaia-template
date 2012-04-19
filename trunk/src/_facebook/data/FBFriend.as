@@ -6,6 +6,9 @@ package _facebook.data
       private var _uid:String;
       private var _name:String;
       
+      public function get uid():String { return _uid; }
+      public function get name():String { return _name; }
+      
       // further info callback
       private var furtherInfoCallback:Function;
       
@@ -14,12 +17,6 @@ package _facebook.data
          _uid = new String($uid);
          _name = new String($name);
       }
-      
-      // ________________________________________________
-      //                                      information
-      
-      public function get uid():String { return _uid; }
-      public function get name():String { return _name; }
       
       // ################### protected ##################
       
