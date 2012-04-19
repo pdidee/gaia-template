@@ -33,23 +33,11 @@ package _extension
       {
       }
       
-      // --------------------- LINE ---------------------
-      
-      // Just like Gaia.api (smile :D)
-      public static function get api():GaiaPlus
-      {
-         if (!instance)
-         {
-            instance = new GaiaPlus(new PrivateClass());
-            // init
-            instance.testEnabled = true;
-         }
-         
-         return instance;
-      }
-      
       // ________________________________________________
-      //                                Transition in/out
+      //                                  Transition Test
+      
+      public function enableTest():void { testEnabled = true; }
+      public function disableTest():void { testEnabled = false; }
       
       /**
        * A transition test model. If you want to press "i" and "o" on your keyboard to test transition in-out functionality, please feel free to use it.
@@ -57,15 +45,14 @@ package _extension
        */      
       public function initTest($target:AbstractBase):void
       {
+         if (!testEnabled) return;
+         
          testTarget = $target;
-         if (testTarget.stage)
+         if (testTarget.stage && !testTarget.stage.hasEventListener(KeyboardEvent.KEY_UP))
          {
             testTarget.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUPUP);
          }
       }
-      
-      public function enableTest():void { testEnabled = true; }
-      public function disableTest():void { testEnabled = false; }
       
       // ________________________________________________
       //                                        Preloader
@@ -160,6 +147,22 @@ package _extension
          
          var asset:Object = page.assets[$assetId];
          return asset.content;
+      }
+      
+      // ________________________________________________
+      //                                        singleton
+      
+      // Just like Gaia.api (smile :D)
+      public static function get api():GaiaPlus
+      {
+         if (!instance)
+         {
+            instance = new GaiaPlus(new PrivateClass());
+            // init
+            instance.testEnabled = true;
+         }
+         
+         return instance;
       }
       
       // ################### protected ##################
