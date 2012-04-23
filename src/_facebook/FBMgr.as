@@ -344,10 +344,7 @@ package _facebook
             Trace2('{as} FBMgr | onInitComplete | not login yet');
             
             // return
-            if (callbackFunc as Function)
-            {
-               callbackFunc();
-            }
+            tryCallback();
          }
       }
       
@@ -376,10 +373,7 @@ package _facebook
             Trace2('{as} FBMgr | onLoginComplete | fail = ', fail);
             
             // return
-            if (callbackFunc as Function)
-            {
-               callbackFunc();
-            }
+            tryCallback();
          }
       }
       
@@ -408,10 +402,7 @@ package _facebook
             Trace2('{as} FBMgr | getProfileComplete | fail = ', fail);
             
             // return
-            if (callbackFunc as Function)
-            {
-               callbackFunc();
-            }
+            tryCallback();
          }
       }
       
@@ -436,10 +427,7 @@ package _facebook
             Trace2('{as} FBMgr | getProfilePhotoComplete | fail = ', fail);
             
             // return
-            if (callbackFunc as Function)
-            {
-               callbackFunc();
-            }
+            tryCallback();
          }
       }
       
@@ -480,10 +468,7 @@ package _facebook
             else
             {
                // return
-               if (callbackFunc as Function)
-               {
-                  callbackFunc();
-               }
+               tryCallback();
             }
          }
          else
@@ -491,10 +476,7 @@ package _facebook
             Trace2('{as} FBMgr | onGetAlbumsComplete | fail = ', fail);
             
             // still notify when failed
-            if (callbackFunc as Function)
-            {
-               callbackFunc();
-            }
+            tryCallback();
          }
       }
       
@@ -512,10 +494,7 @@ package _facebook
          }
          
          // return
-         if (callbackFunc as Function)
-         {
-            callbackFunc();
-         }
+         tryCallback();
       }
       
       // ________________________________________________
@@ -542,10 +521,7 @@ package _facebook
          }
          
          // return
-         if (callbackFunc as Function)
-         {
-            callbackFunc();
-         }
+         tryCallback();
       }
       
       // ________________________________________________
@@ -565,10 +541,7 @@ package _facebook
          }
          
          // return
-         if (callbackFunc as Function)
-         {
-            callbackFunc();
-         }
+         tryCallback();
       }
       
       private function onPublishFeed_UI():void
@@ -578,10 +551,7 @@ package _facebook
       private function onPostFeed_Link(success:Object, fail:Object):void
       {
          // return
-         if (callbackFunc as Function)
-         {
-            callbackFunc();
-         }
+         tryCallback();
       }
       
       private function onPostAppreq(res:Object):void
@@ -592,14 +562,22 @@ package _facebook
          }
          
          // return
+         tryCallback();
+      }
+      
+      // ________________________________________________
+      //                                            utils
+      
+      /**
+       * Try to call callback function.
+       */
+      private function tryCallback():void
+      {
          if (callbackFunc as Function)
          {
             callbackFunc();
          }
       }
-      
-      // ________________________________________________
-      //                                            utils
       
       /**
        * Looks for a policy file at the location specified by parsing the url.
