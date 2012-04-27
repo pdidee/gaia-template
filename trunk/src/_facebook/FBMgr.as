@@ -12,9 +12,8 @@ package _facebook
    import flash.system.Security;
    
    /**
-    * 
-    * @author cj, cjboy1984@gmail.com
-    * 
+    * A facebook manager
+    * @author boy, cjboy1984@gmail.com
     */   
    public class FBMgr
    {
@@ -41,12 +40,16 @@ package _facebook
       public var albumPool:Vector.<FBAlbum>;
       public var returnId:String; // photo id, request id, ...
       
-      public function get isLogin():Boolean { return uid != null; }
-      
       // album
-      private var albumName:String = '';
-      private var albumMsg:String = '';
-      private var wantedAlbumNo:int = -1;
+      private var albumName:String = 'test';
+      private var albumMsg:String = '...';
+      private var wantedAlbum:FBAlbum;
+      // profile album
+      private var profileAlbum:FBAlbum;
+      
+      // like
+      private var likeId:String = '20531316728';
+      private var _isLike:Boolean = false;
       
       // init callback
       private var callbackFunc:Function;
@@ -63,7 +66,7 @@ package _facebook
       //                                             init
       
       /**
-       * init > get album > create album
+       * init > get profile > get profile picture > get album > create album
        * @param param         {fb_key:152204381520601,perms:'user_about_me,user_photos'}
        * @param callback
        */
@@ -86,20 +89,40 @@ package _facebook
          
          callbackFunc = callback;
          
-         var options:Object = 
-            {
-               frictionlessRequests:true
-            };
-         Facebook.init(appKey, onInit_1, options);
+         Facebook.init(appKey, onInit_1);
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onInit_1(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            uid = new String(success.uid);
+            accessToken = new String(success.accessToken);
+            
+            Trace2('{as} FBMgr | init | already login');
+            Trace2('     uid = ' + uid);
+            Trace2('     access_token = ' + accessToken);
+            
+            // next
+            Facebook.api('/me', onLogin1_2);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | init | not login yet');
+            
+            // return
+            tryCallback();
+         }
       }
       
       // ________________________________________________
       //                                            login
       
-      /**
-       * login > get profile > get profile photo > get album > create album
-       * @param callback
-       */
+      public function get isLogin():Boolean { return uid != null; }
+      
+      // login > get profile > get profile photo > get album > create album
       public function login1(callback:Function = null):void
       {
          Trace2('{as} FBMgr | login');
@@ -108,6 +131,210 @@ package _facebook
          // login > profile > picture url
          Facebook.login(onLogin1_1, {scope:perms});
       }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onLogin1_1(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            if (!isLogin)
+            {
+               uid = new String(success.uid);
+               accessToken = new String(success.accessToken);
+               
+               Trace2('{as} FBMgr | login | success = ', success);
+               Trace2('     uid = ' + uid);
+               Trace2('     access_token = ' + accessToken);
+            }
+            
+            // next
+            Facebook.api('/me', onLogin1_2);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | login | fail = ', fail);
+            
+            // return
+            tryCallback();
+         }
+      }
+      
+      private function onLogin1_2(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            name = new String(success.name);
+            username = new String(success.username);
+            gender = new String(success.gender);
+            
+            // optional
+            if (success.hasOwnProperty('email')) email = new String(success.email);
+            
+            Trace2('{as} FBMgr | get profile | success = ', success);
+            Trace2('     name = ' + name);
+            Trace2('     username = ' + username);
+            Trace2('     gender = ' + gender);
+            Trace2('     email = ' + email);
+            
+            // next, see getProfilePhotoURL();
+            var params:Object = {
+               fields:'picture',
+               type:'square'
+            }
+            Facebook.api('/me', onLogin1_3, params, 'GET');
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get profile | fail = ', fail);
+            
+            // return
+            tryCallback();
+         }
+      }
+      
+      private function onLogin1_3(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get profile picture | success = ', success);
+            
+            picUrl_square = new String(success.picture);
+            picUrl_small = square2Small(picUrl_square);
+            picUrl_normal = square2Normal(picUrl_square);
+            picUrl_large = square2Large(picUrl_square);
+            
+            tryLoadPolicy(picUrl_square); // security
+            
+            // next
+            wantedAlbum = null;
+            Facebook.api('/me/albums', onLogin1_4, null, 'GET');
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get profile picture | fail = ', fail);
+            
+            // return
+            tryCallback();
+         }
+      }
+      
+      private function onLogin1_4(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get album | success = ', success);
+            albumPool = new Vector.<FBAlbum>();
+            for (var i:int = 0; i < success.length; ++i) 
+            {
+               var album:FBAlbum = new FBAlbum(Object(success[i]));
+               albumPool.push(album);
+               
+               // handle wannted album
+               if (success[i].name == albumName)
+               {
+                  wantedAlbum = album;
+               }
+               
+               // handle profile album
+               if (success[i].name == 'Profile Pictures')
+               {
+                  profileAlbum = album;
+               }
+            }
+            
+            // next
+            if (!wantedAlbum)
+            {
+               // add to pool
+               wantedAlbum = new FBAlbum();
+               album.name = albumName;
+               albumPool.push(album);
+               
+               // api
+               var obj:Object = 
+                  {
+                     name:albumName,
+                     message:albumMsg
+                  };
+               Facebook.api('/me/albums', onLogin1_5, obj, 'POST');
+            }
+            else
+            {
+               // return
+               tryCallback();
+            }
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get album | fail = ', fail);
+            
+            // return
+            tryCallback();
+         }
+      }
+      
+      private function onLogin1_5(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | create album done | success = ', success);
+            
+            wantedAlbum.id = new String(success.id);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | create album done | fail = ', fail);
+         }
+         
+         // return
+         tryCallback();
+      }
+      
+      // ________________________________________________
+      //                                             like
+      
+      public function setLikeId($likeId:String):void
+      {
+         likeId = $likeId;
+      }
+      
+      public function get isLike():Boolean { return _isLike; }
+      
+      public function checkLikeId(callback:Function = null):void
+      {
+         callbackFunc = callback;
+         _isLike = false;
+         
+         Facebook.api('/me/likes', onCheckLike_1);
+      }
+      
+      private function onCheckLike_1(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | onCheckLike_1 | success = ', success);
+            
+            for (var i:int = 0; i < success.length; ++i) 
+            {
+               if (success[i].id == likeId)
+               {
+                  _isLike = true;
+                  break;
+               }
+            }
+         }
+         else
+         {
+            Trace2('{as} FBMgr | onCheckLike_1 | fail = ', fail);
+         }
+         Trace2('     isLike =', isLike);
+         
+         // return
+         tryCallback();
+      }
+      
+      // --------------------- LINE ---------------------
       
       // ________________________________________________
       //                                           friend
@@ -140,6 +367,115 @@ package _facebook
             Trace2('{as} FBMgr | findFriends | no friends');
             return null;
          }
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onGetFriends(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | getFriendsComplete | success = ', success);
+            
+            var fArr:Array = success as Array;
+            friendPool = new Vector.<FBFriend>();
+            while (fArr.length)
+            {
+               var f:Object = fArr.pop();
+               friendPool.push(new FBFriend(f.id, f.name));
+            }
+            sortFriends();
+         }
+         else
+         {
+            Trace2('{as} FBMgr | getFriendsComplete | fail = ', fail);
+         }
+         
+         // return
+         tryCallback();
+      }
+      
+      private function sortFriends():void
+      {
+         friendPool.sort(mySorter);
+         
+         function mySorter(a:*, b:*):int
+         {
+            if (a.name.substr(0,1) > b.name.substr(0,1))
+            {
+               return 1;
+            }
+            else if (a.name.substr(0,1) < b.name.substr(0,1))
+            {
+               return -1;
+            }
+            else
+            {
+               return 0;
+            }
+         }
+      }
+      
+      // ________________________________________________
+      //                                            album
+      
+      // Assigned a album that you want to creat with customized name and message.
+      public function setWantedAlbumInfo(album_name:String, album_msg:String):void
+      {
+         albumName = album_name;
+         albumMsg = album_msg;
+      }
+      
+      // If it get the wantted album.
+      public function get isGetAlbum():Boolean { return wantedAlbum != null; }
+      
+      public function getProfileAlbumPhotos(callback:Function):void
+      {
+         callbackFunc = callback;
+      }
+      
+      // ________________________________________________
+      //                                            photo
+      
+      public function postPhoto1(message:String, image:BitmapData, callback:Function = null):void
+      {
+         Trace2('{as} FBMgr | postPhoto1');
+         callbackFunc = callback;
+         
+         returnId = null;
+         
+         var obj:Object = 
+            {
+               message:message,
+               file:image,
+               fileName:'test'
+            };
+         Facebook.api('/' + wantedAlbum.id + '/photos', onPostPhoto, obj, 'POST');
+      }
+      
+      public function postProfilePhoto(photo_id:String):void
+      {
+         var url:String = 'http://www.facebook.com/photo.php?fbid=' + photo_id + '&makeprofile=1';
+         navigateToURL(new URLRequest(url), '_blank');
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onPostPhoto(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | onPostPhotoComplete | success = ', success);
+            
+            returnId = new String(success.id);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | onPostPhotoComplete | fail = ', fail);
+         }
+         
+         // return
+         tryCallback();
       }
       
       // ________________________________________________
@@ -210,339 +546,7 @@ package _facebook
          Facebook.ui('apprequests', data, onPostAppreq, DISPLAY);
       }
       
-      // ________________________________________________
-      //                                            album
-      
-      public function setWantedAlbumInfo(album_name:String, album_msg:String):void
-      {
-         albumName = album_name;
-         albumMsg = album_msg;
-      }
-      
-      public function getWantedAlbum():FBAlbum
-      {
-         return wantedAlbumNo == -1 ? null : albumPool[wantedAlbumNo];
-      }
-      
-      // ________________________________________________
-      //                                            photo
-      
-      public function postPhoto1(message:String, image:BitmapData, callback:Function = null):void
-      {
-         Trace2('{as} FBMgr | postPhoto1');
-         callbackFunc = callback;
-         
-         returnId = null;
-         
-         var obj:Object = 
-            {
-               message:message,
-               file:image,
-               fileName:'test'
-            };
-         Facebook.api('/' + albumPool[wantedAlbumNo].id + '/photos', onPostPhoto, obj, 'POST');
-      }
-      
-      public function postPhoto2(message:String, image:BitmapData, callback:Function = null):void
-      {
-         Trace2('{as} FBMgr | postPhoto2');
-      }
-      
-      public function postProfilePhoto(photo_id:String):void
-      {
-         var url:String = 'http://www.facebook.com/photo.php?fbid=' + photo_id + '&makeprofile=1';
-         navigateToURL(new URLRequest(url), '_blank');
-      }
-      
-      // ________________________________________________
-      //                                            utils
-      
-      /**
-       * Convert url of square to small.
-       * @param url
-       */
-      public function square2Small(url:String):String
-      {
-         return url.split('_q.jpg')[0] + '_t.jpg';
-      }
-      
-      /**
-       * Convert url of square to normal.
-       * @param url
-       */
-      public function square2Normal(url:String):String
-      {
-         return url.split('_q.jpg')[0] + '_s.jpg';
-      }
-      
-      /**
-       * Convert url of square to large.
-       * @param url
-       */
-      public function square2Large(url:String):String
-      {
-         return url.split('_q.jpg')[0] + '_n.jpg';
-      }
-      
-      public function sortFriends():void
-      {
-         friendPool.sort(mySorter);
-         
-         function mySorter(a:*, b:*):int
-         {
-            if (a.name.substr(0,1) > b.name.substr(0,1))
-            {
-               return 1;
-            }
-            else if (a.name.substr(0,1) < b.name.substr(0,1))
-            {
-               return -1;
-            }
-            else
-            {
-               return 0;
-            }
-         }
-      }
-      
-      // ________________________________________________
-      //                                    get singleton
-      
-      public static function get api():FBMgr
-      {
-         if (!_instance)
-         {
-            _instance = new FBMgr(new PrivateClass());
-         }
-         
-         return _instance;
-      }
-      
-      // ################### protected ##################
-      
-      // #################### private ###################
-      
-      // ________________________________________________
-      //                                           init 1
-      
-      private function onInit_1(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            uid = new String(success.uid);
-            accessToken = new String(success.accessToken);
-            
-            Trace2('{as} FBMgr | onInitComplete | already login');
-            Trace2('     uid = ' + uid);
-            Trace2('     access_token = ' + accessToken);
-            
-            // next
-            Facebook.api('/me/albums', onLogin1_4, null, 'GET');
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onInitComplete | not login yet');
-            
-            // return
-            tryCallback();
-         }
-      }
-      
-      // ________________________________________________
-      //                                           login1
-      
-      private function onLogin1_1(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            if (!isLogin)
-            {
-               uid = new String(success.uid);
-               accessToken = new String(success.accessToken);
-               
-               Trace2('{as} FBMgr | onLoginComplete | success = ', success);
-               Trace2('     uid = ' + uid);
-               Trace2('     access_token = ' + accessToken);
-            }
-            
-            // next
-            Facebook.api('/me', onLogin1_2);
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onLoginComplete | fail = ', fail);
-            
-            // return
-            tryCallback();
-         }
-      }
-      
-      private function onLogin1_2(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            name = new String(success.name);
-            username = new String(success.username);
-            gender = new String(success.gender);
-            
-            // optional
-            if (success.hasOwnProperty('email')) email = new String(success.email);
-            
-            Trace2('{as} FBMgr | getProfileComplete | success = ', success);
-            Trace2('     name = ' + name);
-            Trace2('     username = ' + username);
-            Trace2('     gender = ' + gender);
-            Trace2('     email = ' + email);
-            
-            // next, see getProfilePhotoURL();
-            Facebook.api('/me?fields=picture&type=square&', onLogin1_3);
-         }
-         else
-         {
-            Trace2('{as} FBMgr | getProfileComplete | fail = ', fail);
-            
-            // return
-            tryCallback();
-         }
-      }
-      
-      private function onLogin1_3(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | getProfilePhotoURLComplete | success = ', success);
-            
-            picUrl_square = new String(success.picture);
-            picUrl_small = square2Small(picUrl_square);
-            picUrl_normal = square2Normal(picUrl_square);
-            picUrl_large = square2Large(picUrl_square);
-            
-            tryLoadPolicy(picUrl_square); // security
-            
-            // next
-            Facebook.api('/me/albums', onLogin1_4, null, 'GET');
-         }
-         else
-         {
-            Trace2('{as} FBMgr | getProfilePhotoComplete | fail = ', fail);
-            
-            // return
-            tryCallback();
-         }
-      }
-      
-      private function onLogin1_4(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | onGetAlbumsComplete | success = ', success);
-            albumPool = new Vector.<FBAlbum>();
-            var arr:Array = success as Array;
-            for (var i:int = 0; i < arr.length; ++i) 
-            {
-               if (arr[i].name == albumName)
-               {
-                  wantedAlbumNo = i;
-               }
-               
-               albumPool.push(new FBAlbum(arr[i] as Object));
-            }
-            
-            // next
-            if (wantedAlbumNo == -1)
-            {
-               // add to pool
-               var album:FBAlbum = new FBAlbum();
-               album.name = albumName;
-               albumPool.push(album);
-               wantedAlbumNo = albumPool.length - 1;
-               
-               // api
-               var obj:Object = 
-                  {
-                     name:albumName,
-                     message:albumMsg
-                  };
-               Facebook.api('/me/albums', onLogin1_5, obj, 'POST');
-            }
-            else
-            {
-               // return
-               tryCallback();
-            }
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onGetAlbumsComplete | fail = ', fail);
-            
-            // still notify when failed
-            tryCallback();
-         }
-      }
-      
-      private function onLogin1_5(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | onCreateAlbumComplete | success = ', success);
-            
-            albumPool[wantedAlbumNo].id = new String(success.id);
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onCreateAlbumComplete | fail = ', fail);
-         }
-         
-         // return
-         tryCallback();
-      }
-      
-      // ________________________________________________
-      //                                          friends
-      
-      private function onGetFriends(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | getFriendsComplete | success = ', success);
-            
-            var fArr:Array = success as Array;
-            friendPool = new Vector.<FBFriend>();
-            while (fArr.length)
-            {
-               var f:Object = fArr.pop();
-               friendPool.push(new FBFriend(f.id, f.name));
-            }
-            sortFriends();
-         }
-         else
-         {
-            Trace2('{as} FBMgr | getFriendsComplete | fail = ', fail);
-         }
-         
-         // return
-         tryCallback();
-      }
-      
-      // ________________________________________________
-      // 
-      
-      private function onPostPhoto(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | onPostPhotoComplete | success = ', success);
-            
-            returnId = new String(success.id);
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onPostPhotoComplete | fail = ', fail);
-         }
-         
-         // return
-         tryCallback();
-      }
+      // --------------------- LINE ---------------------
       
       private function onPublishFeed_UI():void
       {
@@ -580,6 +584,33 @@ package _facebook
       }
       
       /**
+       * Convert url of square to small.
+       * @param url
+       */
+      public function square2Small(url:String):String
+      {
+         return url.split('_q.jpg')[0] + '_t.jpg';
+      }
+      
+      /**
+       * Convert url of square to normal.
+       * @param url
+       */
+      public function square2Normal(url:String):String
+      {
+         return url.split('_q.jpg')[0] + '_s.jpg';
+      }
+      
+      /**
+       * Convert url of square to large.
+       * @param url
+       */
+      public function square2Large(url:String):String
+      {
+         return url.split('_q.jpg')[0] + '_n.jpg';
+      }
+      
+      /**
        * Looks for a policy file at the location specified by parsing the url.
        * @param url
        */
@@ -596,6 +627,19 @@ package _facebook
             Trace2('{as} FBMgr | tryToLoadPolicyFile | domain_file = ' + domain_file);
             Security.loadPolicyFile(domain_file);
          }
+      }
+      
+      // ________________________________________________
+      //                                    get singleton
+      
+      public static function get api():FBMgr
+      {
+         if (!_instance)
+         {
+            _instance = new FBMgr(new PrivateClass());
+         }
+         
+         return _instance;
       }
       
       // --------------------- LINE ---------------------
