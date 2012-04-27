@@ -46,6 +46,9 @@ package _facebook
       private var wantedAlbum:FBAlbum;
       // profile album
       private var profileAlbum:FBAlbum;
+      private var _profilePhotos:Array;
+      // tag album
+      private var _tagPhotos:Array;
       
       // like
       private var likeId:String = '20531316728';
@@ -199,7 +202,7 @@ package _facebook
          {
             Trace2('{as} FBMgr | get profile picture | success = ', success);
             
-            picUrl_square = new String(success.picture);
+            picUrl_square = new String(success.picture).replace('https', 'http');
             picUrl_small = square2Small(picUrl_square);
             picUrl_normal = square2Normal(picUrl_square);
             picUrl_large = square2Large(picUrl_square);
@@ -294,13 +297,26 @@ package _facebook
       // ________________________________________________
       //                                             like
       
+      /**
+       * Initialize the id for checking user's likes.
+       * @see checkLikeId
+       * @see isLike
+       */
       public function setLikeId($likeId:String):void
       {
          likeId = $likeId;
       }
-      
+      /**
+       * If user like the <code>likeId</code> or not.
+       * @see setLikeId
+       * @see checkLikeId
+       */
       public function get isLike():Boolean { return _isLike; }
       
+      /**
+       * Check if user like the <code>likeId</code> or not.
+       * @see setLikeId
+       */
       public function checkLikeId(callback:Function = null):void
       {
          callbackFunc = callback;
@@ -308,6 +324,8 @@ package _facebook
          
          Facebook.api('/me/likes', onCheckLike_1);
       }
+      
+      // --------------------- LINE ---------------------
       
       private function onCheckLike_1(success:Object, fail:Object):void
       {
@@ -333,8 +351,6 @@ package _facebook
          // return
          tryCallback();
       }
-      
-      // --------------------- LINE ---------------------
       
       // ________________________________________________
       //                                           friend
@@ -419,24 +435,90 @@ package _facebook
       // ________________________________________________
       //                                            album
       
-      // Assigned a album that you want to creat with customized name and message.
+      // 
+      /**
+       * Initialize the information for creating the customized album.
+       * @see init
+       * @see login1
+       */
       public function setWantedAlbumInfo(album_name:String, album_msg:String):void
       {
          albumName = album_name;
          albumMsg = album_msg;
       }
       
-      // If it get the wantted album.
+      /**
+       * If it get the wantted album.
+       */
       public function get isGetAlbum():Boolean { return wantedAlbum != null; }
+      /**
+       * An Object Array.<br/>
+       * { pic_s:"small picture url", pic_n:"normal picture url" }
+       * @see getProfilePhotos
+       */
+      public function get profilePhotos():Array { return _profilePhotos; }
       
-      public function getProfileAlbumPhotos(callback:Function):void
+      /**
+       * Get all the photos in the "Profile Pictures" album. Save the link of the photos in a Array.
+       * @see profilePhotos
+       */
+      public function getProfilePhotos(callback:Function = null):void
       {
          callbackFunc = callback;
+         _profilePhotos = null;
+         
+         Facebook.api('/' + profileAlbum.id + '/photos', onGetProfilePhotos_1);
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onGetProfilePhotos_1(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get profile photos | success = ', success);
+            
+            _profilePhotos = new Array();
+            for (var i:int = 0; i < success.length; ++i) 
+            {
+               var obj:Object = {
+                  pic_s:new String(success[i].picture).replace('https', 'http'),
+                     pic_n:new String(success[i].source).replace('https', 'http')
+               };
+               _profilePhotos.push(obj);
+            }
+            Trace2('     profilePhotos =', _profilePhotos);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get profile photos | fail = ', fail);
+         }
+         
+         // return
+         tryCallback();
       }
       
       // ________________________________________________
       //                                            photo
       
+      /**
+       * 
+       */
+      public function get tagPhotos():Array { return _tagPhotos; }
+      
+      /**
+       * 
+       */
+      public function getTagPhotos(callback:Function = null):void
+      {
+         callbackFunc = callback;
+         
+         Facebook.api('/me/photos', onGetTagPhotos_1);
+      }
+      
+      /**
+       * Upload <code>BitmapData</code> to <code>wantedAlbum</code> album.
+       */
       public function postPhoto1(message:String, image:BitmapData, callback:Function = null):void
       {
          Trace2('{as} FBMgr | postPhoto1');
@@ -453,6 +535,9 @@ package _facebook
          Facebook.api('/' + wantedAlbum.id + '/photos', onPostPhoto, obj, 'POST');
       }
       
+      /**
+       * Navigate to the page for changing user's profile picture.
+       */
       public function postProfilePhoto(photo_id:String):void
       {
          var url:String = 'http://www.facebook.com/photo.php?fbid=' + photo_id + '&makeprofile=1';
@@ -461,11 +546,26 @@ package _facebook
       
       // --------------------- LINE ---------------------
       
-      private function onPostPhoto(success:Object, fail:Object):void
+      private function onGetTagPhotos_1(success:Object, fail:Object):void
       {
          if (success)
          {
             Trace2('{as} FBMgr | onPostPhotoComplete | success = ', success);
+         }
+         else
+         {
+            Trace2('{as} FBMgr | onPostPhotoComplete | fail = ', fail);
+         }
+         
+         // return
+         tryCallback();
+      }
+      
+      private function onPostPhoto(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | post photo | success = ', success);
             
             returnId = new String(success.id);
          }
