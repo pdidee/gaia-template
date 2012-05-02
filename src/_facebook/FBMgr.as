@@ -2,6 +2,7 @@ package _facebook
 {
    import _facebook.data.FBAlbum;
    import _facebook.data.FBFriend;
+   import _facebook.data.FBPhoto;
    
    import com.facebook.graph.Facebook;
    
@@ -45,8 +46,8 @@ package _facebook
       private var albumMsg:String = '...';
       private var wantedAlbum:FBAlbum;
       // profile album
+      public var profilePhotoPool:Vector.<FBPhoto>;
       private var profileAlbum:FBAlbum;
-      private var _profilePhotos:Array;
       // tag album
       private var _tagPhotos:Array;
       
@@ -346,7 +347,6 @@ package _facebook
          {
             Trace2('{as} FBMgr | onCheckLike_1 | fail = ', fail);
          }
-         Trace2('     isLike =', isLike);
          
          // return
          tryCallback();
@@ -451,12 +451,6 @@ package _facebook
        * If it get the wantted album.
        */
       public function get isGetAlbum():Boolean { return wantedAlbum != null; }
-      /**
-       * An Object Array.<br/>
-       * { pic_s:"small picture url", pic_n:"normal picture url" }
-       * @see getProfilePhotos
-       */
-      public function get profilePhotos():Array { return _profilePhotos; }
       
       /**
        * Get all the photos in the "Profile Pictures" album. Save the link of the photos in a Array.
@@ -465,7 +459,7 @@ package _facebook
       public function getProfilePhotos(callback:Function = null):void
       {
          callbackFunc = callback;
-         _profilePhotos = null;
+         profilePhotoPool = null;
          
          Facebook.api('/' + profileAlbum.id + '/photos', onGetProfilePhotos_1);
       }
@@ -478,16 +472,12 @@ package _facebook
          {
             Trace2('{as} FBMgr | get profile photos | success = ', success);
             
-            _profilePhotos = new Array();
+            profilePhotoPool = new Vector.<FBPhoto>();
             for (var i:int = 0; i < success.length; ++i) 
             {
-               var obj:Object = {
-                  pic_s:new String(success[i].picture).replace('https', 'http'),
-                     pic_n:new String(success[i].source).replace('https', 'http')
-               };
-               _profilePhotos.push(obj);
+               var obj:FBPhoto = new FBPhoto(success);
+               profilePhotoPool.push(obj);
             }
-            Trace2('     profilePhotos =', _profilePhotos);
          }
          else
          {
