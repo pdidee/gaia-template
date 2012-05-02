@@ -541,8 +541,16 @@ package _facebook
       // ________________________________________________
       //                                             feed
       
-      // todo
-      public function postFeed1($link:String, $name:String = 'name', $caption:String = 'caption', $description:String = 'description', $message:String = 'message', $picture:String = '', callback:Function = null):void
+      /**
+       * Publish a feed.
+       * @param $link
+       * @param $name
+       * @param $description
+       * @param $message
+       * @param $picture
+       * @param callback
+       */
+      public function postFeed1($link:String = 'link', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', $message:String = 'message', $picture:String = '', callback:Function = null):void
       {
          callbackFunc = callback;
          
@@ -559,8 +567,16 @@ package _facebook
          Facebook.api('/me/feed', onPostFeed1_1, obj, 'POST');
       }
       
-      // todo
-      public function postFeed2($link:String, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', callback:Function = null):void
+      /**
+       * Publish a feed by poping up a dialog.
+       * @param $link
+       * @param $name
+       * @param $description
+       * @param $message
+       * @param $picture
+       * @param callback
+       */
+      public function postFeed2($link:String = 'link', $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', callback:Function = null):void
       {
          Trace2('{as} FBMgr | postFeed_Link_UI');
          var obj:Object = 
@@ -572,10 +588,6 @@ package _facebook
                description:$description
             };
          Facebook.ui('feed', obj, onPostFeed2_1, DISPLAY);
-      }
-      
-      public function postFeed3():void
-      {
       }
       
       /**
@@ -611,8 +623,10 @@ package _facebook
          tryCallback();
       }
       
-      private function onPostFeed2_1():void
+      private function onPostFeed2_1(res:Object):void
       {
+         // return
+         tryCallback();
       }
       
       private function onSendAppRequest_1(res:Object):void
@@ -801,7 +815,6 @@ package _facebook
          {
             domainFilePool.push(domain_file);
             
-            //            Trace2('{as} FBMgr | tryToLoadPolicyFile | domain_file = ' + domain_file);
             Security.loadPolicyFile(domain_file);
          }
       }
