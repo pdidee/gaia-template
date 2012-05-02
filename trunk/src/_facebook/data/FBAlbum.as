@@ -1,19 +1,13 @@
 package _facebook.data
 {
-   import _facebook.FBMgr;
-   
-   import com.facebook.graph.Facebook;
-   
-   import flash.events.Event;
    
    public class FBAlbum
    {
       public var id:String;
       public var name:String;
-      public var type:String = 'normal';
-      public var privacy:String;
-      public var updated_time:String;
-      public var count:int;
+      public var privacy:String; // e.g. "everyone"
+      public var updated_time:String; // e.g. "2012-04-13T11:42:26+0000"
+      public var count:int; // Number of photos
       
       public function FBAlbum(data:Object = null)
       {
@@ -21,10 +15,8 @@ package _facebook.data
          {
             id = new String(data.id);
             name = new String(data.name);
-            type = new String(data.type);
             privacy = new String(data.privacy);
             updated_time = new String(data.updated_time);
-            
             count = int(data.count);
          }
       }
