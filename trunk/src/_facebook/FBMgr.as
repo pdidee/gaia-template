@@ -5,6 +5,7 @@ package _facebook
    import _facebook.data.FBPhoto;
    
    import com.facebook.graph.Facebook;
+   import com.openass.math.UniqRand;
    
    import flash.display.BitmapData;
    import flash.external.ExternalInterface;
@@ -27,7 +28,7 @@ package _facebook
       public var appKey:String = '152204381520601';
       public var perms:String = 'user_about_me';
       public var accessToken:String;
-      public var uid:String;
+      public var id:String;
       public var name:String;
       public var username:String;
       public var gender:String;
@@ -39,6 +40,9 @@ package _facebook
       
       public var friendPool:Vector.<FBFriend>;
       public var albumPool:Vector.<FBAlbum>;
+      public var profilePhotoPool:Vector.<FBPhoto>;
+      public var dataPool:Vector.<FBPhoto>;
+      
       public var returnId:String; // photo id, request id, ...
       
       // album
@@ -46,16 +50,12 @@ package _facebook
       private var albumMsg:String = '...';
       private var wantedAlbum:FBAlbum;
       // profile album
-      public var profilePhotoPool:Vector.<FBPhoto>;
       private var profileAlbum:FBAlbum;
-      // tag album
-      private var _tagPhotos:Array;
-      
       // like
       private var likeId:String = '20531316728';
       private var _isLike:Boolean = false;
       
-      // init callback
+      // callback
       private var callbackFunc:Function;
       
       // singleton
@@ -102,11 +102,11 @@ package _facebook
       {
          if (success)
          {
-            uid = new String(success.uid);
+            id = new String(success.uid);
             accessToken = new String(success.accessToken);
             
             Trace2('{as} FBMgr | init | already login');
-            Trace2('     uid = ' + uid);
+            Trace2('     uid = ' + id);
             Trace2('     access_token = ' + accessToken);
             
             // next
@@ -124,7 +124,7 @@ package _facebook
       // ________________________________________________
       //                                            login
       
-      public function get isLogin():Boolean { return uid != null; }
+      public function get isLogin():Boolean { return id != null; }
       
       // login > get profile > get profile photo > get album > create album
       public function login1(callback:Function = null):void
@@ -144,11 +144,11 @@ package _facebook
          {
             if (!isLogin)
             {
-               uid = new String(success.uid);
+               id = new String(success.uid);
                accessToken = new String(success.accessToken);
                
                Trace2('{as} FBMgr | login | success = ', success);
-               Trace2('     uid = ' + uid);
+               Trace2('     uid = ' + id);
                Trace2('     access_token = ' + accessToken);
             }
             
@@ -203,12 +203,17 @@ package _facebook
          {
             Trace2('{as} FBMgr | get profile picture | success = ', success);
             
-            picUrl_square = new String(success.picture).replace('https', 'http');
+            picUrl_square = String(success.picture).replace('https', 'http');
             picUrl_small = square2Small(picUrl_square);
             picUrl_normal = square2Normal(picUrl_square);
             picUrl_large = square2Large(picUrl_square);
             
             tryLoadPolicy(picUrl_square); // security
+            
+            Trace2('     size square = ' + picUrl_square);
+            Trace2('     size small = ' + picUrl_small);
+            Trace2('     size normal = ' + picUrl_normal);
+            Trace2('     size large = ' + picUrl_large);
             
             // next
             wantedAlbum = null;
@@ -342,6 +347,7 @@ package _facebook
                   break;
                }
             }
+            Trace2('     result = ' + _isLike);
          }
          else
          {
@@ -360,7 +366,7 @@ package _facebook
          Trace2('{as} FBMgr | getFriends');
          callbackFunc = callback;
          
-         Facebook.api('/me/friends', onGetFriends);
+         Facebook.api('/me/friends', onGetFriends_1);
       }
       
       public function findFriends(keyWord:String):Vector.<FBFriend>
@@ -368,7 +374,7 @@ package _facebook
          if (friendPool)
          {
             var ret:Vector.<FBFriend> = new Vector.<FBFriend>();
-            for each (var i:FBFriend in friendPool) 
+            for each (var i:FBFriend in friendPool)
             {
                if (i.name.search(keyWord) != -1)
                {
@@ -387,17 +393,16 @@ package _facebook
       
       // --------------------- LINE ---------------------
       
-      private function onGetFriends(success:Object, fail:Object):void
+      private function onGetFriends_1(success:Object, fail:Object):void
       {
          if (success)
          {
             Trace2('{as} FBMgr | getFriendsComplete | success = ', success);
             
-            var fArr:Array = success as Array;
             friendPool = new Vector.<FBFriend>();
-            while (fArr.length)
+            while (success.length)
             {
-               var f:Object = fArr.pop();
+               var f:Object = success.pop();
                friendPool.push(new FBFriend(f.id, f.name));
             }
             sortFriends();
@@ -448,11 +453,6 @@ package _facebook
       }
       
       /**
-       * If it get the wantted album.
-       */
-      public function get isGetAlbum():Boolean { return wantedAlbum != null; }
-      
-      /**
        * Get all the photos in the "Profile Pictures" album. Save the link of the photos in a Array.
        * @see profilePhotos
        */
@@ -492,24 +492,9 @@ package _facebook
       //                                            photo
       
       /**
-       * 
-       */
-      public function get tagPhotos():Array { return _tagPhotos; }
-      
-      /**
-       * 
-       */
-      public function getTagPhotos(callback:Function = null):void
-      {
-         callbackFunc = callback;
-         
-         Facebook.api('/me/photos', onGetTagPhotos_1);
-      }
-      
-      /**
        * Upload <code>BitmapData</code> to <code>wantedAlbum</code> album.
        */
-      public function postPhoto1(message:String, image:BitmapData, callback:Function = null):void
+      public function uploadPhoto(message:String, image:BitmapData, callback:Function = null):void
       {
          Trace2('{as} FBMgr | postPhoto1');
          callbackFunc = callback;
@@ -522,13 +507,13 @@ package _facebook
                file:image,
                fileName:'test'
             };
-         Facebook.api('/' + wantedAlbum.id + '/photos', onPostPhoto, obj, 'POST');
+         Facebook.api('/' + wantedAlbum.id + '/photos', onUploadPhoto_1, obj, 'POST');
       }
       
       /**
        * Navigate to the page for changing user's profile picture.
        */
-      public function postProfilePhoto(photo_id:String):void
+      public function updateProfilePicture(photo_id:String):void
       {
          var url:String = 'http://www.facebook.com/photo.php?fbid=' + photo_id + '&makeprofile=1';
          navigateToURL(new URLRequest(url), '_blank');
@@ -536,22 +521,7 @@ package _facebook
       
       // --------------------- LINE ---------------------
       
-      private function onGetTagPhotos_1(success:Object, fail:Object):void
-      {
-         if (success)
-         {
-            Trace2('{as} FBMgr | onPostPhotoComplete | success = ', success);
-         }
-         else
-         {
-            Trace2('{as} FBMgr | onPostPhotoComplete | fail = ', fail);
-         }
-         
-         // return
-         tryCallback();
-      }
-      
-      private function onPostPhoto(success:Object, fail:Object):void
+      private function onUploadPhoto_1(success:Object, fail:Object):void
       {
          if (success)
          {
@@ -569,28 +539,11 @@ package _facebook
       }
       
       // ________________________________________________
-      //                                          publish
+      //                                             feed
       
       // todo
-      public function postFeed_Link_UI($link:String, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', callback:Function = null):void
+      public function postFeed1($link:String, $name:String = 'name', $caption:String = 'caption', $description:String = 'description', $message:String = 'message', $picture:String = '', callback:Function = null):void
       {
-         Trace2('{as} FBMgr | postFeed_Link_UI');
-         var obj:Object = 
-            {
-               link:$link,
-               picture:$picture,
-               name:$name,
-               caption:$caption,
-               description:$description
-            };
-         Facebook.ui('feed', obj, onPublishFeed_UI, DISPLAY);
-      }
-      
-      // todo
-      public function postFeed_Link($link:String, $name:String = 'name', $caption:String = 'caption', $description:String = 'description', $message:String = 'message', $picture:String = '', callback:Function = null):void
-      {
-         Trace2('{as} FBMgr | postFeed_Link');
-         
          callbackFunc = callback;
          
          var obj:Object = 
@@ -603,10 +556,25 @@ package _facebook
             };
          if ($picture.length > 0) obj.picture = $picture;
          
-         Facebook.api('/me/feed', onPostFeed_Link, obj, 'post');
+         Facebook.api('/me/feed', onPostFeed1_1, obj, 'POST');
       }
       
-      public function postFeed_Link_Sharer():void
+      // todo
+      public function postFeed2($link:String, $picture:String = '', $name:String = 'name', $caption:String = 'caption', $description:String = 'description', callback:Function = null):void
+      {
+         Trace2('{as} FBMgr | postFeed_Link_UI');
+         var obj:Object = 
+            {
+               link:$link,
+               picture:$picture,
+               name:$name,
+               caption:$caption,
+               description:$description
+            };
+         Facebook.ui('feed', obj, onPostFeed2_1, DISPLAY);
+      }
+      
+      public function postFeed3():void
       {
       }
       
@@ -616,9 +584,8 @@ package _facebook
        * @param to_ids
        * @param callback
        */
-      public function postAppreq_UI(message:String, to_ids:Array, callback:Function = null):void
+      public function sendAppRequest(message:String, to_ids:Array, callback:Function = null):void
       {
-         Trace2('{as} FBMgr | postAppreq_UI');
          callbackFunc = callback;
          
          var ids:String = '';
@@ -633,26 +600,145 @@ package _facebook
                message:message,
                to:ids
             };
-         Facebook.ui('apprequests', data, onPostAppreq, DISPLAY);
+         Facebook.ui('apprequests', data, onSendAppRequest_1, DISPLAY);
       }
       
       // --------------------- LINE ---------------------
       
-      private function onPublishFeed_UI():void
-      {
-      }
-      
-      private function onPostFeed_Link(success:Object, fail:Object):void
+      private function onPostFeed1_1(success:Object, fail:Object):void
       {
          // return
          tryCallback();
       }
       
-      private function onPostAppreq(res:Object):void
+      private function onPostFeed2_1():void
+      {
+      }
+      
+      private function onSendAppRequest_1(res:Object):void
       {
          if (res)
          {
             returnId = new String(res.request);
+         }
+         
+         // return
+         tryCallback();
+      }
+      
+      // ________________________________________________
+      //                                 by case function
+      
+      /**
+       * Get all the photos that the app needs.</br>
+       * <code>dataPool[0]</code> is user's icon.</br>
+       * <code>dataPool[1~5]</code> are random friends' icons.</br>
+       * <code>dataPool[6~15]</code> are random photos tagged with user.</br>
+       */
+      public function getData(callback:Function = null):void
+      {
+         callbackFunc = callback;
+         
+         dataPool = new Vector.<FBPhoto>();
+         seed = null;
+         
+         // profile icon
+         var obj:FBPhoto = new FBPhoto();
+         obj.name = name;
+         obj.url_n = picUrl_square;
+         dataPool.push(obj);
+         
+         Facebook.api('/me/friends', onGetGameData_1);
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private var seed:Array;
+      
+      private function getData_1():void
+      {
+         // get 5 friends
+         if (!seed)
+         {
+            seed = UniqRand.getUintSeed(0, friendPool.length, 5); // count
+         }
+         
+         // get friends' icon
+         if (seed.length > 0)
+         {
+            var params:Object = {
+               fields:'name,picture',
+               type:'square'
+            }
+            Facebook.api('/' + friendPool[seed.pop()].id, onGetGameData_2, params, 'GET');
+         }
+         else
+         {
+            Facebook.api('/me/photos', onGetGameData_3);
+         }
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onGetGameData_1(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get friends | success = ', success);
+            
+            friendPool = new Vector.<FBFriend>();
+            while (success.length)
+            {
+               var f:Object = success.pop();
+               friendPool.push(new FBFriend(f.id, f.name));
+            }
+            
+            getData_1();
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get friends | fail = ', fail);
+         }
+      }
+      
+      private function onGetGameData_2(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get friends\' icon | success = ', success);
+            
+            var obj:FBPhoto = new FBPhoto();
+            obj.id = new String(success.id);
+            obj.name = new String(success.name);
+            obj.url_n = String(success.picture).replace('https', 'http');
+            dataPool.push(obj);
+            
+            getData_1();
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get friends\' icon | fail = ', fail);
+         }
+      }
+      
+      private function onGetGameData_3(success:Object, fail:Object):void
+      {
+         if (success)
+         {
+            Trace2('{as} FBMgr | get photo with me | success = ', success);
+            
+            var arr:Array = UniqRand.getUintSeed(0, success.length, 10); // count
+            
+            while (arr.length)
+            {
+               var obj:FBPhoto = new FBPhoto();
+               obj.url_n = String(success[arr.pop()].source).replace('https', 'http');
+               dataPool.push(obj);
+            }
+         }
+         else
+         {
+            Trace2('{as} FBMgr | get photo with me | fail = ', fail);
          }
          
          // return
@@ -671,6 +757,7 @@ package _facebook
          {
             callbackFunc();
          }
+         callbackFunc = null;
       }
       
       /**
@@ -714,7 +801,7 @@ package _facebook
          {
             domainFilePool.push(domain_file);
             
-            Trace2('{as} FBMgr | tryToLoadPolicyFile | domain_file = ' + domain_file);
+            //            Trace2('{as} FBMgr | tryToLoadPolicyFile | domain_file = ' + domain_file);
             Security.loadPolicyFile(domain_file);
          }
       }
