@@ -8,14 +8,18 @@ package _facebook
    import com.openass.math.UniqRand;
    
    import flash.display.BitmapData;
-   import flash.external.ExternalInterface;
    import flash.net.URLRequest;
    import flash.net.navigateToURL;
    import flash.system.Security;
    
    /**
-    * A facebook manager
+    * A facebook manager.
     * @author boy, cjboy1984@gmail.com
+    * @usage
+    * // init
+    * FBMgr.api.setLikeId('1234567');
+    * FBMgr.api.setWantedAlbumInfo('album name', 'album msg');
+    * FBMgr.api.init(...);
     */   
    public class FBMgr
    {
@@ -76,12 +80,6 @@ package _facebook
        */
       public function init(param:Object = null, callback:Function = null):void
       {
-         // js callback
-         if (ExternalInterface.available)
-         {
-            ExternalInterface.addCallback('findFriends', findFriends);
-         }
-         
          if (param)
          {
             if (param.hasOwnProperty('fb_key')) appKey = new String(param.fb_key);
@@ -658,6 +656,7 @@ package _facebook
          
          // profile icon
          var obj:FBPhoto = new FBPhoto();
+         obj.id = id;
          obj.name = name;
          obj.url_n = picUrl_square;
          dataPool.push(obj);
@@ -771,7 +770,6 @@ package _facebook
          {
             callbackFunc();
          }
-         callbackFunc = null;
       }
       
       /**
