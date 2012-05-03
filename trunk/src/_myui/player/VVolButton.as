@@ -1,25 +1,15 @@
 package _myui.player
 {
+   import _myui.player.core.PlayerMgr;
+   
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.MouseEvent;
-   
-   import _myui.player.core.MyPlayerMgr;
-   
-   import org.flintparticles.common.utils.interpolateColors;
 
    /**
-    * @author     cjboy | cjboy1984@gmail.com
-    * @usage
-    * 1. 首先，你必需先有個MyPlayerMgr的getter，以範例來說是取得第0個MyPlayerMgr。
-    * protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(0); }
-    *
-    * 2. 再來利用mgr來監聽事件和用mgr來執行行為。
-    * mgr.play();
-    * mgr.pause();
-    * ...
+    * @author boy, cjboy1984@gmail.com
     */
-   public class BaseSoundButton extends MovieClip
+   public class VVolButton extends MovieClip
    {
       // fla
       public var mcMsk:MovieClip;
@@ -34,12 +24,12 @@ package _myui.player
       // percentage of the seeker
       protected var seekToPerc:Number;
       
-      // player manager
-      protected var managerNo:int = 0;
-      protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(managerNo); }
+      // model
+      public var id:String = 'abc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
 
       /* constructor */
-      public function BaseSoundButton()
+      public function VVolButton()
       {
          // disable tab-functionality.
          tabEnabled = false;
@@ -61,7 +51,7 @@ package _myui.player
 
       protected function onAdd(e:Event):void
       {
-         mcMsk.scaleX = mgr.volumePercentage / 100;
+         mcMsk.scaleX = mgr.vol;
          
          // seeker functionality
          addEventListener(MouseEvent.MOUSE_DOWN, onMDown);
@@ -86,7 +76,7 @@ package _myui.player
       {
          isDragging = true;
          // new volume
-         mgr.volumePercentage = getVolumePercentage();
+         mgr.vol = getVolumePercentage();
          
          // view
          changeViewByVolumn();
@@ -99,7 +89,7 @@ package _myui.player
       protected function onMMove(e:MouseEvent):void
       {
          // new volume
-         mgr.volumePercentage = getVolumePercentage();
+         mgr.vol = getVolumePercentage();
          // view
          changeViewByVolumn();
       }
@@ -108,7 +98,7 @@ package _myui.player
       {
          isDragging = false;
          // new volume
-         mgr.volumePercentage = getVolumePercentage();
+         mgr.vol = getVolumePercentage();
          
          // view
          changeViewByVolumn();
@@ -128,18 +118,18 @@ package _myui.player
          }
          else if (mouseX > mcMsk.x + barWidth)
          {
-            return 100;
+            return 1;
          }
          else
          {
             var offx:Number = mouseX - mcMsk.x;
-            return int(100 * offx / barWidth);
+            return offx / barWidth;
          }
       }
 
       protected function changeViewByVolumn():void
       {
-         mcMsk.scaleX = mgr.volumePercentage / 100;
+         mcMsk.scaleX = mgr.vol;
       }
       
       // --------------------- LINE ---------------------

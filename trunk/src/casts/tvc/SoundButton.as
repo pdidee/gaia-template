@@ -1,13 +1,13 @@
-package casts.root.player
+package casts.tvc
 {
-   import _myui.player.BaseSoundButton;
+   import _myui.player.VVolButton;
    
    import flash.events.Event;
    import flash.events.MouseEvent;
    import flash.ui.Mouse;
    import flash.ui.MouseCursor;
    
-   public class SoundButton extends BaseSoundButton
+   public class SoundButton extends VVolButton
    {
       
       public function SoundButton()

@@ -4,25 +4,18 @@ package _myui.player
    import flash.events.Event;
    import flash.events.MouseEvent;
    
-   import _myui.player.core.MyPlayerMgr;
+   import _myui.player.core.PlayerMgr;
 
    /**
-    * @author     cjboy | cjboy1984@gmail.com
-    * @usage
-    * 1. 首先，你必需先有個MyPlayerMgr的getter，以範例來說是取得第0個MyPlayerMgr。
-    * protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(0); }
-    *
-    * 2. 再來利用mgr來監聽事件和用mgr來執行行為。
-    * mgr.play();
-    * mgr.pause();
-    * ...
+    * @author boy, cjboy1984@gmail.com
     */
-   public class BasePlayPauseButton extends MovieClip
+   public class VPlayButton3 extends MovieClip
    {
-      protected var managerNo:int = 0;
-      protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(managerNo); }
+      // model
+      public var id:String = 'abc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
 
-      public function BasePlayPauseButton()
+      public function VPlayButton3()
       {
          // disable tab-functionality.
          tabEnabled = false;
@@ -42,9 +35,9 @@ package _myui.player
       protected function onAdd(e:Event):void
       {
          // model
-         mgr.addEventListener(MyPlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(MyPlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(MyPlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
 
          // click
          addEventListener(MouseEvent.CLICK, onClick);
@@ -53,9 +46,9 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(MyPlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(MyPlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(MyPlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
 
          // click
          removeEventListener(MouseEvent.CLICK, onClick);

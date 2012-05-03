@@ -1,6 +1,6 @@
 package _myui.player
 {
-   import _myui.player.core.MyPlayerMgr;
+   import _myui.player.core.PlayerMgr;
    
    import com.greensock.TweenMax;
    import com.greensock.easing.Linear;
@@ -10,17 +10,9 @@ package _myui.player
    import flash.events.MouseEvent;
    
    /**
-    * @author     cjboy | cjboy1984@gmail.com
-    * @usage
-    * 1. 首先，你必需先有個MyPlayerMgr的getter，以範例來說是取得第0個MyPlayerMgr。
-    * protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(0); }
-    *
-    * 2. 再來利用mgr來監聽事件和用mgr來執行行為。
-    * mgr.play();
-    * mgr.pause();
-    * ...
+    * @author boy, cjboy1984@gmail.com
     */
-   public class BaseProgressbar extends MovieClip
+   public class VProgressBar extends MovieClip
    {
       // fla
       public var mcPlayhead:MovieClip;
@@ -30,9 +22,9 @@ package _myui.player
       protected var isOver:Boolean = false;
       protected var isDragging:Boolean = false;
       
-      // player manager
-      protected var managerNo:int = 0;
-      protected function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(managerNo); }
+      // model
+      public var id:String = 'abc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
       
       // data
       protected var barWidth:Number = 100;
@@ -44,7 +36,7 @@ package _myui.player
       protected var seekToPerc:Number;
       
       /* constructor */
-      public function BaseProgressbar()
+      public function VProgressBar()
       {
          // disable tab-functionality.
          tabEnabled = false;
@@ -67,9 +59,9 @@ package _myui.player
          if (mcBuffer) mcBuffer.width = 0;
          
          // model
-         mgr.addEventListener(MyPlayerMgr.BUFFERING, onUpdateBuffer);
-         mgr.addEventListener(MyPlayerMgr.PLAYING, onUpdatePlayhead);
-         mgr.addEventListener(MyPlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.addEventListener(PlayerMgr.BUFFERING, onUpdateBuffer);
+         mgr.addEventListener(PlayerMgr.PLAYING, onUpdatePlayhead);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
          
          // seeker functionality
          addEventListener(MouseEvent.MOUSE_DOWN, onMDown);
@@ -82,9 +74,9 @@ package _myui.player
          if (mcBuffer) TweenMax.killTweensOf(mcBuffer);
          
          // model
-         mgr.removeEventListener(MyPlayerMgr.BUFFERING, onUpdateBuffer);
-         mgr.removeEventListener(MyPlayerMgr.PLAYING, onUpdatePlayhead);
-         mgr.removeEventListener(MyPlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.removeEventListener(PlayerMgr.BUFFERING, onUpdateBuffer);
+         mgr.removeEventListener(PlayerMgr.PLAYING, onUpdatePlayhead);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
          
          // seeker functionality
          removeEventListener(MouseEvent.MOUSE_DOWN, onMDown);
@@ -99,7 +91,7 @@ package _myui.player
       {
          if (!mcBuffer) return;
          
-         var w:Number = width * mgr.loadPerc / 100;
+         var w:Number = width * mgr.bufferProgress;
          TweenMax.to(mcBuffer, 0.2, { width:w } );
       }
       
@@ -108,7 +100,7 @@ package _myui.player
       // playhead note
       protected function onUpdatePlayhead(e:Event):void
       {
-         var w:Number = barWidth * mgr.playheadPercentage / 100;
+         var w:Number = barWidth * mgr.bufferProgress;
          TweenMax.to(mcPlayhead, 0.2, { x:w, ease:Linear.easeNone } );
       }
       
@@ -160,7 +152,7 @@ package _myui.player
       {
          isDragging = false;
          // resume play
-         mgr.seekPercentage(Math.floor(100 * seekToPerc));
+         mgr.seekTo(seekToPerc);
          if (resumePlay) mgr.play();
          
          // remove drag & up handler

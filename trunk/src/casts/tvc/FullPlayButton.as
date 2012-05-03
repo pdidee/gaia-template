@@ -1,11 +1,11 @@
-package casts.root.player
+package casts.tvc
 {
-   import _myui.player.BasePlayPauseButton;
-
-   public class PlaypauseButton extends BasePlayPauseButton
+   import _myui.player.VPlayButton2;
+   
+   public class FullPlayButton extends VPlayButton2
    {
       
-      public function PlaypauseButton()
+      public function FullPlayButton()
       {
          super();
          

@@ -8,7 +8,7 @@ package _myui.player
    import flash.events.FullScreenEvent;
    // boy
    import ui2.MyPlayerMgr;
-   import _myui.player.core.MyPlayerMgr;
+   import _myui.player.core.PlayerMgr;
 
    /**
     * @author  boy | cjboy1984@gmail.com
@@ -79,7 +79,7 @@ package _myui.player
 
       // -------------------- LINE -------------------
 
-      private function get mgr():MyPlayerMgr { return MyPlayerMgr.getMgrAt(0); }
+      private function get mgr():PlayerMgr { return PlayerMgr.getMgrAt(0); }
 
       // -------------------- LINE -------------------
 

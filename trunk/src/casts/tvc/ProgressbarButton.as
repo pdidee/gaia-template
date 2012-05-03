@@ -1,13 +1,13 @@
-package casts.root.player
+package casts.tvc
 {
-   import _myui.player.BaseProgressbar;
+   import _myui.player.VProgressBar;
    
    import flash.events.Event;
    import flash.events.MouseEvent;
    import flash.ui.Mouse;
    import flash.ui.MouseCursor;
    
-   public class ProgressbarButton extends BaseProgressbar
+   public class ProgressbarButton extends VProgressBar
    {
       
       public function ProgressbarButton()
