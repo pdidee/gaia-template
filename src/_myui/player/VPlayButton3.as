@@ -7,6 +7,7 @@ package _myui.player
    import _myui.player.core.PlayerMgr;
 
    /**
+    * A play-pause mode button.
     * @author boy, cjboy1984@gmail.com
     */
    public class VPlayButton3 extends MovieClip

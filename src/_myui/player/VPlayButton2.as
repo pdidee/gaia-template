@@ -9,6 +9,7 @@ package _myui.player
    import flash.events.MouseEvent;
    
    /**
+    * A full-size play button.
     * @author boy, cjboy1984@gmail.com
     */
    public class VPlayButton2 extends MovieClip

@@ -1,6 +1,10 @@
 package casts.tvc
 {
    import _myui.player.GreenPlayer;
+   import _myui.player.VPlayButton1;
+   import _myui.player.VPlayButton2;
+   import _myui.player.VProgressBar;
+   import _myui.player.VVolButton;
    
    import casts._lightbox.BaseLightbox;
    
@@ -27,7 +31,13 @@ package casts.tvc
    {
       // fla
       public var btnClose:MyButton;
-      public var mcPlayer:GreenPlayer;
+      public var mcMain:MovieClip;
+      public function get mcLoading():MovieClip { return MovieClip(mcMain.mcLoading); }
+      public function get btnPlay1():VPlayButton2 { return VPlayButton2(mcMain.btnPlay1); }
+      public function get btnPlay2():VPlayButton1 { return VPlayButton1(mcMain.btnPlay2); }
+      public function get btnbtnBarPlay2():VProgressBar { return VProgressBar(mcMain.btnBar); }
+      public function get btnVol():VVolButton { return VVolButton(mcMain.btnVol); }
+      public function get mcVideo():GreenPlayer { return GreenPlayer(mcMain.mcVideo); }
       public var mcBg:MovieClip;
       
       public function VBoxMain()
@@ -37,7 +47,7 @@ package casts.tvc
          TweenPlugin.activate([AutoAlphaPlugin]);
          TweenPlugin.activate([TransformAroundPointPlugin]);
          
-         mcPlayer.init('http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 854, 480);
+         mcVideo.init('tvc', 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -63,7 +73,7 @@ package casts.tvc
             onComplete:function()
             {
                // video
-               mcPlayer.play();
+               mcVideo.play();
             }
          });
          
@@ -71,12 +81,12 @@ package casts.tvc
          initButton();
          TweenMax.to(this, 0, {autoAlpha:1});
          TweenMax.to(mcBg, 0, {alpha:0});
-         TweenMax.to(mcPlayer, 0, {x:142, y:77, alpha:0, scaleX:1, scaleY:1});
+         TweenMax.to(mcMain, 0, {x:142, y:77, alpha:0, scaleX:1, scaleY:1});
          TweenMax.to(btnClose, 0, {x:761, y:61, alpha:0});
          
          // [actions]
          cmd.insert(TweenMax.to(mcBg, 0.6, {alpha:1}));
-         cmd.insert(TweenMax.to(mcPlayer, 0.6, {y:47, alpha:1}));
+         cmd.insert(TweenMax.to(mcMain, 0.6, {y:47, alpha:1}));
          cmd.insert(TweenMax.to(btnClose, 0.6, {y:21, alpha:1}), 0.4);
          
          cmd.play();
@@ -104,7 +114,7 @@ package casts.tvc
             onComplete:function()
             {
                // video
-               mcPlayer.stop();
+               mcVideo.stop();
                
                // framework
                returnToParent();
@@ -116,7 +126,7 @@ package casts.tvc
          // [init]
          // [actions]
          cmd.insert(TweenMax.to(this, 0.6, {autoAlpha:0}));
-         cmd.insert(TweenMax.to(mcPlayer, 0.6, {transformAroundPoint:{point:new Point(480,260), scaleX:0.9, scaleY:0.9}}));
+         cmd.insert(TweenMax.to(mcMain, 0.6, {transformAroundPoint:{point:new Point(480,260), scaleX:0.9, scaleY:0.9}}));
          
          cmd.play();
       }
@@ -130,22 +140,7 @@ package casts.tvc
       
       // #################### private ###################
       
-      private function onAdd(e:Event):void
-      {
-         super.onAdd(e);
-         
-         alpha = 0;
-         visible = false;
-      }
-      
-      private function onRemove(e:Event):void
-      {
-         super.onRemove(e);
-         // basic
-         stage.removeEventListener(Event.RESIZE, onStageResize);
-      }
-      
-      private function onStageResize(e:Event = null):void
+      override protected function onStageResize(e:Event = null):void
       {
          x = (sw>>1) - (GB.DocWidth>>1);
          y = (sh>>1) - (GB.DocHeight>>1);
