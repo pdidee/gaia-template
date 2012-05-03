@@ -35,7 +35,7 @@ package casts.tvc
       public function get mcLoading():MovieClip { return MovieClip(mcMain.mcLoading); }
       public function get btnPlay1():VPlayButton2 { return VPlayButton2(mcMain.btnPlay1); }
       public function get btnPlay2():VPlayButton1 { return VPlayButton1(mcMain.btnPlay2); }
-      public function get btnbtnBarPlay2():VProgressBar { return VProgressBar(mcMain.btnBar); }
+      public function get btnBar():VProgressBar { return VProgressBar(mcMain.btnBar); }
       public function get btnVol():VVolButton { return VVolButton(mcMain.btnVol); }
       public function get mcVideo():GreenPlayer { return GreenPlayer(mcMain.mcVideo); }
       public var mcBg:MovieClip;
@@ -47,7 +47,9 @@ package casts.tvc
          TweenPlugin.activate([AutoAlphaPlugin]);
          TweenPlugin.activate([TransformAroundPointPlugin]);
          
-         mcVideo.init('tvc', 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
+         // sync model
+         btnPlay1.id = btnPlay2.id = btnBar.id = btnVol.id = mcVideo.id = 'tvc';
+         mcVideo.init('http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);

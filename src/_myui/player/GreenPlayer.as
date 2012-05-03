@@ -41,9 +41,8 @@ package _myui.player
       // ________________________________________________
       //                                             init
       
-      public function init(mgrId:String, source:String, width:Number, height:Number):void
+      public function init(source:String, width:Number, height:Number):void
       {
-         id = mgrId;
          src = source;
          docWidth = width;
          docHeight = height;
