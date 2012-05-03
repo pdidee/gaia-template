@@ -16,7 +16,6 @@ package _myui.player
    {
       // fla
       public var video:VideoLoader;
-      public var mcLoading:MovieClip; // The loading animation for buffering video
       
       public var src:String;
       public var docWidth:Number = 640; // <!-- width
@@ -42,14 +41,15 @@ package _myui.player
       // ________________________________________________
       //                                             init
       
-      public function init(source:String, width:Number, height:Number):void
+      public function init(mgrId:String, source:String, width:Number, height:Number):void
       {
+         id = mgrId;
          src = source;
          docWidth = width;
          docHeight = height;
          
          // video
-         video = new VideoLoader('v.mp4', {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x000000, autoPlay:false, bufferTime:10});
+         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x000000, autoPlay:false, bufferTime:10});
          video.addEventListener(VideoLoader.VIDEO_BUFFER_FULL, onBuffFull);
          video.addEventListener(VideoLoader.VIDEO_BUFFER_EMPTY, onBuffEmpty);
          video.addEventListener(VideoLoader.VIDEO_PLAY, onVideoPlay);
