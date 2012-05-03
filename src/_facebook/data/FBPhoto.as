@@ -1,5 +1,6 @@
 package _facebook.data
 {
+   import flash.display.BitmapData;
    
    public class FBPhoto
    {
@@ -8,6 +9,9 @@ package _facebook.data
       public var url_s:String; // Link of icon-size photo
       public var width:Number; // Width of original-size photo
       public var height:Number; // Height of original-size photo
+      
+      public var bmpd_n:BitmapData;
+      public var bmpd_s:BitmapData;
       
       public var name:String; // Just a name buffer
       
