@@ -82,7 +82,7 @@ package casts.root
          TweenMax.to(this, 0.6, {y:pos.y});
          
          // In order to prevent user do navigating action before the 1st swf is loaded.
-         disableThis();
+         if (Gaia.api) disableThis();
          initButtons();
          initFrameworkRelationship();
       }
