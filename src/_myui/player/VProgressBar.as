@@ -39,6 +39,7 @@ package _myui.player
          tabChildren = false;
          focusRect = false;
          
+         buttonMode = true;
          mouseChildren = true;
          
          stop();
@@ -156,6 +157,8 @@ package _myui.player
          {
             seekPerc = 1;
          }
+         
+         mgr.seekTo(seekPerc);
          
          var w:Number = barWidth * seekPerc;
          TweenMax.to(mcPlayhead, 0.2, {x:w});

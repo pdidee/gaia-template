@@ -88,6 +88,7 @@ package _myui.player
          mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering);
          mgr.removeEventListener(PlayerMgr.SEEK_TO, onSeekTo);
          mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
          
          _id = v;
          
@@ -97,6 +98,7 @@ package _myui.player
          mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering);
          mgr.addEventListener(PlayerMgr.SEEK_TO, onSeekTo);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
       }
       
       // ################### protected ##################
@@ -104,7 +106,7 @@ package _myui.player
       protected function onAdded(e:Event):void
       {
          // video
-         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x000000, autoPlay:false, bufferTime:10, onOpen:onLoadOpen, onComplete:onLoadComplete});
+         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x000000, bgAlpha:0, autoPlay:false, bufferTime:10, onOpen:onLoadOpen, onComplete:onLoadComplete});
          video.addEventListener(VideoLoader.VIDEO_BUFFER_FULL, onBuffFull);
          video.addEventListener(VideoLoader.VIDEO_BUFFER_EMPTY, onBuffEmpty);
          video.addEventListener(VideoLoader.VIDEO_PLAY, onVideoPlay);
@@ -169,7 +171,7 @@ package _myui.player
       
       protected function onStop(e:Event):void
       {
-         video.playProgress = 0;
+         video.playProgress = mgr.playProgress;
          video.pauseVideo();
       }
       
