@@ -15,8 +15,8 @@ package _myui.player
    public class VPlayButton2 extends MovieClip
    {
       // model
-      public var id:String = 'abc';
-      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
+      protected var _id:String = 'tvc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
       
       public function VPlayButton2()
       {
@@ -33,7 +33,24 @@ package _myui.player
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                               id
+      
+      public function get id():String { return _id; }
+      public function set id(v:String):void
+      {
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         
+         _id = v;
+         
+         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+      }
       
       // ################### protected ##################
       

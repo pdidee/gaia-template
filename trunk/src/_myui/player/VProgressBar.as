@@ -18,22 +18,18 @@ package _myui.player
       public var mcPlayhead:MovieClip;
       public var mcBuffer:MovieClip;
       
-      // flag
-      protected var isOver:Boolean = false;
-      protected var isDragging:Boolean = false;
-      
       // model
-      public var id:String = 'abc';
-      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
+      protected var _id:String = 'tvc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
       
       // data
-      protected var barWidth:Number = 100;
+      public var barWidth:Number = 100;
       
       // whether to resume play
       protected var resumePlay:Boolean;
       
       // percentage of the seeker
-      protected var seekToPerc:Number;
+      protected var seekPerc:Number;
       
       /* constructor */
       public function VProgressBar()
@@ -51,6 +47,23 @@ package _myui.player
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
       
+      // ________________________________________________
+      //                                               id
+      
+      public function get id():String { return _id; }
+      public function set id(v:String):void
+      {
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         
+         _id = v;
+         
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+      }
+      
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
@@ -59,8 +72,8 @@ package _myui.player
          if (mcBuffer) mcBuffer.width = 0;
          
          // model
-         mgr.addEventListener(PlayerMgr.BUFFERING, onUpdateBuffer);
-         mgr.addEventListener(PlayerMgr.PLAYING, onUpdatePlayhead);
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
          
          // seeker functionality
@@ -74,8 +87,8 @@ package _myui.player
          if (mcBuffer) TweenMax.killTweensOf(mcBuffer);
          
          // model
-         mgr.removeEventListener(PlayerMgr.BUFFERING, onUpdateBuffer);
-         mgr.removeEventListener(PlayerMgr.PLAYING, onUpdatePlayhead);
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
          mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
          
          // seeker functionality
@@ -92,7 +105,7 @@ package _myui.player
          if (!mcBuffer) return;
          
          var w:Number = width * mgr.bufferProgress;
-         TweenMax.to(mcBuffer, 0.2, { width:w } );
+         TweenMax.to(mcBuffer, 0.2, {width:w});
       }
       
       // --------------------- LINE ---------------------
@@ -100,14 +113,14 @@ package _myui.player
       // playhead note
       protected function onUpdatePlayhead(e:Event):void
       {
-         var w:Number = barWidth * mgr.bufferProgress;
-         TweenMax.to(mcPlayhead, 0.2, { x:w, ease:Linear.easeNone } );
+         var w:Number = barWidth * mgr.playProgress;
+         TweenMax.to(mcPlayhead, 0.2, {x:w, ease:Linear.easeNone});
       }
       
       // video ends note
       protected function onVideoEnd(e:Event):void
       {
-         TweenMax.to(mcPlayhead, 0.2, { x:barWidth, ease:Linear.easeNone } );
+         TweenMax.to(mcPlayhead, 0.2, {x:barWidth, ease:Linear.easeNone});
       }
       
       // --------------------- LINE ---------------------
@@ -117,15 +130,14 @@ package _myui.player
       
       protected function onMDown(e:MouseEvent):void
       {
-         isDragging = true;
          // pause video
          resumePlay = mgr.playing;
          mgr.pause();
          
          // update progress bar
-         seekToPerc = mouseX / width;
-         var w:Number = barWidth * seekToPerc;
-         TweenMax.to(mcPlayhead, 0.3, { x:w } );
+         seekPerc = mouseX / width;
+         var w:Number = barWidth * seekPerc;
+         TweenMax.to(mcPlayhead, 0.3, {x:w});
          
          // add drag & up handler
          stage.addEventListener(MouseEvent.MOUSE_MOVE, onMMove);
@@ -135,24 +147,24 @@ package _myui.player
       protected function onMMove(e:MouseEvent):void
       {
          // update progress bar
-         seekToPerc = mouseX / barWidth;
-         if (seekToPerc < 0)
+         seekPerc = mouseX / barWidth;
+         if (seekPerc < 0)
          {
-            seekToPerc = 0;
+            seekPerc = 0;
          }
-         else if (seekToPerc > 1)
+         else if (seekPerc > 1)
          {
-            seekToPerc = 1;
+            seekPerc = 1;
          }
-         var w:Number = barWidth * seekToPerc;
-         TweenMax.to(mcPlayhead, 0.2, { x:w } );
+         
+         var w:Number = barWidth * seekPerc;
+         TweenMax.to(mcPlayhead, 0.2, {x:w});
       }
       
       protected function onMUp(e:MouseEvent):void
       {
-         isDragging = false;
          // resume play
-         mgr.seekTo(seekToPerc);
+         mgr.seekTo(seekPerc);
          if (resumePlay) mgr.play();
          
          // remove drag & up handler
