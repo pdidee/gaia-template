@@ -1,8 +1,10 @@
 package casts.tvc
 {
    import _myui.player.GreenPlayer;
+   import _myui.player.VLoading;
    import _myui.player.VPlayButton1;
    import _myui.player.VPlayButton2;
+   import _myui.player.VPlayButton3;
    import _myui.player.VProgressBar;
    import _myui.player.VVolButton;
    
@@ -32,13 +34,15 @@ package casts.tvc
       // fla
       public var btnClose:MyButton;
       public var mcMain:MovieClip;
-      public function get mcLoading():MovieClip { return MovieClip(mcMain.mcLoading); }
+      public function get mcLoading():VLoading { return VLoading(mcMain.mcLoading); }
       public function get btnPlay1():VPlayButton2 { return VPlayButton2(mcMain.btnPlay1); }
-      public function get btnPlay2():VPlayButton1 { return VPlayButton1(mcMain.btnPlay2); }
+      public function get btnPlay2():VPlayButton3 { return VPlayButton3(mcMain.btnPlay2); }
       public function get btnBar():VProgressBar { return VProgressBar(mcMain.btnBar); }
       public function get btnVol():VVolButton { return VVolButton(mcMain.btnVol); }
-      public function get mcVideo():GreenPlayer { return GreenPlayer(mcMain.mcVideo); }
       public var mcBg:MovieClip;
+      
+      // player
+      private var player:GreenPlayer = new GreenPlayer('http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
       
       public function VBoxMain()
       {
@@ -46,10 +50,6 @@ package casts.tvc
          
          TweenPlugin.activate([AutoAlphaPlugin]);
          TweenPlugin.activate([TransformAroundPointPlugin]);
-         
-         // sync model
-         btnPlay1.id = btnPlay2.id = btnBar.id = btnVol.id = mcVideo.id = 'tvc';
-         mcVideo.init('http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -75,11 +75,12 @@ package casts.tvc
             onComplete:function()
             {
                // video
-               mcVideo.play();
+               player.play();
             }
          });
          
          // [init]
+         initPlayer();
          initButton();
          TweenMax.to(this, 0, {autoAlpha:1});
          TweenMax.to(mcBg, 0, {alpha:0});
@@ -116,7 +117,7 @@ package casts.tvc
             onComplete:function()
             {
                // video
-               mcVideo.stop();
+               player.stop();
                
                // framework
                returnToParent();
@@ -126,6 +127,7 @@ package casts.tvc
          });
          
          // [init]
+         destroyPlayer();
          // [actions]
          cmd.insert(TweenMax.to(this, 0.6, {autoAlpha:0}));
          cmd.insert(TweenMax.to(mcMain, 0.6, {transformAroundPoint:{point:new Point(480,260), scaleX:0.9, scaleY:0.9}}));
@@ -162,6 +164,26 @@ package casts.tvc
             
             transitionOut();
          };
+      }
+      
+      // ________________________________________________
+      //                                           player
+      
+      private function initPlayer():void
+      {
+         // sync model
+         btnBar.barWidth = 556;
+         btnVol.barWidth = 35;
+         mcLoading.id = btnPlay1.id = btnPlay2.id = btnBar.id = btnVol.id = player.id = 'tvc';
+         
+         player.x = 23;
+         player.y = 9;
+         mcMain.addChildAt(player, 4);
+      }
+      
+      private function destroyPlayer():void
+      {
+         mcMain.removeChild(player);
       }
       
       // --------------------- LINE ---------------------
