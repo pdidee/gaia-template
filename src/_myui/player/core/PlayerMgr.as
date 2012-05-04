@@ -25,8 +25,10 @@ package _myui.player.core
       public static const PAUSE:String = '__PAUSE__';
       public static const STOP:String = '__STOP__';
       // Event
-      public static const BUFFERING:String = '__BUFFERING__';
-      public static const PLAYING:String = '__PLAYING__';
+      public static const BUFFER_EMPTY:String = '__BUFFER_EMPTY__';
+      public static const BUFFER_FULL:String = '__BUFFER_FULL__';
+      public static const BUFFER_PROGRESS:String = '__BUFFER_PROGRESS__';
+      public static const PLAY_PROGRESS:String = '__PLAY_PROGRESS__';
       // Event
       public static const SEEK_TO:String = '__SEEK_TO__';
       public static const VIDEO_END:String = '__VIDEO_END__';
@@ -38,7 +40,7 @@ package _myui.player.core
       
       // load percentage, play head percentage...
       public var playing:Boolean = false;
-      public var vol:Number = 0; // 0~1
+      public var vol:Number = 1; // 0~1
       public var bufferProgress:Number = 0; // 0~1
       public var playProgress:Number = 0; // 0~1
       
@@ -119,13 +121,23 @@ package _myui.player.core
       public function setBufferProgress(v:Number):void
       {
          bufferProgress = v;
-         dispatchEvent(new Event(PlayerMgr.BUFFERING));
+         dispatchEvent(new Event(PlayerMgr.BUFFER_PROGRESS));
+      }
+      
+      public function setBufferEmpty():void
+      {
+         dispatchEvent(new Event(PlayerMgr.BUFFER_EMPTY));
+      }
+      
+      public function setBufferFull():void
+      {
+         dispatchEvent(new Event(PlayerMgr.BUFFER_FULL));
       }
       
       public function setPlayProgress(v:Number):void
       {
          playProgress = v;
-         dispatchEvent(new Event(PlayerMgr.PLAYING));
+         dispatchEvent(new Event(PlayerMgr.PLAY_PROGRESS));
          
          if (playProgress == 1)
          {

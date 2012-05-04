@@ -15,7 +15,7 @@ package _myui.player
       public var mcMsk:MovieClip;
       
       // bar width
-      protected var barWidth:Number = 100;
+      public var barWidth:Number = 100;
       
       // flag
       protected var isOver:Boolean = false;
@@ -25,8 +25,8 @@ package _myui.player
       protected var seekToPerc:Number;
       
       // model
-      public var id:String = 'abc';
-      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(id); }
+      protected var _id:String = 'tvc';
+      protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
 
       /* constructor */
       public function VVolButton()
@@ -45,7 +45,18 @@ package _myui.player
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
 
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                               id
+      
+      public function get id():String { return _id; }
+      public function set id(v:String):void
+      {
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         
+         _id = v;
+         
+         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+      }
 
       // ################### protected ##################
 
@@ -53,33 +64,64 @@ package _myui.player
       {
          mcMsk.scaleX = mgr.vol;
          
+         // model
+         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         
          // seeker functionality
          addEventListener(MouseEvent.MOUSE_DOWN, onMDown);
       }
-
+      
       protected function onRemove(e:Event):void
       {
+         // model
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         
          // seeker functionality
          removeEventListener(MouseEvent.MOUSE_DOWN, onMDown);
          stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMMove);
          stage.removeEventListener(MouseEvent.MOUSE_UP, onMUp);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                       vol change
       
-      protected function onMOver(e:MouseEvent):void {}
-      protected function onMOut(e:MouseEvent):void {}
-
-      // --------------------- LINE ---------------------
+      protected function onVolChange(e:Event):void
+      {
+         updateView();
+      }
+      
+      protected function getVol():Number
+      {
+         var ret:Number;
+         if (mouseX < mcMsk.x)
+         {
+            ret = 0;
+         }
+         else if (mouseX > mcMsk.x + barWidth)
+         {
+            ret = 1;
+         }
+         else
+         {
+            var offx:Number = mouseX - mcMsk.x;
+            ret = offx / barWidth;
+         }
+         return ret;
+      }
+      
+      protected function updateView():void
+      {
+         mcMsk.scaleX = mgr.vol;
+      }
+      
+      // ________________________________________________
+      //                                            mouse
 
       protected function onMDown(e:MouseEvent):void
       {
          isDragging = true;
          // new volume
-         mgr.vol = getVolumePercentage();
-         
-         // view
-         changeViewByVolumn();
+         mgr.setVol(getVol());
 
          // add drag & up handler
          stage.addEventListener(MouseEvent.MOUSE_MOVE, onMMove);
@@ -89,47 +131,20 @@ package _myui.player
       protected function onMMove(e:MouseEvent):void
       {
          // new volume
-         mgr.vol = getVolumePercentage();
+         mgr.setVol(getVol());
          // view
-         changeViewByVolumn();
+         updateView();
       }
 
       protected function onMUp(e:MouseEvent):void
       {
          isDragging = false;
          // new volume
-         mgr.vol = getVolumePercentage();
-         
-         // view
-         changeViewByVolumn();
+         mgr.setVol(getVol());
 
          // remove drag & up handler
          stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMMove);
          stage.removeEventListener(MouseEvent.MOUSE_UP, onMUp);
-      }
-
-      // --------------------- LINE ---------------------
-
-      protected function getVolumePercentage():int
-      {
-         if (mouseX < mcMsk.x)
-         {
-            return 0;
-         }
-         else if (mouseX > mcMsk.x + barWidth)
-         {
-            return 1;
-         }
-         else
-         {
-            var offx:Number = mouseX - mcMsk.x;
-            return offx / barWidth;
-         }
-      }
-
-      protected function changeViewByVolumn():void
-      {
-         mcMsk.scaleX = mgr.vol;
       }
       
       // --------------------- LINE ---------------------
