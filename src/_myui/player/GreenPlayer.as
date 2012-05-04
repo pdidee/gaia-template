@@ -169,8 +169,8 @@ package _myui.player
       
       protected function onStop(e:Event):void
       {
-         video.pauseVideo();
          video.playProgress = 0;
+         video.pauseVideo();
       }
       
       protected function onBuffering(e:Event):void
