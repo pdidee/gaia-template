@@ -9,13 +9,13 @@ package _myui.player
    /**
     * @author boy, cjboy1984@gmail.com
     */
-   public class VPauseButton extends MovieClip
+   public class VStopButton extends MovieClip
    {
       // model
       protected var _id:String = 'tvc';
       protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
       
-      public function VPauseButton()
+      public function VStopButton()
       {
          // disable tab-functionality.
          tabEnabled = false;
@@ -55,7 +55,6 @@ package _myui.player
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
          
          // click
-         mouseChildren = true;
          addEventListener(MouseEvent.CLICK, onClick);
       }
       
@@ -70,31 +69,24 @@ package _myui.player
          removeEventListener(MouseEvent.CLICK, onClick);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                            mouse
       
       protected function onClick(e:MouseEvent):void
       {
-         if (mouseChildren)
-         {
-            mgr.pause();
-         }
-         else
-         {
-            mgr.play();
-         }
+         mgr.stop();
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                            model
       
       protected function onPlayVid(e:Event):void
       {
-         mouseChildren = true;
-         alpha = 1.0;
+         alpha = 1;
       }
       
       protected function onPauseVid(e:Event):void
       {
-         mouseChildren = false;
          alpha = 0.5;
       }
       
