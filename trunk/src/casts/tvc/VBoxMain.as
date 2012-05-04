@@ -2,11 +2,10 @@ package casts.tvc
 {
    import _myui.player.GreenPlayer;
    import _myui.player.VLoading;
-   import _myui.player.VPlayButton1;
    import _myui.player.VPlayButton2;
    import _myui.player.VPlayButton3;
    import _myui.player.VProgressBar;
-   import _myui.player.VVolButton;
+   import _myui.player.VVolButton2;
    
    import casts._lightbox.BaseLightbox;
    
@@ -38,7 +37,7 @@ package casts.tvc
       public function get btnPlay1():VPlayButton2 { return VPlayButton2(mcMain.btnPlay1); }
       public function get btnPlay2():VPlayButton3 { return VPlayButton3(mcMain.btnPlay2); }
       public function get btnBar():VProgressBar { return VProgressBar(mcMain.btnBar); }
-      public function get btnVol():VVolButton { return VVolButton(mcMain.btnVol); }
+      public function get btnVol():VVolButton2 { return VVolButton2(mcMain.btnVol); }
       public var mcBg:MovieClip;
       
       // player
