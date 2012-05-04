@@ -21,6 +21,7 @@ package _myui.player
          tabEnabled = false;
          tabChildren = false;
          focusRect = false;
+         buttonMode = true;
          
          stop();
          
