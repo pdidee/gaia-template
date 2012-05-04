@@ -2,26 +2,30 @@ package _myui.player
 {
    import _myui.player.core.PlayerMgr;
    
+   import com.greensock.TweenMax;
+   
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.MouseEvent;
    
    /**
-    * @author boy, cjboy1984@gmail.com
+    * A snapshot movieclip.
+    * @author boy,cjboy1984@gmail.com
     */
-   public class VStopButton extends MovieClip
+   public class VSnapShot extends MovieClip
    {
       // model
       protected var _id:String = 'tvc';
       protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
       
-      public function VStopButton()
+      public function VSnapShot()
       {
          // disable tab-functionality.
          tabEnabled = false;
          tabChildren = false;
          focusRect = false;
-         buttonMode = true;
+         
+         mouseEnabled = mouseChildren = false;
          
          stop();
          
@@ -35,17 +39,11 @@ package _myui.player
       public function get id():String { return _id; }
       public function set id(v:String):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
          
          _id = v;
          
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
       }
       
       // ################### protected ##################
@@ -53,22 +51,20 @@ package _myui.player
       protected function onAdd(e:Event):void
       {
          // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
+         
+         // view
+         updateView();
          
          // click
+         mouseChildren = true;
          addEventListener(MouseEvent.CLICK, onClick);
       }
       
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
          
          // click
          removeEventListener(MouseEvent.CLICK, onClick);
@@ -79,20 +75,30 @@ package _myui.player
       
       protected function onClick(e:MouseEvent):void
       {
-         mgr.stop();
+         if (mouseChildren)
+         {
+            mgr.play();
+         }
       }
       
       // ________________________________________________
       //                                            model
       
-      protected function onPlayVid(e:Event):void
+      protected function onStatChange(e:Event):void
       {
-         alpha = 1;
+         updateView();
       }
       
-      protected function onPauseVid(e:Event):void
+      protected function updateView():void
       {
-         alpha = 0.5;
+         if (mgr.playProgress == 0)
+         {
+            TweenMax.to(this, 0.5, {alpha:1});
+         }
+         else
+         {
+            TweenMax.to(this, 0.5, {alpha:0});
+         }
       }
       
       // #################### private ###################

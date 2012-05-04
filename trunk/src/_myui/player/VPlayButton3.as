@@ -39,12 +39,14 @@ package _myui.player
          mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
          
          _id = v;
          
          mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
       }
 
       // ################### protected ##################
@@ -55,6 +57,7 @@ package _myui.player
          mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
 
          // click
          addEventListener(MouseEvent.CLICK, onClick);
@@ -66,6 +69,7 @@ package _myui.player
          mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
 
          // click
          removeEventListener(MouseEvent.CLICK, onClick);
