@@ -10,7 +10,7 @@ package _myui.form
    public class FriendBox extends MovieClip
    {
       // photo
-      protected var photo:PhotoBox;
+      protected var photo:PhotoBox; // todo, replace PhotoBox with ImageLoader
       protected function get pw():Number { return photo.pw; } // photo width
       protected function get ph():Number { return photo.ph; } // photo height
       
