@@ -2,7 +2,6 @@ package casts.friend
 {
    import _facebook.FBMgr;
    
-   import _myui.form.PhotoBox;
    import _myui.scrollbar.VScrollBar1;
    
    import casts._lightbox.BaseLightbox;
