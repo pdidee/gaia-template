@@ -10,8 +10,8 @@ package
       // ________________________________________________
       //                                    document info
       
-      public static const DocWidth:Number = 960;
-      public static const DocHeight:Number = 520;
+      public static const DOC_WIDTH:Number = 960;
+      public static const DOC_HEIGHT:Number = 520;
       
       // ________________________________________________
       //                                        framework
