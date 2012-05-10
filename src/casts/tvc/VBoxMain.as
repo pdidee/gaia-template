@@ -2,29 +2,28 @@ package casts.tvc
 {
    import _myui.player.GreenPlayer;
    import _myui.player.VLoading;
-   import _myui.player.VPlayButton_Dual;
+   import _myui.player.VPlayButton;
    import _myui.player.VPlayButton_Screen;
    import _myui.player.VProgressBar;
-   import _myui.player.VVolButton2;
+   import _myui.player.VVolButton1;
    
    import casts._lightbox.BaseLightbox;
    
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.plugins.AutoAlphaPlugin;
-   import com.greensock.plugins.TransformAroundPointPlugin;
+   import com.greensock.plugins.BlurFilterPlugin;
    import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
    import flash.events.Event;
-   import flash.geom.Point;
    
    /**
     * A Video-Player.
     * @author boy, cjboy1984@gmail.com
     * @usage
     * // assign resource.
-    * GaiaPlus.api.getAssetContent('tvc', 'root').video_src = 'video.flv';
+    * GaiaPlus.api.getAssetContent('tvc', 'root').setInfo('video.flv', 1);
     * // show and play it.
     * GaiaPlus.api.showAsset('tvc', 'root', null);
     */   
@@ -32,29 +31,42 @@ package casts.tvc
    {
       // fla
       public var btnClose:MyButton;
-      public var mcMain:MovieClip;
-      public function get mcLoading():VLoading { return VLoading(mcMain.mcLoading); }
-      public function get btnPlay1():VPlayButton_Screen { return VPlayButton_Screen(mcMain.btnPlay1); }
-      public function get btnPlay2():VPlayButton_Dual { return VPlayButton_Dual(mcMain.btnPlay2); }
-      public function get btnBar():VProgressBar { return VProgressBar(mcMain.btnBar); }
-      public function get btnVol():VVolButton2 { return VVolButton2(mcMain.btnVol); }
-      public var mcBg:MovieClip;
+      public var mc1:MovieClip;
+      public var mc2:MovieClip;
+      public function get mcLoading():VLoading { return VLoading(mc2.mcLoading); }
+      public function get btnPlay1():VPlayButton_Screen { return VPlayButton_Screen(mc2.btnPlay1); }
+      public function get btnPlay2():VPlayButton { return VPlayButton(mc2.btnPlay2); }
+      public function get btnBar():VProgressBar { return VProgressBar(mc2.btnBar); }
+      public function get btnVol():VVolButton1 { return VVolButton1(mc2.btnVol); }
+      public var mc3:MovieClip;
+      
+      // video-source
+      public var src:String = 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv';
       
       // player
-      private var player:GreenPlayer = new GreenPlayer(632, 359);
+      private var player:GreenPlayer = new GreenPlayer(630, 362);
       
       public function VBoxMain()
       {
          super();
          
-         TweenPlugin.activate([AutoAlphaPlugin]);
-         TweenPlugin.activate([TransformAroundPointPlugin]);
+         TweenPlugin.activate([AutoAlphaPlugin, BlurFilterPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                             init
+      
+      public function setInfo(source:String, titleFrame:uint = 1):void
+      {
+         mc1.gotoAndStop(titleFrame);
+         if (player) player.src = source;
+      }
+      
+      // ________________________________________________
+      //                                        framework
       
       override public function transitionIn():void
       {
@@ -73,23 +85,25 @@ package casts.tvc
             },
             onComplete:function()
             {
+               mouseChildren = true;
                // video
                player.play();
             }
          });
          
          // [init]
+         mouseChildren = false;
          initPlayer();
          initButton();
          TweenMax.to(this, 0, {autoAlpha:1});
-         TweenMax.to(mcBg, 0, {alpha:0});
-         TweenMax.to(mcMain, 0, {x:142, y:77, alpha:0, scaleX:1, scaleY:1});
-         TweenMax.to(btnClose, 0, {x:761, y:61, alpha:0});
+         TweenMax.to(mc3, 0, {alpha:0});
+         TweenMax.to(mc2, 0, {alpha:0, scaleX:0.9, scaleY:0.9, blurFilter:{blurX:20, blurY:20}});
+         TweenMax.to(btnClose, 0, {y:140, alpha:0});
          
          // [actions]
-         cmd.insert(TweenMax.to(mcBg, 0.6, {alpha:1}));
-         cmd.insert(TweenMax.to(mcMain, 0.6, {y:47, alpha:1}));
-         cmd.insert(TweenMax.to(btnClose, 0.6, {y:21, alpha:1}), 0.4);
+         cmd.insert(TweenMax.to(mc3, 0.5, {alpha:1}));
+         cmd.insert(TweenMax.to(mc2, 1.0, {alpha:1, scaleX:1, scaleY:1, blurFilter:{blurX:0, blurY:0}}));
+         cmd.insert(TweenMax.to(btnClose, 0.6, {y:115, alpha:1}), 0.8);
          
          cmd.play();
       }
@@ -128,8 +142,7 @@ package casts.tvc
          // [init]
          destroyPlayer();
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.6, {autoAlpha:0}));
-         cmd.insert(TweenMax.to(mcMain, 0.6, {transformAroundPoint:{point:new Point(480,260), scaleX:0.9, scaleY:0.9}}));
+         cmd.insert(TweenMax.to(this, 0.3, {autoAlpha:0}));
          
          cmd.play();
       }
@@ -170,8 +183,7 @@ package casts.tvc
       
       private function initPlayer():void
       {
-         btnBar.barWidth = 556;
-         btnVol.barWidth = 35;
+         btnBar.barWidth = 533;
          
          // sync model
          var modId:String = 'tvc';
@@ -181,16 +193,16 @@ package casts.tvc
          btnBar.init(modId);
          btnVol.init(modId);
          
-         player.src = 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv';
+         player.src = src;
+         player.x = -314;
+         player.y = -196;
          player.init(modId);
-         player.x = 23;
-         player.y = 9;
-         mcMain.addChildAt(player, 4);
+         mc2.addChildAt(player, 4);
       }
       
       private function destroyPlayer():void
       {
-         mcMain.removeChild(player);
+         mc2.removeChild(player);
       }
       
       // --------------------- LINE ---------------------
