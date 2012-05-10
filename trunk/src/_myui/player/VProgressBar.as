@@ -60,9 +60,9 @@ package _myui.player
          }
          
          // model
-         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
-         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer, false, 0, true);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead, false, 0, true);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd, false, 0, true);
       }
       
       public function destroy():void

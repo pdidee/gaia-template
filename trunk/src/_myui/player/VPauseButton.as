@@ -40,9 +40,9 @@ package _myui.player
          }
          
          // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid, false, 0, true);
+         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid, false, 0, true);
+         mgr.addEventListener(PlayerMgr.STOP, onPauseVid, false, 0, true);
       }
       
       public function destroy():void
