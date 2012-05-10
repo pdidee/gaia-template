@@ -37,9 +37,9 @@ package _myui.player
          }
          
          // model
-         mgr.addEventListener(PlayerMgr.BUFFER_FULL, onBuffFull);
-         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.addEventListener(PlayerMgr.BUFFER_FULL, onBuffFull, false, 0, true);
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty, false, 0, true);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd, false, 0, true);
       }
       
       public function destroy():void
