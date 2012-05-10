@@ -51,7 +51,7 @@ package _myui.player
          }
          
          // model
-         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange, false, 0, true);
       }
       
       public function destroy():void

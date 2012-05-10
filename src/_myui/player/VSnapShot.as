@@ -45,7 +45,7 @@ package _myui.player
          }
          
          // model
-         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
+         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange, false, 0, true);
       }
       
       public function destroy():void
