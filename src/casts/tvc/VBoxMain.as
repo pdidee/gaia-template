@@ -2,8 +2,8 @@ package casts.tvc
 {
    import _myui.player.GreenPlayer;
    import _myui.player.VLoading;
-   import _myui.player.VPlayButton2;
-   import _myui.player.VPlayButton3;
+   import _myui.player.VPlayButton_Dual;
+   import _myui.player.VPlayButton_Screen;
    import _myui.player.VProgressBar;
    import _myui.player.VVolButton2;
    
@@ -34,14 +34,14 @@ package casts.tvc
       public var btnClose:MyButton;
       public var mcMain:MovieClip;
       public function get mcLoading():VLoading { return VLoading(mcMain.mcLoading); }
-      public function get btnPlay1():VPlayButton2 { return VPlayButton2(mcMain.btnPlay1); }
-      public function get btnPlay2():VPlayButton3 { return VPlayButton3(mcMain.btnPlay2); }
+      public function get btnPlay1():VPlayButton_Screen { return VPlayButton_Screen(mcMain.btnPlay1); }
+      public function get btnPlay2():VPlayButton_Dual { return VPlayButton_Dual(mcMain.btnPlay2); }
       public function get btnBar():VProgressBar { return VProgressBar(mcMain.btnBar); }
       public function get btnVol():VVolButton2 { return VVolButton2(mcMain.btnVol); }
       public var mcBg:MovieClip;
       
       // player
-      private var player:GreenPlayer = new GreenPlayer('http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv', 632, 359);
+      private var player:GreenPlayer = new GreenPlayer(632, 359);
       
       public function VBoxMain()
       {
@@ -170,11 +170,19 @@ package casts.tvc
       
       private function initPlayer():void
       {
-         // sync model
          btnBar.barWidth = 556;
          btnVol.barWidth = 35;
-         mcLoading.id = btnPlay1.id = btnPlay2.id = btnBar.id = btnVol.id = player.id = 'tvc';
          
+         // sync model
+         var modId:String = 'tvc';
+         mcLoading.init(modId);
+         btnPlay1.init(modId);
+         btnPlay2.init(modId);
+         btnBar.init(modId);
+         btnVol.init(modId);
+         
+         player.src = 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv';
+         player.init(modId);
          player.x = 23;
          player.y = 9;
          mcMain.addChildAt(player, 4);

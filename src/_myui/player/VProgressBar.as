@@ -49,20 +49,28 @@ package _myui.player
       }
       
       // ________________________________________________
-      //                                               id
+      //                                     init/destroy
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
          mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
       }
       
       // ################### protected ##################
@@ -71,11 +79,6 @@ package _myui.player
       {
          mcPlayhead.x = 0;
          if (mcBuffer) mcBuffer.width = 0;
-         
-         // model
-         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
-         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
          
          // seeker functionality
          addEventListener(MouseEvent.MOUSE_DOWN, onMDown);
@@ -88,9 +91,7 @@ package _myui.player
          if (mcBuffer) TweenMax.killTweensOf(mcBuffer);
          
          // model
-         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         destroy();
          
          // seeker functionality
          removeEventListener(MouseEvent.MOUSE_DOWN, onMDown);

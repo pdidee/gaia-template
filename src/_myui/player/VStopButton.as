@@ -30,6 +30,33 @@ package _myui.player
       }
       
       // ________________________________________________
+      //                                     init/destroy
+      
+      public function init(modId:String = null):void
+      {
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
+         
+         // model
+         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+      }
+      
+      // ________________________________________________
       //                                               id
       
       public function get id():String { return _id; }
@@ -52,12 +79,6 @@ package _myui.player
       
       protected function onAdd(e:Event):void
       {
-         // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
-         
          // click
          addEventListener(MouseEvent.CLICK, onClick);
       }
@@ -65,10 +86,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         destroy();
          
          // click
          removeEventListener(MouseEvent.CLICK, onClick);

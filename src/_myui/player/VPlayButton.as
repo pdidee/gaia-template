@@ -1,110 +1,110 @@
 package _myui.player
 {
+   import _myui.player.core.PlayerMgr;
+   
    import flash.display.MovieClip;
    import flash.events.Event;
    import flash.events.MouseEvent;
    
-   import _myui.player.core.PlayerMgr;
-
    /**
-    * A play-pause mode button.
-    * @author boy, cjboy1984@gmail.com
+    * A play button.
+    * @author boy,cjboy1984@gmail.com
     */
-   public class VPlayButton3 extends MovieClip
+   public class VPlayButton extends MovieClip
    {
       // model
       protected var _id:String = 'tvc';
       protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
-
-      public function VPlayButton3()
+      
+      public function VPlayButton()
       {
          // disable tab-functionality.
          tabEnabled = false;
          tabChildren = false;
          focusRect = false;
          buttonMode = true;
-
+         
          stop();
-
+         
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
-
-      // ________________________________________________
-      //                                               id
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      // ________________________________________________
+      //                                     init/destroy
+      
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
-      }
-
-      // ################### protected ##################
-
-      protected function onAdd(e:Event):void
-      {
          // model
          mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
-
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+      }
+      
+      // ################### protected ##################
+      
+      protected function onAdd(e:Event):void
+      {
          // click
+         mouseChildren = true;
          addEventListener(MouseEvent.CLICK, onClick);
       }
-
+      
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
-
+         destroy();
+         
          // click
          removeEventListener(MouseEvent.CLICK, onClick);
       }
-
-      // --------------------- LINE ---------------------
-
+      
+      // ________________________________________________
+      //                                            mouse
+      
       protected function onClick(e:MouseEvent):void
       {
-         if (currentFrame == 1)
+         if (mouseChildren)
          {
             mgr.play();
          }
-         else
-         {
-            mgr.pause();
-         }
       }
-
-      // --------------------- LINE ---------------------
-
+      
+      // ________________________________________________
+      //                                            model
+      
       protected function onPlayVid(e:Event):void
       {
-         gotoAndStop(2);
+         mouseChildren = false;
+         alpha = 0.5;
       }
-
+      
       protected function onPauseVid(e:Event):void
       {
-         gotoAndStop(1);
+         mouseChildren = true;
+         alpha = 1.0;
       }
       
       // #################### private ###################
       
       // --------------------- LINE ---------------------
-
+      
    }
-
+   
 }

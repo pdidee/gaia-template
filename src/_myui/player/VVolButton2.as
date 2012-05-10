@@ -38,18 +38,26 @@ package _myui.player
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
-
-      // ________________________________________________
-      //                                               id
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      // ________________________________________________
+      //                                     init/destroy
+      
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
       }
 
       // ################### protected ##################
@@ -58,9 +66,6 @@ package _myui.player
       {
          mcMsk.scaleX = mgr.vol;
          
-         // model
-         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
-         
          // seeker functionality
          addEventListener(MouseEvent.MOUSE_DOWN, onMDown);
       }
@@ -68,7 +73,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         destroy();
          
          // seeker functionality
          removeEventListener(MouseEvent.MOUSE_DOWN, onMDown);

@@ -33,27 +33,32 @@ package _myui.player
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
       }
-
-      // ________________________________________________
-      //                                               id
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      // ________________________________________________
+      //                                     init/destroy
+      
+      public function init(modId:String = null):void
       {
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
+         
+         // model
          mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
-         
-         _id = v;
-         
-         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
       }
 
       // ################### protected ##################
 
       protected function onAdd(e:Event):void
       {
-         // model
-         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
-         
          // seeker functionality
          addEventListener(MouseEvent.CLICK, onClick);
       }
@@ -61,7 +66,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         destroy();
          
          // seeker functionality
          removeEventListener(MouseEvent.CLICK, onClick);

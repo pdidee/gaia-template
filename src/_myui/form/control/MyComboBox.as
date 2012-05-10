@@ -1,7 +1,7 @@
 package _myui.form.control
 {
    import _myui.form.control.common.MyList;
-   import _myui.form.control.core.FocusMgr;
+   import _myui.form.control.core.COMFocusMgr;
    
    import com.greensock.TweenMax;
    import com.greensock.easing.Strong;
@@ -119,7 +119,7 @@ package _myui.form.control
          
          // focus
          canOpen = false;
-         FocusMgr.api.addEventListener(FocusMgr.FOCUS_CHANGE, onFocusChange);
+         COMFocusMgr.api.addEventListener(COMFocusMgr.FOCUS_CHANGE, onFocusChange);
          
          // list
          mcList.onItemClick = onListItemClick;
@@ -140,7 +140,7 @@ package _myui.form.control
          stage.removeEventListener(MouseEvent.CLICK, onStageClick);
          
          // focus
-         FocusMgr.api.removeEventListener(FocusMgr.FOCUS_CHANGE, onFocusChange);
+         COMFocusMgr.api.removeEventListener(COMFocusMgr.FOCUS_CHANGE, onFocusChange);
          
          // list
          mcList.removeAll();
@@ -156,7 +156,7 @@ package _myui.form.control
       
       protected function onOut(e:MouseEvent):void
       {
-         if (FocusMgr.api.focus != this)
+         if (COMFocusMgr.api.focus != this)
             doMouseOut();
       }
       
@@ -166,11 +166,11 @@ package _myui.form.control
          
          if (!canOpen)
          {
-            FocusMgr.api.setFocus(this);
+            COMFocusMgr.api.setFocus(this);
          }
          else
          {
-            FocusMgr.api.setFocus(null);
+            COMFocusMgr.api.setFocus(null);
          }
       }
       
@@ -179,7 +179,7 @@ package _myui.form.control
          isAtTarget = false;
          tfLabel.text = mcList.selectedLabel;
          
-         FocusMgr.api.setFocus(null);
+         COMFocusMgr.api.setFocus(null);
          
          dispatchEvent(new Event(Event.CHANGE));
       }
@@ -196,7 +196,7 @@ package _myui.form.control
          // whether to clear focus
          if (e.eventPhase == EventPhase.AT_TARGET || !isAtTarget)
          {
-            FocusMgr.api.setFocus(null);
+            COMFocusMgr.api.setFocus(null);
          }
          
          // flag
@@ -239,7 +239,7 @@ package _myui.form.control
       
       protected function onFocusChange(e:Event):void
       {
-         if (FocusMgr.api.focus == this)
+         if (COMFocusMgr.api.focus == this)
          {
             // flag
             canOpen = true;
