@@ -67,25 +67,34 @@ package _myui.player
          }
          
          // video
-         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x000000, bgAlpha:0, autoPlay:false, bufferTime:10, onOpen:onLoadOpen, onComplete:onLoadComplete});
-         video.addEventListener(VideoLoader.VIDEO_BUFFER_FULL, onBuffFull);
-         video.addEventListener(VideoLoader.VIDEO_BUFFER_EMPTY, onBuffEmpty);
-         video.addEventListener(VideoLoader.VIDEO_PLAY, onVideoPlay);
-         video.addEventListener(VideoLoader.VIDEO_PAUSE, onVideoPause);
-         video.addEventListener(VideoLoader.PLAY_PROGRESS, onProgress);
+         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x00000000, bgAlpha:0, autoPlay:false, bufferTime:10, onOpen:onLoadOpen, onComplete:onLoadComplete});
+         video.addEventListener(VideoLoader.VIDEO_BUFFER_FULL, onBuffFull, false, 0, true);
+         video.addEventListener(VideoLoader.VIDEO_BUFFER_EMPTY, onBuffEmpty, false, 0, true);
+         video.addEventListener(VideoLoader.VIDEO_PLAY, onVideoPlay, false, 0, true);
+         video.addEventListener(VideoLoader.VIDEO_PAUSE, onVideoPause, false, 0, true);
+         video.addEventListener(VideoLoader.PLAY_PROGRESS, onProgress, false, 0, true);
          
          // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlay);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPause);
-         mgr.addEventListener(PlayerMgr.STOP, onStop);
-         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering);
-         mgr.addEventListener(PlayerMgr.SEEK_TO, onSeekTo);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
-         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         mgr.addEventListener(PlayerMgr.PLAY, onPlay, false, 0, true);
+         mgr.addEventListener(PlayerMgr.PAUSE, onPause, false, 0, true);
+         mgr.addEventListener(PlayerMgr.STOP, onStop, false, 0, true);
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering, false, 0, true);
+         mgr.addEventListener(PlayerMgr.SEEK_TO, onSeekTo, false, 0, true);
+         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd, false, 0, true);
+         mgr.addEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange, false, 0, true);
       }
       
       public function destroy():void
       {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlay);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPause);
+         mgr.removeEventListener(PlayerMgr.STOP, onStop);
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering);
+         mgr.removeEventListener(PlayerMgr.SEEK_TO, onSeekTo);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
+         
          // video
          if (video)
          {
@@ -97,15 +106,6 @@ package _myui.player
             video.dispose(true);
             video = null;
          }
-         
-         // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlay);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPause);
-         mgr.removeEventListener(PlayerMgr.STOP, onStop);
-         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffering);
-         mgr.removeEventListener(PlayerMgr.SEEK_TO, onSeekTo);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
-         mgr.removeEventListener(PlayerMgr.VOLUME_CHANGE, onVolChange);
       }
       
       // ________________________________________________
