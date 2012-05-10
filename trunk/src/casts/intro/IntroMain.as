@@ -4,6 +4,7 @@ package casts.intro
    
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
+   import com.greensock.TweenMax;
    
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
@@ -58,6 +59,10 @@ package casts.intro
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
          stage.align = StageAlign.TOP_LEFT;
+         onStageResize();
+         stage.addEventListener(Event.RESIZE, onStageResize);
+         
+         TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);
@@ -65,7 +70,18 @@ package casts.intro
       
       private function onRemove(e:Event):void
       {
+         // basic
+         stage.removeEventListener(Event.RESIZE, onStageResize);
       }
+      
+      private function onStageResize(e:Event = null):void
+      {
+         x = (sw>>1) - (GB.DOC_WIDTH>>1);
+         y = (sh>>1) - (GB.DOC_HEIGHT>>1);
+      }
+      
+      private function get sw():Number { return stage.stageWidth; }
+      private function get sh():Number { return stage.stageHeight; }
       
       // --------------------- LINE ---------------------
       

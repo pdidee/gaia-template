@@ -12,13 +12,13 @@ package _myui.player
     * A full-size play button.
     * @author boy, cjboy1984@gmail.com
     */
-   public class VPlayButton2 extends MovieClip
+   public class VPlayButton_Screen extends MovieClip
    {
       // model
       protected var _id:String = 'tvc';
       protected function get mgr():PlayerMgr { return PlayerMgr.api.getMgr(_id); }
       
-      public function VPlayButton2()
+      public function VPlayButton_Screen()
       {
          // disable tab-functionality.
          tabEnabled = false;
@@ -34,34 +34,36 @@ package _myui.player
       }
       
       // ________________________________________________
-      //                                               id
+      //                                     init/destroy
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
       }
       
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+      }
+      
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
       {
-         // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid);
-         
          // click
          addEventListener(MouseEvent.CLICK, onClick);
       }
@@ -69,10 +71,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         destroy();
          
          // click
          removeEventListener(MouseEvent.CLICK, onClick);

@@ -26,20 +26,28 @@ package _myui.player
       }
       
       // ________________________________________________
-      //                                               id
+      //                                     init/destroy
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onBuffFull);
-         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.BUFFER_FULL, onBuffFull);
          mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onBuffFull);
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
+         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
       }
       
       // ################### protected ##################
@@ -47,19 +55,12 @@ package _myui.player
       protected function onAdd(e:Event):void
       {
          visible = false;
-         
-         // model
-         mgr.addEventListener(PlayerMgr.BUFFER_FULL, onBuffFull);
-         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
-         mgr.addEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
       }
       
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onBuffFull);
-         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBuffEmpty);
-         mgr.removeEventListener(PlayerMgr.VIDEO_END, onVideoEnd);
+         destroy();
       }
       
       // ________________________________________________

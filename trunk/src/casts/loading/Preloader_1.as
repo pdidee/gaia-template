@@ -141,8 +141,7 @@ package casts.loading
       {
          super.onAdd(e);
 
-         visible = false;
-         alpha = 0;
+         TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);

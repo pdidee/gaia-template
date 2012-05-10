@@ -116,9 +116,7 @@ package casts.home
          onStageResize();
          stage.addEventListener(Event.RESIZE, onStageResize);
          
-         alpha = 0;
-         visible = false;
-         gotoAndStop(1);
+         TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);

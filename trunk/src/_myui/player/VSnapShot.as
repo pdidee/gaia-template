@@ -34,25 +34,30 @@ package _myui.player
       }
       
       // ________________________________________________
-      //                                               id
+      //                                     init/destroy
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
       }
       
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
       {
-         // model
-         mgr.addEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
-         
          // view
          updateView();
          
@@ -64,7 +69,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onStatChange);
+         destroy();
          
          // click
          removeEventListener(MouseEvent.CLICK, onClick);

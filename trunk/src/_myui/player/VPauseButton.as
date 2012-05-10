@@ -29,31 +29,34 @@ package _myui.player
       }
       
       // ________________________________________________
-      //                                               id
+      //                                     init/destroy
       
-      public function get id():String { return _id; }
-      public function set id(v:String):void
+      public function init(modId:String = null):void
       {
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         // model id
+         if (modId)
+         {
+            _id = modId;
+         }
          
-         _id = v;
-         
+         // model
          mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
+      }
+      
+      public function destroy():void
+      {
+         // model
+         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
+         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
       }
       
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
       {
-         // model
-         mgr.addEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.addEventListener(PlayerMgr.STOP, onPauseVid);
-         
          // click
          mouseChildren = true;
          addEventListener(MouseEvent.CLICK, onClick);
@@ -62,9 +65,7 @@ package _myui.player
       protected function onRemove(e:Event):void
       {
          // model
-         mgr.removeEventListener(PlayerMgr.PLAY, onPlayVid);
-         mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
-         mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
+         destroy();
          
          // click
          removeEventListener(MouseEvent.CLICK, onClick);
