@@ -67,7 +67,7 @@ package _myui.player
          }
          
          // video
-         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x00000000, bgAlpha:0, autoPlay:false, bufferTime:10, onOpen:onLoadOpen, onComplete:onLoadComplete});
+         video = new VideoLoader(src, {container:this, width:docWidth, height:docHeight, scaleMode:'proportionalOutside', crop:true, bgColor:0x00000000, bgAlpha:0, autoPlay:false, onOpen:onLoadOpen, onComplete:onLoadComplete});
          video.addEventListener(VideoLoader.VIDEO_BUFFER_FULL, onBuffFull, false, 0, true);
          video.addEventListener(VideoLoader.VIDEO_BUFFER_EMPTY, onBuffEmpty, false, 0, true);
          video.addEventListener(VideoLoader.VIDEO_PLAY, onVideoPlay, false, 0, true);
@@ -175,7 +175,10 @@ package _myui.player
       
       protected function onBuffering(e:Event):void
       {
-         mgr.setBufferProgress(video.bufferProgress);
+         if (video)
+         {
+            mgr.setPlayProgress(video.playProgress);
+         }
       }
       
       protected function onSeekTo(e:Event):void
