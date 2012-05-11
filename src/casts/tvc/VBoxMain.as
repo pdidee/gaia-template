@@ -62,7 +62,7 @@ package casts.tvc
       public function setInfo(source:String, titleFrame:uint = 1):void
       {
          mc1.gotoAndStop(titleFrame);
-         if (player) player.src = source;
+         src = source;
       }
       
       // ________________________________________________

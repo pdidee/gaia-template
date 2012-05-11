@@ -80,6 +80,14 @@ package _myui.player.core
       }
       
       /**
+       * Initialize.
+       */
+      public function init():void
+      {
+         // DO NOTHING
+      }
+      
+      /**
        * Destory the dictionary.
        */
       public function dispose():void
