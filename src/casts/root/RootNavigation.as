@@ -74,7 +74,7 @@ package casts.root
       {
          // basic
          x = pos.x;
-         stage.addEventListener(Event.RESIZE, onStageResize);
+         stage.addEventListener(Event.RESIZE, updatePosition);
          
          // [init]
          TweenMax.to(this, 0, {y:pos.y + 50});
@@ -90,7 +90,7 @@ package casts.root
       private function onRemove(e:Event):void
       {
          // basic
-         stage.removeEventListener(Event.RESIZE, onStageResize);
+         stage.removeEventListener(Event.RESIZE, updatePosition);
          
          destroyFrameworkRelationship();
       }
@@ -231,7 +231,7 @@ package casts.root
       
       // --------------------- LINE ---------------------
       
-      private function onStageResize(e:Event = null):void
+      private function updatePosition(e:Event = null):void
       {
          x = pos.x;
          y = pos.y;

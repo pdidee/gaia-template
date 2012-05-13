@@ -2,14 +2,15 @@ package casts.home
 {
    import _extension.GaiaPlus;
    
-   import com.gaiaframework.api.Gaia;
-   import com.gaiaframework.templates.AbstractBase;
    import com.gaiaframework.templates.AbstractPage;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
+   import com.greensock.easing.Back;
    import com.greensock.plugins.AutoAlphaPlugin;
+   import com.greensock.plugins.BezierPlugin;
    import com.greensock.plugins.TweenPlugin;
    
+   import flash.display.MovieClip;
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
@@ -17,11 +18,12 @@ package casts.home
    public class HomeMain extends AbstractPage
    {
       // fla
-      public function get intro():AbstractBase { return page && assets && assets.intro ? AbstractBase(assets.intro.content) : null; }
-      public function get nav():Object { return Object(Gaia.api.getPage('root').content.mcNav); }
+      public var mc1:MovieClip;
+      public var mc2:MovieClip;
+      public var mc3:MovieClip;
+      public var mc4:MovieClip;
       
       // cmd
-      private var justatimer:Number;
       private var cmd:TimelineMax = new TimelineMax();
       
       public function HomeMain()
@@ -29,7 +31,7 @@ package casts.home
          super();
          
          // gs
-         TweenPlugin.activate([AutoAlphaPlugin]);
+         TweenPlugin.activate([AutoAlphaPlugin, BezierPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -57,9 +59,28 @@ package casts.home
             }
          });
          
-         // [init]
-         // [actions]
-         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:1}));
+         // ---[init]---
+         TweenMax.to(this, 0, {frame:1, autoAlpha:1});
+         
+         mc1.orgx = mc2.orgx = mc3.orgx = mc4.orgx = 754;
+         
+         TweenMax.to(mc1, 0, {x:754, y:196, rotation:0, alpha:0, scaleX:0.5, scaleY:0.5});
+         TweenMax.to(mc2, 0, {x:754, y:201, rotation:0, alpha:0, scaleX:0.5, scaleY:0.5});
+         TweenMax.to(mc3, 0, {x:754, y:201, rotation:0, alpha:0, scaleX:0.5, scaleY:0.5});
+         TweenMax.to(mc4, 0, {x:754, y:201, rotation:0, alpha:0, scaleX:0.5, scaleY:0.5});
+         
+         // ---[actions]---
+         cmd.insert(TweenMax.to(mc1, 1, {alpha:1}), 0.0);
+         cmd.insert(TweenMax.to(mc1, 3, {bezier:[{x:894,y:236},{x:400,y:256}], scaleX:1, scaleY:1, onUpdate:updateRotation, onUpdateParams:[mc1], ease:Back.easeOut}), 0.0);
+         
+         cmd.insert(TweenMax.to(mc2, 1, {alpha:1}), 0.2);
+         cmd.insert(TweenMax.to(mc2, 3, {bezier:[{x:924,y:241},{x:461,y:265}], scaleX:1, scaleY:1, onUpdate:updateRotation, onUpdateParams:[mc2], ease:Back.easeOut}), 0.2);
+         
+         cmd.insert(TweenMax.to(mc3, 1, {alpha:1}), 0.4);
+         cmd.insert(TweenMax.to(mc3, 3, {bezier:[{x:958,y:241},{x:528,y:265}], scaleX:1, scaleY:1, onUpdate:updateRotation, onUpdateParams:[mc3], ease:Back.easeOut}), 0.4);
+         
+         cmd.insert(TweenMax.to(mc4, 1, {alpha:1}), 0.6);
+         cmd.insert(TweenMax.to(mc4, 3, {bezier:[{x:991,y:241},{x:594,y:265}], scaleX:1, scaleY:1, onUpdate:updateRotation, onUpdateParams:[mc4], ease:Back.easeOut}), 0.6);
          
          cmd.play();
       }
@@ -91,9 +112,15 @@ package casts.home
             }
          );
          
-         // [init]
-         // [actions]
-         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}));
+         // ---[init]---
+         // kill rotation tween
+         for each (var mc:MovieClip in [mc1,mc2,mc3,mc4]) 
+         {
+            TweenMax.killTweensOf(mc);
+         }
+         
+         // ---[actions]---
+         cmd.insert(TweenMax.to(this, 0.3, {autoAlpha:0}));
          
          cmd.play();
       }
@@ -101,7 +128,6 @@ package casts.home
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         visible = false;
       }
       
       // ################### protected ##################
@@ -113,8 +139,8 @@ package casts.home
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
          stage.align = StageAlign.TOP_LEFT;
-         onStageResize();
-         stage.addEventListener(Event.RESIZE, onStageResize);
+         updatePosition();
+         stage.addEventListener(Event.RESIZE, updatePosition);
          
          TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
@@ -125,17 +151,25 @@ package casts.home
       private function onRemove(e:Event):void
       {
          // basic
-         stage.removeEventListener(Event.RESIZE, onStageResize);
+         stage.removeEventListener(Event.RESIZE, updatePosition);
       }
       
-      private function onStageResize(e:Event = null):void
+      private function updatePosition(e:Event = null):void
       {
-         x = (sw>>1) - (GB.DOC_WIDTH>>1);
-         y = (sh>>1) - (GB.DOC_HEIGHT>>1);
+         x = (stage.stageWidth - 960) / 2;
+         y = (stage.stageHeight - 520) / 2;
       }
       
-      private function get sw():Number { return stage.stageWidth; }
-      private function get sh():Number { return stage.stageHeight; }
+      // ________________________________________________
+      //                                  update rotation
+      
+      private function updateRotation(mc:MovieClip):void
+      {
+         var dx:Number = mc.x - mc.orgx;
+         mc.orgx = mc.x;
+         
+         TweenMax.to(mc, 0.3, {rotation:dx*3});
+      }
       
       // --------------------- LINE ---------------------
       

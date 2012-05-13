@@ -14,7 +14,7 @@ package casts._lightbox
    import flash.display.StageAlign;
    import flash.display.StageScaleMode;
    import flash.events.Event;
-
+   
    /**
     * Lightbox super class
     * @author boy, cjboy1984@gmail.com
@@ -81,8 +81,8 @@ package casts._lightbox
          stage.scaleMode = StageScaleMode.NO_SCALE;
          stage.align = StageAlign.TOP_LEFT;
          // stage resize handler
-         onStageResize();
-         stage.addEventListener(Event.RESIZE, onStageResize);
+         updatePosition();
+         stage.addEventListener(Event.RESIZE, updatePosition);
          
          TweenMax.to(this, 0, {frame:1, autoAlpha:0});
          
@@ -93,10 +93,10 @@ package casts._lightbox
       protected function onRemove(e:Event):void
       {
          // stage resize handler
-         stage.removeEventListener(Event.RESIZE, onStageResize);
+         stage.removeEventListener(Event.RESIZE, updatePosition);
       }
       
-      protected function onStageResize(e:Event = null):void
+      protected function updatePosition(e:Event = null):void
       {
       }
       

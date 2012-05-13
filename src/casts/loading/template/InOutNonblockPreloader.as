@@ -106,8 +106,8 @@ package casts.loading.template
          // basic
          stage.scaleMode = StageScaleMode.NO_SCALE;
          stage.align = StageAlign.TOP_LEFT;
-         onStageResize();
-         stage.addEventListener(Event.RESIZE, onStageResize);
+         updatePosition();
+         stage.addEventListener(Event.RESIZE, updatePosition);
          
          // framework history
          if (Gaia.api)
@@ -118,12 +118,12 @@ package casts.loading.template
       
       public function onRemove(e:Event):void
       {
-         stage.removeEventListener(Event.RESIZE, onStageResize);
+         stage.removeEventListener(Event.RESIZE, updatePosition);
       }
       
       // ################### protected ##################
       
-      protected function onStageResize(e:Event = null):void
+      protected function updatePosition(e:Event = null):void
       {
       }
       
