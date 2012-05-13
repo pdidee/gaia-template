@@ -158,8 +158,8 @@ package casts.tvc
       
       override protected function updatePosition(e:Event = null):void
       {
-         x = (sw>>1) - (GB.DOC_WIDTH>>1);
-         y = (sh>>1) - (GB.DOC_HEIGHT>>1);
+         x = (sw - GB.DOC_WIDTH) >> 1;
+         y = (sh - GB.DOC_HEIGHT) >> 1;
       }
       
       // ________________________________________________
