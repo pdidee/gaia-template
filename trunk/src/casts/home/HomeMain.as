@@ -156,9 +156,12 @@ package casts.home
       
       private function updatePosition(e:Event = null):void
       {
-         x = (stage.stageWidth - 960) / 2;
-         y = (stage.stageHeight - 520) / 2;
+         x = (sw - GB.DOC_WIDTH) >> 1;
+         y = (sh - GB.DOC_HEIGHT) >> 1;
       }
+      
+      protected function get sw():Number { return stage.stageWidth; }
+      protected function get sh():Number { return stage.stageHeight; }
       
       // ________________________________________________
       //                                  update rotation
