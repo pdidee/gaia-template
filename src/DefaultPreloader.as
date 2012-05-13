@@ -71,11 +71,11 @@ package
          
          // [init]
          TweenMax.to(this, 0, {autoAlpha:0});
-         TweenMax.to(mcThumb, 0, {alpha:0, width:0});
-         TweenMax.to(mcTrack, 0, {alpha:0});
+         TweenMax.to(mcThumb, 0, {alpha:1, width:0});
+         TweenMax.to(mcTrack, 0, {alpha:1});
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.6, {alpha:1, ease:Quad.easeOut}));
+         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:1, ease:Quad.easeOut}));
          
          cmd.play();
       }
@@ -109,9 +109,7 @@ package
             // [init]
             // [actions]
             cmd.insert(TweenMax.to(mcThumb, 0.6, {width:width100}));
-            cmd.insert(TweenMax.to(mcThumb, 0.6, {alpha:0}), 0.6);
-            cmd.insert(TweenMax.to(mcTrack, 0.6, {alpha:0}), 0.6);
-            cmd.insert(TweenMax.to(this, 1, {autoAlpha:0}), 1.2);
+            cmd.insert(TweenMax.to(this, 1, {autoAlpha:0}), 0.6);
             
             cmd.play();
          }
