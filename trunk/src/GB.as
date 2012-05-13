@@ -11,7 +11,7 @@ package
       //                                    document info
       
       public static const DOC_WIDTH:Number = 960;
-      public static const DOC_HEIGHT:Number = 640;
+      public static const DOC_HEIGHT:Number = 520;
       
       // ________________________________________________
       //                                        framework

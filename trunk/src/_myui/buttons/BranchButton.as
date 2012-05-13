@@ -68,9 +68,9 @@ package _myui.buttons
       // --------------------- LINE ---------------------
       
       /**
-       * Tell you is the branch match the framework.
-       * With fuzzy search:
-       * branch = 'root/home*';
+       * Compare the path match the current branch.</br>
+       * With fuzzy search:</br>
+       * branch = "root/home*";
        */
       public function isMatchBranch($branch:String, fuzzySearch:Boolean = false):Boolean
       {
@@ -98,7 +98,7 @@ package _myui.buttons
       }
       
       /**
-       * Return a string without "*"
+       * Returns a branch path without "*"
        */
       public function getValidBranch():String
       {
