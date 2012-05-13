@@ -21,19 +21,19 @@ package casts.root
       private function onAdd(e:Event):void
       {
          // basic
-         onStageResize();
-         stage.addEventListener(Event.RESIZE, onStageResize);
+         updatePosition();
+         stage.addEventListener(Event.RESIZE, updatePosition);
       }
       
       private function onRemove(e:Event):void
       {
          // basic
-         stage.removeEventListener(Event.RESIZE, onStageResize);
+         stage.removeEventListener(Event.RESIZE, updatePosition);
       }
       
       // --------------------- LINE ---------------------
       
-      private function onStageResize(e:Event = null):void
+      private function updatePosition(e:Event = null):void
       {
          x = sw>>1;
          y = sh>>1;

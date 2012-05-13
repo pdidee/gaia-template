@@ -98,7 +98,7 @@ package _sample
       
       // --------------------- LINE ---------------------
       
-      override protected function onStageResize(e:Event = null):void
+      override protected function updatePosition(e:Event = null):void
       {
          x = (sw>>1) - (GB.DOC_WIDTH>>1);
          y = (sh>>1) - (GB.DOC_HEIGHT>>1);
