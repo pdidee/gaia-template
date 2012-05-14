@@ -3,6 +3,8 @@
    <page id="root" src="root.swf" depth="top">
       <asset id="preloader_1" src="preloader_1.swf" depth="preload"/>
       <asset id="tvc" src="tvc.swf" depth="top"/>
+      <!-- WATCH, rule is not a PAGE but a ASSET. -->
+      <asset id="rule" src="rule/main.swf" depth="top"/>
       
       <page id="home" title="home" src="home/main.swf">
       </page>
@@ -11,9 +13,6 @@
       </page>
       
       <page id="game" title="game" src="game/main.swf">
-      </page>
-      
-      <page id="rule" title="rule" src="rule/main.swf">
       </page>
       
    </page>

@@ -32,8 +32,6 @@ package casts._lightbox
       // cmd
       protected var cmd:TimelineMax = new TimelineMax();
       
-      // true時，代表換單元前，一定會等此lightbox退場完再繼續動作；false時，不會等待，邊退場邊進行換單元。
-      protected var blockMode:Boolean = false;
       protected var releaseGaia:Function;
       
       public function BaseLightbox()
@@ -111,7 +109,7 @@ package casts._lightbox
          if (Gaia.api)
          {
             Gaia.api.removeBeforeGoto(onBeforeGoto);
-            releaseGaia = Gaia.api.beforeGoto(onBeforeGoto, blockMode, true);
+            releaseGaia = Gaia.api.beforeGoto(onBeforeGoto, false, true);
          }
       }
       
@@ -123,11 +121,6 @@ package casts._lightbox
          {
             releaseGaia(true);
             releaseGaia = null;
-         }
-         // remove hijack
-         if (Gaia.api)
-         {
-            Gaia.api.removeBeforeGoto(onBeforeGoto);
          }
       }
       
