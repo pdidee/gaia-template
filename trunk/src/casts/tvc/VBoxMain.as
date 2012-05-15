@@ -33,7 +33,6 @@ package casts.tvc
       public var btnClose:MyButton;
       public var mc1:MovieClip;
       public var mc2:MovieClip;
-      public function get mcLoading():VLoading { return VLoading(mc2.mcLoading); }
       public function get btnPlay1():VPlayButton_Screen { return VPlayButton_Screen(mc2.btnPlay1); }
       public function get btnPlay2():VPlayButton { return VPlayButton(mc2.btnPlay2); }
       public function get btnBar():VProgressBar { return VProgressBar(mc2.btnBar); }
@@ -98,12 +97,12 @@ package casts.tvc
          TweenMax.to(this, 0, {autoAlpha:1});
          TweenMax.to(mc3, 0, {alpha:0});
          TweenMax.to(mc2, 0, {alpha:0, scaleX:0.9, scaleY:0.9, blurFilter:{blurX:20, blurY:20}});
-         TweenMax.to(btnClose, 0, {y:140, alpha:0});
+         TweenMax.to(btnClose, 0, {alpha:0});
          
          // [actions]
          cmd.insert(TweenMax.to(mc3, 0.5, {alpha:1}));
          cmd.insert(TweenMax.to(mc2, 1.0, {alpha:1, scaleX:1, scaleY:1, blurFilter:{blurX:0, blurY:0}}));
-         cmd.insert(TweenMax.to(btnClose, 0.6, {y:115, alpha:1}), 0.8);
+         cmd.insert(TweenMax.to(btnClose, 0.6, {alpha:1}), 0.8);
          
          cmd.play();
       }
@@ -187,7 +186,6 @@ package casts.tvc
          
          // sync model
          var modId:String = 'tvc';
-         mcLoading.init(modId);
          btnPlay1.init(modId);
          btnPlay2.init(modId);
          btnBar.init(modId);

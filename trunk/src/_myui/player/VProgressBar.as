@@ -25,8 +25,9 @@ package _myui.player
       // data
       public var barWidth:Number = 100;
       
-      // whether to resume play
-      protected var resumePlay:Boolean;
+      // flag
+      protected var cachedPlayStat:Boolean;
+      protected var seeking:Boolean = false;
       
       // percentage of the seeker
       protected var seekPerc:Number;
@@ -53,6 +54,8 @@ package _myui.player
       
       public function init(modId:String = null):void
       {
+         seeking = false;
+         
          // model id
          if (modId)
          {
@@ -67,6 +70,8 @@ package _myui.player
       
       public function destroy():void
       {
+         seeking = false;
+         
          // model
          mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onUpdateBuffer);
          mgr.removeEventListener(PlayerMgr.PLAY_PROGRESS, onUpdatePlayhead);
@@ -95,7 +100,7 @@ package _myui.player
          
          // seeker functionality
          removeEventListener(MouseEvent.MOUSE_DOWN, onMDown);
-         stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMMove);
+         stage.removeEventListener(Event.ENTER_FRAME, onMMove);
          stage.removeEventListener(MouseEvent.MOUSE_UP, onMUp);
       }
       
@@ -115,14 +120,16 @@ package _myui.player
       // playhead note
       protected function onUpdatePlayhead(e:Event):void
       {
-         var w:Number = barWidth * mgr.playProgress;
-         TweenMax.to(mcPlayhead, 0.2, {x:w, ease:Linear.easeNone});
+         if (seeking) return;
+         
+         var nx:Number = barWidth * mgr.playProgress;
+         TweenMax.to(mcPlayhead, 0.2, {x:nx});
       }
       
       // video ends note
       protected function onVideoEnd(e:Event):void
       {
-         TweenMax.to(mcPlayhead, 0.2, {x:barWidth, ease:Linear.easeNone});
+         TweenMax.to(mcPlayhead, 0.0, {x:barWidth});
       }
       
       // --------------------- LINE ---------------------
@@ -133,46 +140,54 @@ package _myui.player
       protected function onMDown(e:MouseEvent):void
       {
          // pause video
-         resumePlay = mgr.playing;
+         cachedPlayStat = mgr.playing;
          mgr.pause();
          
          // update progress bar
-         seekPerc = mouseX / width;
-         var w:Number = barWidth * seekPerc;
-         TweenMax.to(mcPlayhead, 0.3, {x:w});
+         seekPerc = mouseX / barWidth;
+         if (seekPerc > 1) seekPerc = 1;
+         else if (seekPerc < 0) seekPerc = 0;
+         
+         var nx:Number = barWidth * seekPerc;
+         TweenMax.to(mcPlayhead, 0.0, {x:nx});
+         
+         // model
+         mgr.seekTo(seekPerc);
          
          // add drag & up handler
-         stage.addEventListener(MouseEvent.MOUSE_MOVE, onMMove);
+         stage.addEventListener(Event.ENTER_FRAME, onMMove);
          stage.addEventListener(MouseEvent.MOUSE_UP, onMUp);
       }
       
-      protected function onMMove(e:MouseEvent):void
+      protected function onMMove(e:Event):void
       {
          // update progress bar
          seekPerc = mouseX / barWidth;
-         if (seekPerc < 0)
-         {
-            seekPerc = 0;
-         }
-         else if (seekPerc > 1)
-         {
-            seekPerc = 1;
-         }
+         if (seekPerc > 1) seekPerc = 1;
+         else if (seekPerc < 0) seekPerc = 0;
          
+         // model
          mgr.seekTo(seekPerc);
          
-         var w:Number = barWidth * seekPerc;
-         TweenMax.to(mcPlayhead, 0.2, {x:w});
+         var nx:Number = barWidth * seekPerc;
+         TweenMax.to(mcPlayhead, 0.0, {x:nx});
       }
       
       protected function onMUp(e:MouseEvent):void
       {
-         // resume play
+         // update progress bar
+         seekPerc = mouseX / barWidth;
+         if (seekPerc > 1) seekPerc = 1;
+         else if (seekPerc < 0) seekPerc = 0;
+         
+         // model
          mgr.seekTo(seekPerc);
-         if (resumePlay) mgr.play();
+         
+         // resume stat
+         if (cachedPlayStat) mgr.play();
          
          // remove drag & up handler
-         stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMMove);
+         stage.removeEventListener(Event.ENTER_FRAME, onMMove);
          stage.removeEventListener(MouseEvent.MOUSE_UP, onMUp);
       }
       

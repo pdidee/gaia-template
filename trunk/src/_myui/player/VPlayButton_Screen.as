@@ -24,8 +24,9 @@ package _myui.player
          tabEnabled = false;
          tabChildren = false;
          focusRect = false;
-         buttonMode = true;
          mouseChildren = false;
+         
+         buttonMode = true;
          
          stop();
          
@@ -49,6 +50,8 @@ package _myui.player
          mgr.addEventListener(PlayerMgr.PAUSE, onPauseVid, false, 0, true);
          mgr.addEventListener(PlayerMgr.STOP, onPauseVid, false, 0, true);
          mgr.addEventListener(PlayerMgr.VIDEO_END, onPauseVid, false, 0, true);
+         mgr.addEventListener(PlayerMgr.BUFFER_EMPTY, onBufferEmpty, false, 0, true);
+         mgr.addEventListener(PlayerMgr.BUFFER_FULL, onBufferFull, false, 0, true);
       }
       
       public function destroy():void
@@ -58,14 +61,18 @@ package _myui.player
          mgr.removeEventListener(PlayerMgr.PAUSE, onPauseVid);
          mgr.removeEventListener(PlayerMgr.STOP, onPauseVid);
          mgr.removeEventListener(PlayerMgr.VIDEO_END, onPauseVid);
+         mgr.removeEventListener(PlayerMgr.BUFFER_EMPTY, onBufferEmpty);
+         mgr.removeEventListener(PlayerMgr.BUFFER_FULL, onBufferFull);
       }
       
       // ################### protected ##################
       
       protected function onAdd(e:Event):void
       {
-         // click
+         // mouse
          addEventListener(MouseEvent.CLICK, onClick);
+         addEventListener(MouseEvent.ROLL_OVER, onOver);
+         addEventListener(MouseEvent.ROLL_OUT, onOut);
       }
       
       protected function onRemove(e:Event):void
@@ -73,11 +80,14 @@ package _myui.player
          // model
          destroy();
          
-         // click
+         // mouse
          removeEventListener(MouseEvent.CLICK, onClick);
+         removeEventListener(MouseEvent.ROLL_OVER, onOver);
+         removeEventListener(MouseEvent.ROLL_OUT, onOut);
       }
       
-      // --------------------- LINE ---------------------
+      // ________________________________________________
+      //                                            mouse
       
       protected function onClick(e:MouseEvent):void
       {
@@ -91,18 +101,50 @@ package _myui.player
          }
       }
       
-      // --------------------- LINE ---------------------
+      protected function onOver(e:MouseEvent):void
+      {
+         TweenMax.to(this, 0.3, {alpha:1});
+      }
+      
+      protected function onOut(e:MouseEvent):void
+      {
+         TweenMax.to(this, 0.3, {alpha:0});
+      }
+      
+      // ________________________________________________
+      //                                            model
       
       protected function onPlayVid(e:Event):void
       {
-         buttonMode = false;
+         gotoAndStop(2);
          TweenMax.to(this, 0.3, {alpha:0});
       }
       
       protected function onPauseVid(e:Event):void
       {
-         buttonMode = true;
+         gotoAndStop(1);
          TweenMax.to(this, 0.3, {alpha:1});
+      }
+      
+      // --------------------- LINE ---------------------
+      
+      private function onBufferEmpty(e:Event):void
+      {
+         gotoAndStop(3);
+         TweenMax.to(this, 0.3, {alpha:1});
+      }
+      
+      private function onBufferFull(e:Event):void
+      {
+         if (mgr.playing)
+         {
+            gotoAndStop(2);
+         }
+         else
+         {
+            gotoAndStop(1);
+         }
+         TweenMax.to(this, 0.3, {alpha:0});
       }
       
       // #################### private ###################
