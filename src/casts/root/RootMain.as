@@ -149,7 +149,7 @@ package casts.root
       private function initButtons():void
       {
          btn1.branch = 'root/home';
-         btn2.branch = 'root/prodcut';
+         btn2.branch = 'root/product';
          btn3.branch = 'root/game';
          btn4.branch = 'root/rule';
          
