@@ -108,7 +108,10 @@ package _myui.player
       
       protected function onOut(e:MouseEvent):void
       {
-         TweenMax.to(this, 0.3, {alpha:0});
+         if (currentFrame != 3)
+         {
+            TweenMax.to(this, 0.3, {alpha:0});
+         }
       }
       
       // ________________________________________________
@@ -128,13 +131,13 @@ package _myui.player
       
       // --------------------- LINE ---------------------
       
-      private function onBufferEmpty(e:Event):void
+      protected function onBufferEmpty(e:Event):void
       {
          gotoAndStop(3);
          TweenMax.to(this, 0.3, {alpha:1});
       }
       
-      private function onBufferFull(e:Event):void
+      protected function onBufferFull(e:Event):void
       {
          if (mgr.playing)
          {
