@@ -69,6 +69,8 @@ package _myui.player
       
       protected function onAdd(e:Event):void
       {
+         gotoAndStop(2);
+         
          // mouse
          addEventListener(MouseEvent.CLICK, onClick);
          addEventListener(MouseEvent.ROLL_OVER, onOver);
