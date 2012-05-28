@@ -40,7 +40,7 @@ package casts.tvc
       public var mc3:MovieClip;
       
       // video-source
-      public var src:String = 'http://dl.dropbox.com/u/3587501/httpdoc2/video/test.flv';
+      public var src:String = 'http://file.mo2.com.tw/mo/cj/ja12-tw/video/tvc.mp4';
       
       // player
       private var player:GreenPlayer = new GreenPlayer(630, 362);
