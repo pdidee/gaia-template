@@ -82,7 +82,7 @@ package _facebook
       {
          if (param)
          {
-            if (param.hasOwnProperty('fb_key')) appKey = new String(param.fb_key);
+            if (param.hasOwnProperty('appKey')) appKey = new String(param.appKey);
             if (param.hasOwnProperty('perms')) perms = new String(param.perms);
          }
          Trace2('{as} FBMgr | init');
