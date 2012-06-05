@@ -151,13 +151,18 @@ package casts.root
          btn1.branch = 'root/home';
          btn2.branch = 'root/product';
          btn3.branch = 'root/game';
-         btn4.branch = 'root/rule';
+         btn4.gotoAndStop(1);
+         btn4.buttonMode = true;
+         btn4.onClick = function()
+         {
+            if (!this.buttonMode) return;
+            GaiaPlus.api.showAsset('rule', 'root');
+         };
          
          navPool = Vector.<BranchButton>([
             btn1,
             btn2,
-            btn3,
-            btn4
+            btn3
          ]);
          for each (var i:BranchButton in navPool) 
          {
