@@ -27,6 +27,7 @@ package casts.root
       public function get btn2():BranchButton { return BranchButton(mcNav.btn2); }
       public function get btn3():BranchButton { return BranchButton(mcNav.btn3); }
       public function get btn4():BranchButton { return BranchButton(mcNav.btn4); }
+      public function get btn5():BranchButton { return BranchButton(mcNav.btn5); }
       public var mcBg:MovieClip;
       
       // branch
@@ -70,14 +71,18 @@ package casts.root
          });
          
          // ---[init]---
+         TweenMax.to(this, 0, {autoAlpha:1});
          // nav
          TweenMax.to(mcNav, 0, {y:sh+50, autoAlpha:1});
+         // bg
+         TweenMax.to(mcBg, 0, {alpha:0});
          
          initButtons();
          initFrameworkRelationship();
          
          // ---[actions]---
          cmd.insert(TweenMax.to(mcNav, 0.5, {y:sh}));
+         cmd.insert(TweenMax.to(mcBg, 0.5, {alpha:1}));
          
          cmd.play();
       }
@@ -110,12 +115,15 @@ package casts.root
             var layer_3:Sprite = Gaia.api.getDepthContainer(Gaia.MIDDLE);
             var layer_4:Sprite = Gaia.api.getDepthContainer(Gaia.BOTTOM);
             
-            // lightbox
-            TweenMax.to(mcNav, 0, {autoAlpha:0});
+            // nav
+            layer_1.addChild(mcNav);
             
             // background
             layer_4.addChild(mcBg);
          }
+         
+         // hide this
+         TweenMax.to(this, 0, {autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);
@@ -134,6 +142,9 @@ package casts.root
          
          if (Gaia.api)
          {
+            mcNav.x = sw >> 1;
+            mcNav.y = sh;
+            
             mcBg.x = sw >> 1;
             mcBg.y = sh >> 1;
          }
