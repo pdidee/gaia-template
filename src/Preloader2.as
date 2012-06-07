@@ -1,22 +1,20 @@
-package
+package 
 {
    import _extension.GaiaPlus;
    
-   import casts.loading.template.InOutBlockPreloader;
+   import casts.loading.template.InOutNonblockPreloader;
    
    import com.gaiaframework.api.Gaia;
-   import com.gaiaframework.api.IMovieClip;
    import com.gaiaframework.events.AssetEvent;
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
-   import com.greensock.easing.Quad;
    import com.greensock.plugins.AutoAlphaPlugin;
    import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
    import flash.events.Event;
    
-   public class DefaultPreloader extends InOutBlockPreloader
+   public class Preloader2 extends InOutNonblockPreloader
    {
       // fla
       public var mcThumb:MovieClip;
@@ -24,14 +22,15 @@ package
       public var mcBg:MovieClip;
       
       // 100%
-      private var width100:Number;
+      private const width100:Number = 118;
       
       // cmd
       private var cmd:TimelineMax = new TimelineMax();
       
-      public function DefaultPreloader()
+      public function Preloader2()
       {
          super();
+         isShow = false;
          
          // gs
          TweenPlugin.activate([AutoAlphaPlugin]);
@@ -41,18 +40,6 @@ package
       
       override public function transitionIn():void
       {
-         // necessary for block-mode
-         if (!callByTransitIn)
-         {
-            super.transitionIn();
-            super.transitionInComplete();
-            return;
-         }
-         else
-         {
-            callByTransitIn = false;
-         }
-         
          // stop cmd(TimelineMax)
          cmd.stop();
          cmd.kill();
@@ -60,6 +47,10 @@ package
             {
                onStart:function()
                {
+                  // necessary for non-block mode
+                  isShow = true;
+                  
+                  transitionInComplete();
                },
                onComplete:function()
                {
@@ -70,12 +61,21 @@ package
          );
          
          // [init]
-         TweenMax.to(this, 0, {autoAlpha:0});
+         TweenMax.to(this, 0, {autoAlpha:1});
          TweenMax.to(mcThumb, 0, {alpha:1, width:0});
-         TweenMax.to(mcTrack, 0, {alpha:1});
+         TweenMax.to(mcTrack, 0, {alpha:0});
+         TweenMax.to(mcBg, 0, {alpha:0});
+         
+         // layer
+         if (Gaia.api)
+         {
+            parent.parent.setChildIndex(parent, 0);
+         }
          
          // [actions]
-         cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:1, ease:Quad.easeOut}));
+         // [actions]
+         cmd.insert(TweenMax.to(mcTrack, 0.7, {alpha:1}));
+         cmd.insert(TweenMax.to(mcBg, 0.7, {alpha:1}));
          
          cmd.play();
       }
@@ -96,6 +96,8 @@ package
             {
                onStart:function()
                {
+                  // necessary for non-block mode
+                  isShow = false;
                },
                onComplete:function()
                {
@@ -108,21 +110,16 @@ package
          {
             // [init]
             // [actions]
-            cmd.insert(TweenMax.to(mcThumb, 0.6, {width:width100}));
-            cmd.insert(TweenMax.to(this, 1, {autoAlpha:0}), 0.6);
-            
-            cmd.play();
+            cmd.insert(TweenMax.to(mcThumb, 0.2, {width:width100}));
+            cmd.insert(TweenMax.to(this, 0.5, {autoAlpha:0}), 0.0);
          }
-         else
-         {
-            transitionOutComplete();
-         }
+         
+         cmd.play();
       }
       
       override public function transitionOutComplete():void
       {
          super.transitionOutComplete();
-         changePreloader();
       }
       
       // --------------------- LINE ---------------------
@@ -140,7 +137,6 @@ package
          
          visible = false;
          alpha = 0;
-         width100 = mcTrack.width;
          
          // debug
          GaiaPlus.api.initTest(this);
@@ -151,18 +147,10 @@ package
       override protected function updatePosition(e:Event = null):void
       {
          x = (sw>>1) - (GB.DOC_WIDTH>>1);
-         y = (sh>>1) - (GB.DOC_HEIGHT>>1);
+         y = 0;
       }
       
       // #################### private ###################
-      
-      private function changePreloader():void
-      {
-         if (!Gaia.api) return;
-         
-         var newPreloader:IMovieClip = IMovieClip(Gaia.api.getPage('root').assets.preloader_1);
-         GaiaPlus.api.setPreloader(newPreloader);
-      }
       
       // --------------------- LINE ---------------------
       

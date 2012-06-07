@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<site menu="false" preloader="def_preloader.swf" flow="cross">
+<site menu="false" preloader="preloader1.swf" flow="cross">
    <page id="root" src="root.swf" depth="top">
-      <asset id="preloader_1" src="preloader_1.swf" depth="preload"/>
+      <asset id="preloader2" src="preloader2.swf" depth="preload"/>
       <asset id="tvc" src="tvc.swf" depth="top"/>
       <!-- WATCH, rule is not a PAGE but a ASSET. -->
       <asset id="rule" src="rule/main.swf" depth="top"/>
