@@ -25,6 +25,7 @@ package _myui.form
       
       public function ReqBuilder()
       {
+         removeVars();
       }
       
       // ________________________________________________
@@ -79,7 +80,7 @@ package _myui.form
       /**
        * Return a URLRequest object.
        * @param url
-       * @param method     'auto', 'post', 'get'
+       * @param method     'post', 'get'
        * @return 
        * 
        */
@@ -110,25 +111,14 @@ package _myui.form
          // req
          var req:URLRequest = new URLRequest();
          req.url = newURL;
-         if (method == 'auto')
+         if (method == 'post')
          {
-            if (postData.length)
-            {
-               req.method = URLRequestMethod.POST;
-               req.data = vars;
-            }
+            req.method = URLRequestMethod.POST;
+            req.data = vars;
          }
-         else
+         else if (method == 'get')
          {
-            if (method == 'post')
-            {
-               req.method = URLRequestMethod.POST;
-               req.data = vars;
-            }
-            else if (method == 'get')
-            {
-               req.method = URLRequestMethod.GET;
-            }
+            req.method = URLRequestMethod.GET;
          }
          
          Trace2('{as} ReqBuilder | url = ' + newURL);
