@@ -123,7 +123,9 @@ package _myui.player
          if (seeking) return;
          
          var nx:Number = barWidth * mgr.playProgress;
-         TweenMax.to(mcPlayhead, 0.2, {x:nx});
+         var dur:Number = mgr.seekWithTween ? 0.2 : 0;
+         if (dur == 0) TweenMax.killTweensOf(mcPlayhead);
+         TweenMax.to(mcPlayhead, dur, {x:nx});
       }
       
       // video ends note

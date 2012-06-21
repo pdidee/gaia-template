@@ -69,7 +69,7 @@ package _myui.player
       
       protected function onAdd(e:Event):void
       {
-         gotoAndStop(2);
+         gotoAndStop(1);
          
          // mouse
          addEventListener(MouseEvent.CLICK, onClick);

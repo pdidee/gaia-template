@@ -1,7 +1,6 @@
 package casts.tvc
 {
    import _myui.player.GreenPlayer;
-   import _myui.player.VLoading;
    import _myui.player.VPlayButton;
    import _myui.player.VPlayButton_Screen;
    import _myui.player.VProgressBar;
@@ -12,7 +11,6 @@ package casts.tvc
    import com.greensock.TimelineMax;
    import com.greensock.TweenMax;
    import com.greensock.plugins.AutoAlphaPlugin;
-   import com.greensock.plugins.BlurFilterPlugin;
    import com.greensock.plugins.TweenPlugin;
    
    import flash.display.MovieClip;
@@ -40,7 +38,7 @@ package casts.tvc
       public var mc3:MovieClip;
       
       // video-source
-      public var src:String = 'http://file.mo2.com.tw/mo/cj/ja12-tw/video/tvc.mp4';
+      public var src:String = 'http://file.mo2.com.tw/mo/cj/ja12-tw/video/tvc.f4v';
       
       // player
       private var player:GreenPlayer = new GreenPlayer(630, 362);
@@ -49,7 +47,7 @@ package casts.tvc
       {
          super();
          
-         TweenPlugin.activate([AutoAlphaPlugin, BlurFilterPlugin]);
+         TweenPlugin.activate([AutoAlphaPlugin]);
          
          addEventListener(Event.ADDED_TO_STAGE, onAdd);
          addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
@@ -96,12 +94,12 @@ package casts.tvc
          initButton();
          TweenMax.to(this, 0, {autoAlpha:1});
          TweenMax.to(mc3, 0, {alpha:0});
-         TweenMax.to(mc2, 0, {alpha:0, scaleX:0.9, scaleY:0.9, blurFilter:{blurX:20, blurY:20}});
+         TweenMax.to(mc2, 0, {alpha:0, scaleX:0.9, scaleY:0.9});
          TweenMax.to(btnClose, 0, {alpha:0});
          
          // [actions]
          cmd.insert(TweenMax.to(mc3, 0.5, {alpha:1}));
-         cmd.insert(TweenMax.to(mc2, 1.0, {alpha:1, scaleX:1, scaleY:1, blurFilter:{blurX:0, blurY:0}}));
+         cmd.insert(TweenMax.to(mc2, 1.0, {alpha:1, scaleX:1, scaleY:1}));
          cmd.insert(TweenMax.to(btnClose, 0.6, {alpha:1}), 0.8);
          
          cmd.play();
