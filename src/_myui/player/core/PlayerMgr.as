@@ -40,6 +40,7 @@ package _myui.player.core
       
       // load percentage, play head percentage...
       public var playing:Boolean = false;
+      public var seekWithTween:Boolean = true;
       public var vol:Number = 1; // 0~1
       public var bufferProgress:Number = 0; // 0~1
       public var playProgress:Number = 0; // 0~1
@@ -117,9 +118,10 @@ package _myui.player.core
          dispatchEvent(new Event(PlayerMgr.STOP));
       }
       
-      public function seekTo(v:Number):void
+      public function seekTo(v:Number, noTween:Boolean = false):void
       {
          playProgress = v;
+         seekWithTween = !noTween;
          dispatchEvent(new Event(PlayerMgr.SEEK_TO));
       }
       

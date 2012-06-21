@@ -190,6 +190,9 @@ package _myui.player
       protected function onVideoEnd(e:Event):void
       {
          isEnd = true;
+         
+         mgr.seekTo(0, true);
+         mgr.stop();
       }
       
       // ________________________________________________

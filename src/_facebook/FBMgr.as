@@ -122,7 +122,14 @@ package _facebook
       // ________________________________________________
       //                                            login
       
-      public function get isLogin():Boolean { return id != null; }
+      public function get isLogin():Boolean
+      {
+         var ret:Boolean = (id != null);
+         Trace2('###########################');
+         Trace2('{as} FBMgr | check status, ' + (ret?'already login.':'not login yet.'));
+         Trace2('###########################');
+         return ret;
+      }
       
       // login > get profile > get profile photo > get album > create album
       public function login1(callback:Function = null):void
