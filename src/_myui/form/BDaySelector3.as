@@ -75,97 +75,10 @@ package _myui.form
          {
             cbDay.addItem(NumberFormatter.addLeadingZero(i), i);
          }
-         
-         // handler
-         cbYear.addEventListener(Event.CHANGE, onYearSelect);
-         cbMonth.addEventListener(Event.CHANGE, onMonthSelect);
       }
       
       private function onRemove(e:Event):void
       {
-         // handler
-         cbYear.removeEventListener(Event.CHANGE, onYearSelect);
-         cbMonth.removeEventListener(Event.CHANGE, onMonthSelect);
-      }
-      
-      // ________________________________________________
-      //                                   select handler
-      
-      private function onYearSelect(e:Event):void
-      {
-         // select Feb
-         if(cbMonth.selectedIndex == 1)
-         {
-            if(int(cbYear.selectedIndex) % 4 == 0)
-            {
-               if(cbDay.length < 29)
-               {
-                  cbDay.addItem(String(29));
-               }
-            }
-            else
-            {
-               if(cbDay.length > 28)
-               {
-                  cbDay.removeItemAt(cbDay.length - 1);
-               }
-            }
-         }
-         
-         cbMonth.resetSelection();
-         cbDay.resetSelection();
-      }
-      
-      private function onMonthSelect(e:Event):void
-      {
-         var lastDay:int;
-         
-         switch(cbMonth.selectedIndex)
-         {
-            case 0: // 1
-            case 2: // 3
-            case 4: // 5
-            case 6: // 7
-            case 7: // 8
-            case 9: // 10
-            case 11: // 12
-               lastDay = 31;
-               break;
-            case 1: // 2
-               if(int(cbYear.selectedIndex) % 4 == 0)
-               {
-                  lastDay = 29;
-               }
-               else
-               {
-                  lastDay = 28;
-               }
-               break;
-            case 3: // 4
-            case 5: // 6
-            case 8: // 9
-            case 10: // 11
-               lastDay = 30;
-               break;
-         }
-         
-         var off:int = lastDay - cbDay.length;
-         if(off > 0)
-         {
-            for(var i:int = off; i > 0; --i)
-            {
-               cbDay.addItem(String(lastDay - i + 1));
-            }
-         }
-         else if(off < 0)
-         {
-            for(var j:int = off; j < 0; ++j)
-            {
-               cbDay.removeItemAt(cbDay.length - 1);
-            }
-         }
-         
-         cbDay.resetSelection();
       }
       
       // #################### private ###################
