@@ -39,8 +39,8 @@ package _myui.scrollbar
       protected var canScroll:Boolean = false;
       
       // manager
-      protected var mgrNo:int = 0;
-      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      protected const id:String = 'common slider';
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgr(id); }
       
       protected var _ta:MovieClip;          // target
       protected var _taInitPos:Point;       // target init-position

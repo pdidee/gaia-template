@@ -49,11 +49,7 @@ package _myui.buttons.core
        */
       public function getMgr(id:String):BtnFocusMgr
       {
-         // Initialize the lists if it is null.
-         if (!mgrPool)
-         {
-            mgrPool = new Vector.<BtnFocusMgr>();
-         }
+         if (!mgrPool) mgrPool = new Dictionary();
          
          // Whether to create a new instance or NOT.
          var mgr:BtnFocusMgr = BtnFocusMgr(mgrPool[id]);
