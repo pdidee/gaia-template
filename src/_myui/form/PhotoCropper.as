@@ -75,8 +75,8 @@ package _myui.form
       
       // scroll
       protected var jump:Number = 0.05; // scale jump
-      protected var mgrNo:int = 0;
-      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      protected const id:String = 'cropper';
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgr(id); }
       
       public function PhotoCropper()
       {

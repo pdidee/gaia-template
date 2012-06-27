@@ -2,6 +2,7 @@ package _myui.scrollbar.core
 {
    import flash.events.Event;
    import flash.events.EventDispatcher;
+   import flash.utils.Dictionary;
    
    /**
     * A scroll-bar basing on MVC-pattern.
@@ -11,20 +12,19 @@ package _myui.scrollbar.core
    public class ScrollMgr extends EventDispatcher
    {
       // Event
-      public static const VALUE_CHANGE:String = 'SCROLL_VALUE_CHANGE';
-      public static const VALUE_REVERT:String = 'SCROLL_VALUE_REVERT';
-      
-      // A static lists saving instance of ScrollMgr class.
-      private static var mgrs:Array;
+      public static const VALUE_CHANGE:String = 'VALUE_CHANGE';
+      public static const VALUE_REVERT:String = 'VALUE_REVERT';
       
       // target, seek percentage, mask reference...
-      private var _value:Number;
-      private var _oldValue:Number;
+      private var _value:Number = 0;
+      private var _oldValue:Number = 0;
+      
+      // singleton
+      private static var mgrPool:Dictionary = new Dictionary();
       
       public function ScrollMgr(pvt:PrivateClass)
       {
-         _value = 0;
-         _oldValue = 0;
+         // DO NOTHING
       }
       
       // ________________________________________________
@@ -65,21 +65,19 @@ package _myui.scrollbar.core
        * @param i          The number.
        * @return           The Nth instance of ScrollMgr class.
        */
-      public static function getMgrAt(i:int = 0):ScrollMgr
+      public static function getMgr(id:String):ScrollMgr
       {
-         // Initialize the lists if it is null.
-         if (!mgrs)
-         {
-            mgrs = new Array();
-         }
+         if (!mgrPool) mgrPool = new Dictionary();
          
          // Whether to create a new instance or NOT.
-         while (i >= mgrs.length)
+         var mgr:ScrollMgr = ScrollMgr(mgrPool[id]);
+         if (mgr == null)
          {
-            var mgr:ScrollMgr = new ScrollMgr(new PrivateClass());
-            mgrs.push(mgr);
+            mgr = new ScrollMgr(new PrivateClass());
+            mgrPool[id] = mgr;
          }
-         return mgrs[i] as ScrollMgr;
+         
+         return mgr;
       }
       
       /**
@@ -88,7 +86,7 @@ package _myui.scrollbar.core
        */
       public static function dispose():void
       {
-         mgrs = null;
+         mgrPool = null;
       }
       
       // ################### protected ##################

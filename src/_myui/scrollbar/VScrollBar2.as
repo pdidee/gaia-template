@@ -34,8 +34,8 @@ package _myui.scrollbar
       protected var SCROLL_SPEED:Number = 15;
       
       // manager
-      protected var mgrNo:int = 0;
-      public function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      protected const id:String = 'common vsbar';
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgr(id); }
       
       protected var _barRef:Number; // 捲bar的可移動距離
       protected var thumbNewY:int; // thumb的y值，因為有滑鼠滾輪功能所以存在

@@ -39,7 +39,7 @@ package _myui.form.control.common
       
       // manager
       protected var mgrNo:int = 0;
-      protected function get mgr():ScrollMgr { return ScrollMgr.getMgrAt(mgrNo); }
+      protected function get mgr():ScrollMgr { return ScrollMgr.getMgr(mgrNo); }
       
       public function MyList()
       {
