@@ -135,8 +135,7 @@ package
       {
          super.onAdd(e);
          
-         visible = false;
-         alpha = 0;
+         TweenMax.to(this, 0, {autoAlpha:0});
          
          // debug
          GaiaPlus.api.initTest(this);
