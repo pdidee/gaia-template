@@ -141,6 +141,17 @@ package _facebook
          Facebook.login(onLogin1_1, {scope:perms});
       }
       
+      // login in a redirect way
+      public function login2(redirectParams:*):void
+      {
+         Trace2('{as} FBMgr | login');
+         
+         var url:String = 'http://www.facebook.com/dialog/oauth?client_id=' + appKey
+            + '&redirect_uri=' + 'https://apps.facebook.com/skii-ja/?' + String(redirectParams)
+            + '&scope=' + perms;
+         navigateToURL(new URLRequest(url), '_parent');
+      }
+      
       // --------------------- LINE ---------------------
       
       private function onLogin1_1(success:Object, fail:Object):void
