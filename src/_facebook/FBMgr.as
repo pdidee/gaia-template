@@ -273,8 +273,8 @@ package _facebook
             {
                // add to pool
                wantedAlbum = new FBAlbum();
-               album.name = albumName;
-               albumPool.push(album);
+               wantedAlbum.name = albumName;
+               albumPool.push(wantedAlbum);
                
                // api
                var obj:Object = 
@@ -467,6 +467,8 @@ package _facebook
          albumName = album_name;
          albumMsg = album_msg;
       }
+      
+      public function get hasProfileAlbum():Boolean { return (profileAlbum != null); }
       
       /**
        * Get all the photos in the "Profile Pictures" album. Save the link of the photos in a Array.
